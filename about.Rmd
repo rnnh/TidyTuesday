@@ -1,0 +1,12 @@
+---
+title: "About this blog"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This site features graphs and analysis of various data sets from the R for Data
+Science (R4DS) [#TidyTuesday project](https://github.com/rfordatascience/tidytuesday).
+
+The source code for this website can be found at: <https://github.com/rnnh/TidyTuesday>

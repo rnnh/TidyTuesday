@@ -1,0 +1,17 @@
+name: "TidyTuesday"
+title: "TidyTuesday"
+description: |
+  Visualisations of R4DS #TidyTuesday data
+theme: theme.css
+repository_url: https://github.com/rnnh/TidyTuesday
+output_dir: "_site"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+output: 
+  distill::distill_article:
+    includes:
+      in_header: utterances.html

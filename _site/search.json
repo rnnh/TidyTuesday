@@ -1,0 +1,19 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "About this blog",
+      "author": [],
+      "contents": "\nThis site features graphs and analysis of various data sets from the R for Data Science (R4DS) #TidyTuesday project.\nThe source code for this website can be found at: https://github.com/rnnh/TidyTuesday\n\n\n\n",
+      "last_modified": "2021-03-21T22:42:47+00:00"
+    },
+    {
+      "path": "index.html",
+      "title": "TidyTuesday",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2021-03-21T22:42:48+00:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}
