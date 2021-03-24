@@ -1,0 +1,132 @@
+---
+title: "Video Games and Sliced"
+description: |
+  Graphs and analysis using the #TidyTuesday data set for week 12 of 2021
+    (16/3/2021): "Video Games and Sliced"
+author:
+  - name: Ronan Harrington 
+    url: https://github.com/rnnh/
+date: 03-23-2021
+repository_url: https://github.com/rnnh/TidyTuesday/
+preview: ../../images/video-games-and-sliced-1.png
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+---
+
+## Setup
+
+Loading the `R` libraries and [data set](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-03-16/readme.md).
+
+```{r, code_folding=TRUE, include=TRUE}
+# Loading libraries
+library(tidyverse)
+
+# Reading in the raw data from GitHub (I would use "tt_load", but I hit an API
+# rate limt)
+games <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-03-16/games.csv')
+```
+
+## Plotting Peak vs. Average number of players using 200 observations
+
+For this plot, the top 200 observations for average number of players at the
+same time are selected using `slice_max(order_by = avg, n = 200)`. The peak and
+average number of players for these observations are plotted on a scatter plot.
+The colour of the points indicates the game used for each observation. Models are
+fit to illustrate trends in the data; these trends follow the featured three
+games. The game "Cyberpunk 2077" was filtered out before creating this plot,
+as it occurred in only one of the 200 observations.
+
+```{r figure1, code_folding=TRUE, include=TRUE, fig.height=5, fig.width=6}
+games %>% 
+  select(gamename, avg, peak) %>%
+  # Filtering out Cyberpunk 2077 as it has only a single observation
+  filter(gamename != "Cyberpunk 2077") %>%
+  slice_max(order_by = avg, n = 200) %>%
+  ggplot(aes(x = avg, y = peak, colour = gamename)) + 
+  geom_point() + 
+  geom_smooth(formula = y ~ x) + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  labs(title = "Peak vs. Average number of players online simultaneously",
+       subtitle = "Top 200 observations for Average used",
+       y = "Highest number of players at the same time",
+       x = "Average number of players at the same time",
+       colour = "Game")
+```
+
+```{r, include=FALSE}
+# Saving the last plot to use as the preview image for this post
+ggsave("../../images/video-games-and-sliced-1.png")
+```
+
+## Combining "year" and "month" into a new variable
+
+Combining the `year` and `month` variables makes it easier to track when each
+observation was recorded. Creating this new `year_month` variable using the
+`as.date()` function from `{lubridate}` ensures that it will be interpreted as a
+date.
+
+```{r, include=TRUE, code_folding=TRUE}
+# Creating a "year_month" variable with the year and month of each observation
+# using the lubridate "as_date()" function, by pasting together...
+games$year_month <- lubridate::as_date(paste(
+  # ...the "year" variable...
+  games$year,
+  # ...the number of each month, obtained by matching the month names to the
+  # "month.name" built-in constant...
+  match(games$month, month.name),
+  # ...the number "1", as a dummy "day" value...
+  1,
+  # ...separated by a "-".
+  sep = "-"))
+
+# Printing the start of the "games" object with the new variable...
+games
+```
+
+## Plotting the monthly player gains and losses for three of the most popular games
+
+This plot uses the `year_month` variable on the x-axis and the `gain` variable
+on the y-axis to illustrate month-to-month gains and losses in average players.
+The three games used share the majority of the highest `avg` (average number of
+simultaenous players) values in the data set. This graph is faceted for each
+game. To put these gains and losses into perspective, dashed lines are added at
+plus and minus 100,000 players in each facet.
+
+```{r figure2, code_folding=TRUE, include=TRUE, fig.height=4, fig.width=9}
+games %>% 
+  # Selecting the variables
+  select(gamename, year_month, gain) %>%
+  # Filtering the data set for three of the most popular games
+  filter(gamename == "Dota 2" |
+           gamename == "PLAYERUNKNOWN'S BATTLEGROUNDS" |
+           gamename == "Counter-Strike: Global Offensive") %>%
+  ggplot(aes(year_month, gain, fill = gamename)) +
+  geom_col() +
+  theme_classic() +
+  theme(legend.position = "none") +
+  # Adding dashed lines to put facets into perspective
+  geom_hline(yintercept = 100000, linetype = "dashed") +
+  geom_hline(yintercept = -100000, linetype = "dashed") +
+  # Faceting the plot for each game
+  facet_wrap(~gamename, scales = "free") +
+  labs(
+    title = "Gains/Losses in average number of players online for three games",
+    subtitle = "Dashed lines added at +/-100,000 players for each game",
+    x = "Time",
+    y = "Gains/Losses in average number of players"
+  )
+```
+
+## Discussion
+
+The two plots in this post illustrate peak number of players online, average
+number of players online, and changes in that average for three games. Of these
+games, PLAYERUNKNOWN'S BATTLEGROUNDS (PUBG) has the highest values for peak and
+average players by far. However, these high points were not sustained, with
+dramatic losses in average number of players per month in 2018. By contrast,
+Dota 2 has maintained a relatively steady player base, without dramatic gains or
+losses. Counter-Strike: Global Offensive's spike in popularity around April 2020
+coincides with the introduction of lockdown measures.
