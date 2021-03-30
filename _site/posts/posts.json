@@ -52,7 +52,7 @@
   },
   {
     "path": "posts/welcome/",
-    "title": "Welcome to TidyTuesday",
+    "title": "Welcome",
     "description": "Welcome to my TidyTuesday blog. This site features graphs and analysis\nof various data sets from the R for Data Science (R4DS) #TidyTuesday project.",
     "author": [
       {
@@ -64,7 +64,7 @@
     "categories": [],
     "contents": "\n\n\n\n",
     "preview": {},
-    "last_modified": "2021-03-29T23:33:57+01:00",
+    "last_modified": "2021-03-30T21:24:28+01:00",
     "input_file": {}
   }
 ]

@@ -1,5 +1,5 @@
 name: "TidyTuesday"
-title: "TidyTuesday"
+title: "TidyTuesday.netlify.app"
 description: |
   Visualisations of R4DS #TidyTuesday data
 theme: theme.css

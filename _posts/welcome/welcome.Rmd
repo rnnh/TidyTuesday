@@ -1,5 +1,5 @@
 ---
-title: "Welcome to TidyTuesday"
+title: "Welcome"
 description: |
   Welcome to my TidyTuesday blog. This site features graphs and analysis
   of various data sets from the R for Data Science (R4DS) #TidyTuesday project.

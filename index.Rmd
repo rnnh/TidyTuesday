@@ -1,5 +1,5 @@
 ---
-title: "TidyTuesday"
+title: "Ronan's #TidyTuesday blog"
 site: distill::distill_website
 listing: posts
 ---
