@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:distill="https://distill.pub/journal/" version="2.0">
+  <channel>
+    <title>TidyTuesday.netlify.app</title>
+    <link>https://tidytuesday.netlify.app/</link>
+    <atom:link href="https://tidytuesday.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Ronan's #TidyTuesday blog. Visualisations and analysis of various data sets
+created by the R for Data Science (R4DS) community
+</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Wed, 07 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Plotting deforestation and its causes</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation</link>
+      <description>Graphs and analysis using the #TidyTuesday data set for week 15 of 2021
+  (6/4/2021): "Global deforestation"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation</guid>
+      <pubDate>Wed, 07 Apr 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/global-deforestation_files/figure-html5/figure2-1.png" medium="image" type="image/png" width="2304" height="1536"/>
+    </item>
+    <item>
+      <title>Plotting foundations according to shade</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades</link>
+      <description>Graphs and analysis using the #TidyTuesday data set for week 14 of 2021
+  (30/3/2021): "Makeup Shades"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades</guid>
+      <pubDate>Tue, 06 Apr 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades/makeup-shades_files/figure-html5/figure1-1.png" medium="image" type="image/png" width="1536" height="1536"/>
+    </item>
+    <item>
+      <title>UN Votes: Plotting votes on United Nations resolutions</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-03-30-un-votes</link>
+      <description>Graphs and analysis using the #TidyTuesday data set for week 13 of 2021
+  (23/3/2021): "UN Votes"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-03-30-un-votes</guid>
+      <pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-03-30-un-votes/un-votes_files/figure-html5/figure2-1.png" medium="image" type="image/png" width="1536" height="960"/>
+    </item>
+    <item>
+      <title>Video Games and Sliced</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-03-23-video-games-and-sliced</link>
+      <description>Graphs and analysis using the #TidyTuesday data set for week 12 of 2021
+  (16/3/2021): "Video Games and Sliced"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-03-23-video-games-and-sliced</guid>
+      <pubDate>Tue, 23 Mar 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-03-23-video-games-and-sliced/../../images/video-games-and-sliced-1.png" medium="image" type="image/png" width="1950" height="1199"/>
+    </item>
+    <item>
+      <title>Bechdel Test</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test</link>
+      <description>Graphs using the #TidyTuesday data set for week 11 of 2021 (9/3/2021):
+"Bechdel Test"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test</guid>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test/../../images/bechdel-test-1.gif" medium="image" type="image/gif"/>
+    </item>
+    <item>
+      <title>Welcome</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/welcome</link>
+      <description>Welcome to my TidyTuesday blog. This site features graphs and analysis
+of various data sets from the R for Data Science (R4DS) #TidyTuesday project.</description>
+      <guid>https://tidytuesday.netlify.app/posts/welcome</guid>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

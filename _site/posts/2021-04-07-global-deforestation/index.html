@@ -89,6 +89,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <meta property="description" itemprop="description" content="Graphs and analysis using the #TidyTuesday data set for week 15 of 2021&#10;  (6/4/2021): &quot;Global deforestation&quot;"/>
 
+<link rel="canonical" href="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/"/>
 
 <!--  https://schema.org/Article -->
 <meta property="article:published" itemprop="datePublished" content="2021-04-07"/>
@@ -99,19 +100,33 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <meta property="og:title" content="TidyTuesday.netlify.app: Plotting deforestation and its causes"/>
 <meta property="og:type" content="article"/>
 <meta property="og:description" content="Graphs and analysis using the #TidyTuesday data set for week 15 of 2021&#10;  (6/4/2021): &quot;Global deforestation&quot;"/>
+<meta property="og:url" content="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/"/>
+<meta property="og:image" content="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/global-deforestation_files/figure-html5/figure2-1.png"/>
+<meta property="og:image:width" content="2304"/>
+<meta property="og:image:height" content="1536"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:site_name" content="TidyTuesday.netlify.app"/>
 
 <!--  https://dev.twitter.com/cards/types/summary -->
-<meta property="twitter:card" content="summary"/>
+<meta property="twitter:card" content="summary_large_image"/>
 <meta property="twitter:title" content="TidyTuesday.netlify.app: Plotting deforestation and its causes"/>
 <meta property="twitter:description" content="Graphs and analysis using the #TidyTuesday data set for week 15 of 2021&#10;  (6/4/2021): &quot;Global deforestation&quot;"/>
+<meta property="twitter:url" content="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/"/>
+<meta property="twitter:image" content="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/global-deforestation_files/figure-html5/figure2-1.png"/>
+<meta property="twitter:image:width" content="2304"/>
+<meta property="twitter:image:height" content="1536"/>
 
+<!--  https://scholar.google.com/intl/en/scholar/inclusion.html#indexing -->
+<meta name="citation_title" content="TidyTuesday.netlify.app: Plotting deforestation and its causes"/>
+<meta name="citation_fulltext_html_url" content="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/"/>
+<meta name="citation_online_date" content="2021/04/07"/>
+<meta name="citation_publication_date" content="2021/04/07"/>
+<meta name="citation_author" content="Ronan Harrington"/>
 <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
 <script type="text/json" id="radix-rmarkdown-metadata">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","repository_url","preview","output"]}},"value":[{"type":"character","attributes":{},"value":["Plotting deforestation and its causes"]},{"type":"character","attributes":{},"value":["Graphs and analysis using the #TidyTuesday data set for week 15 of 2021\n  (6/4/2021): \"Global deforestation\""]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["04-07-2021"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/TidyTuesday/"]},{"type":"character","attributes":{},"value":["global-deforestation_files/figure-html5/figure2-1.png"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","repository_url","preview","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["Plotting deforestation and its causes"]},{"type":"character","attributes":{},"value":["Graphs and analysis using the #TidyTuesday data set for week 15 of 2021\n  (6/4/2021): \"Global deforestation\""]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["04-07-2021"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/TidyTuesday/"]},{"type":"character","attributes":{},"value":["global-deforestation_files/figure-html5/figure2-1.png"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/"]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/"]}]}
 </script>
 <!--/radix_placeholder_rmarkdown_metadata-->
   
@@ -2419,6 +2434,12 @@ d-appendix d-footnote-list a.footnote-backlink {
 <div class="nav-right">
 <a href="../../index.html">Home</a>
 <a href="../../about.html">About</a>
+<a href="https://github.com/rnnh/TidyTuesday/">
+<i class="fa fa-github" aria-hidden="true"></i>
+</a>
+<a href="../../index.xml">
+<i class="fa fa-rss" aria-hidden="true"></i>
+</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -2640,6 +2661,19 @@ Show code
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
+<div class="article-footer">
+  <p class="social_footer">
+    <span class="article-sharing">
+      Share: &nbsp;
+      <a href="https://twitter.com/share?text=Plotting%20deforestation%20and%20its%20causes&amp;url=https%3A%2F%2Ftidytuesday.netlify.app%2Fposts%2F2021-04-07-global-deforestation%2F">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftidytuesday.netlify.app%2Fposts%2F2021-04-07-global-deforestation%2F&amp;title=Plotting%20deforestation%20and%20its%20causes">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </span>
+  </p>
+</div>
 <!--/radix_placeholder_article_footer-->
 </div>
 
@@ -2653,6 +2687,16 @@ Show code
 <div class="appendix-bottom">
   <h3 id="updates-and-corrections">Corrections</h3>
   <p>If you see mistakes or want to suggest changes, please <a href="https://github.com/rnnh/TidyTuesday/issues/new">create an issue</a> on the source repository.</p>
+  <h3 id="citation">Citation</h3>
+  <p>For attribution, please cite this work as</p>
+  <pre class="citation-appendix short">Harrington (2021, April 7). TidyTuesday.netlify.app: Plotting deforestation and its causes. Retrieved from https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/</pre>
+  <p>BibTeX citation</p>
+  <pre class="citation-appendix long">@misc{harrington2021plotting,
+  author = {Harrington, Ronan},
+  title = {TidyTuesday.netlify.app: Plotting deforestation and its causes},
+  url = {https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/},
+  year = {2021}
+}</pre>
 </div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->

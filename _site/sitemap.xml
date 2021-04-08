@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
+  <url>
+    <loc>https://tidytuesday.netlify.app/about.html</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://tidytuesday.netlify.app/</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades/</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://tidytuesday.netlify.app/posts/2021-03-30-un-votes/</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://tidytuesday.netlify.app/posts/2021-03-23-video-games-and-sliced/</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test/</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+  <url>
+    <loc>https://tidytuesday.netlify.app/posts/welcome/</loc>
+    <lastmod>2021-04-08T21:50:11+01:00</lastmod>
+  </url>
+</urlset>
