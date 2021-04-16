@@ -8,7 +8,17 @@
 created by the R for Data Science (R4DS) community
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 07 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 16 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Post offices in the USA from 1772 to 2000</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices</link>
+      <description>Graphs and analysis using the #TidyTuesday data set for week 16 of 2021
+  (13/4/2021): "US post offices"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices</guid>
+      <pubDate>Fri, 16 Apr 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure1-1.gif" medium="image" type="image/gif"/>
+    </item>
     <item>
       <title>Plotting deforestation and its causes</title>
       <dc:creator>Ronan Harrington</dc:creator>
