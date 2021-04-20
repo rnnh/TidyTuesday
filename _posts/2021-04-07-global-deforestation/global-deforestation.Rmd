@@ -8,7 +8,7 @@ author:
     url: https://github.com/rnnh/
 date: 04-07-2021
 repository_url: https://github.com/rnnh/TidyTuesday/
-preview: global-deforestation_files/figure-html5/figure2-1.png
+preview: global-deforestation_files/figure-html5/figure1-1.png
 output:
   distill::distill_article:
     self_contained: false
@@ -70,7 +70,7 @@ levels(tidy_brazil$cause) <- c("Commercial crops",
                                "Roads",
                                "Logging for lumber",
                                "Small scale clearing",
-                               "Tree plantations (including palm)")
+                               "Tree plantations")
 
 # Printing the start of the tidied version of tt$brazil_loss
 tidy_brazil
