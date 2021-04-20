@@ -8,7 +8,7 @@ author:
     url: https://github.com/rnnh/
 date: 04-16-2021
 repository_url: https://github.com/rnnh/TidyTuesday/
-preview: us-post-offices_files/figure-html5/figure1-1.gif
+preview: us-post-offices_files/figure-html5/figure2-1.png
 output:
   distill::distill_article:
     self_contained: false
@@ -67,7 +67,7 @@ p <- ggplot(usa_shapefile) +
              data = post_office_est) +
   scale_fill_continuous(type = "gradient") +
   transition_time(established, range = c(1772L, 2000L)) +
-  ease_aes("cubic-in-out") +
+  ease_aes("linear") +
   theme_void() +
   theme(legend.position = "none") +
   labs(title = "Post offices established each year in the US",
