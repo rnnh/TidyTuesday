@@ -8,7 +8,17 @@
 created by the R for Data Science (R4DS) community
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Fri, 16 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 21 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Films with MPA ratings on Netflix</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles</link>
+      <description>Graphs and analysis using the #TidyTuesday data set for week 17 of 2021
+  (20/4/2021): "Netflix Titles"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles</guid>
+      <pubDate>Wed, 21 Apr 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles/netflix-titles_files/figure-html5/figure1-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Post offices in the USA from 1772 to 2000</title>
       <dc:creator>Ronan Harrington</dc:creator>
