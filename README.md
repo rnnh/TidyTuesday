@@ -8,7 +8,7 @@ by [Ronan Harrington](https://github.com/rnnh/)
 Reproducible visualisation and analysis of [#TidyTuesday data sets](https://github.com/rfordatascience/tidytuesday), created using [distill for R Markdown](https://github.com/rstudio/distill).
 These data sets are provided by the [R for Data Science (R4DS)](https://github.com/rfordatascience) community.
 This blog can be viewed locally by downloading this GitHub repository and opening [the index page](_site/index.html) in a web browser.
-It is also available at [`tidytuesday.netlify.app`](https://tidytuesday.netlify.app/). 
+It is also available at **<https://tidytuesday.netlify.app/>**. 
 
 ## Posts
 
