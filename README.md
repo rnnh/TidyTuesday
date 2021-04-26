@@ -12,7 +12,7 @@ It is also available at **<https://tidytuesday.netlify.app/>**.
 
 ## Posts
 
-| Year | Week | Data Set | Blog post | Rmarkdown source | Preview plot |
+| Year | Week | Data Set | Blog post | R Markdown source | Preview plot |
 | ---- | ---- | -------- | --------- | ---------------- | ------------ |
 | 2021 | 17   | [Netflix Titles](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-04-20/readme.md) | [2021-04-21-netflix-titles](https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles/) | [netflix-titles.Rmd](_posts/2021-04-21-netflix-titles/netflix-titles.Rmd) | ![netflix titles plot](_posts/2021-04-21-netflix-titles/netflix-titles_files/figure-html5/figure1-1.png) |
 | 2021 | 16   | [US Post Offices](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-04-13/readme.md) | [2021-04-16-us-post-offices](https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/) | [us-post-offices.Rmd](_posts/2021-04-16-us-post-offices/us-post-offices.Rmd) | ![us post offices plot](_posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure2-1.png) |
