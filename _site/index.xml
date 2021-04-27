@@ -8,7 +8,17 @@
 created by the R for Data Science (R4DS) community
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 21 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 27 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Predicting voluntary CEO departures using machine learning</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-04-27-ceo-departures</link>
+      <description>Graphs and analysis using the #TidyTuesday data set for week 18 of 2021
+  (27/4/2021): "CEO Departures"</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-04-27-ceo-departures</guid>
+      <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-04-27-ceo-departures/ceo-departures_files/figure-html5/fig2-1.png" medium="image" type="image/png" width="1536" height="960"/>
+    </item>
     <item>
       <title>Films with MPA ratings on Netflix</title>
       <dc:creator>Ronan Harrington</dc:creator>

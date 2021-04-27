@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
   <meta name="generator" content="distill" />
-  <link rel="alternate" type="application/rss+xml" href="https://tidytuesday.netlify.app/index.xml" />
 
   <style type="text/css">
   /* Hide doc at startup (prevent jankiness while JS renders/transforms) */
@@ -86,635 +85,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-  <title>TidyTuesday.netlify.app: Ronan's #TidyTuesday blog</title>
+  <title>Predicting voluntary CEO departures using machine learning</title>
+
+  <meta property="description" itemprop="description" content="Graphs and analysis using the #TidyTuesday data set for week 18 of 2021&#10;  (27/4/2021): &quot;CEO Departures&quot;"/>
 
 
-
+  <!--  https://schema.org/Article -->
+  <meta property="article:published" itemprop="datePublished" content="2021-04-27"/>
+  <meta property="article:created" itemprop="dateCreated" content="2021-04-27"/>
+  <meta name="article:author" content="Ronan Harrington"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="TidyTuesday.netlify.app: Ronan&#39;s #TidyTuesday blog"/>
+  <meta property="og:title" content="Predicting voluntary CEO departures using machine learning"/>
   <meta property="og:type" content="article"/>
+  <meta property="og:description" content="Graphs and analysis using the #TidyTuesday data set for week 18 of 2021&#10;  (27/4/2021): &quot;CEO Departures&quot;"/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="TidyTuesday.netlify.app"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="TidyTuesday.netlify.app: Ronan&#39;s #TidyTuesday blog"/>
+  <meta property="twitter:title" content="Predicting voluntary CEO departures using machine learning"/>
+  <meta property="twitter:description" content="Graphs and analysis using the #TidyTuesday data set for week 18 of 2021&#10;  (27/4/2021): &quot;CEO Departures&quot;"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","site","listing"]}},"value":[{"type":"character","attributes":{},"value":["Ronan's #TidyTuesday blog"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["posts"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","repository_url","preview","output"]}},"value":[{"type":"character","attributes":{},"value":["Predicting voluntary CEO departures using machine learning"]},{"type":"character","attributes":{},"value":["Graphs and analysis using the #TidyTuesday data set for week 18 of 2021\n  (27/4/2021): \"CEO Departures\"\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["04-27-2021"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/TidyTuesday/"]},{"type":"character","attributes":{},"value":["ceo-departures_files/figure-html5/fig2-1.png"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
+  
+  <script type="text/json" id="radix-resource-manifest">
+  {"type":"character","attributes":{},"value":["ceo-departures_files/anchor-4.2.2/anchor.min.js","ceo-departures_files/bowser-1.9.3/bowser.min.js","ceo-departures_files/distill-2.2.21/template.v2.js","ceo-departures_files/figure-html5/fig1-1.png","ceo-departures_files/figure-html5/fig2-1.png","ceo-departures_files/header-attrs-2.7/header-attrs.js","ceo-departures_files/jquery-1.11.3/jquery.min.js","ceo-departures_files/popper-2.6.0/popper.min.js","ceo-departures_files/tippy-6.2.7/tippy-bundle.umd.min.js","ceo-departures_files/tippy-6.2.7/tippy-light-border.css","ceo-departures_files/tippy-6.2.7/tippy.css","ceo-departures_files/tippy-6.2.7/tippy.umd.min.js","ceo-departures_files/webcomponents-2.0.0/webcomponents.js"]}
+  </script>
   <!--radix_placeholder_navigation_in_header-->
-  <meta name="distill:offset" content=""/>
-
-  <script type="application/javascript">
-
-    window.headroom_prevent_pin = false;
-
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-
-      // initialize headroom for banner
-      var header = $('header').get(0);
-      var headerHeight = header.offsetHeight;
-      var headroom = new Headroom(header, {
-        tolerance: 5,
-        onPin : function() {
-          if (window.headroom_prevent_pin) {
-            window.headroom_prevent_pin = false;
-            headroom.unpin();
-          }
-        }
-      });
-      headroom.init();
-      if(window.location.hash)
-        headroom.unpin();
-      $(header).addClass('headroom--transition');
-
-      // offset scroll location for banner on hash change
-      // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
-      window.addEventListener("hashchange", function(event) {
-        window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
-      });
-
-      // responsive menu
-      $('.distill-site-header').each(function(i, val) {
-        var topnav = $(this);
-        var toggle = topnav.find('.nav-toggle');
-        toggle.on('click', function() {
-          topnav.toggleClass('responsive');
-        });
-      });
-
-      // nav dropdowns
-      $('.nav-dropbtn').click(function(e) {
-        $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
-        $(this).parent().siblings('.nav-dropdown')
-           .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $("body").click(function(e){
-        $('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $(".nav-dropdown").click(function(e){
-        e.stopPropagation();
-      });
-    });
-  </script>
-
-  <style type="text/css">
-
-  /* Theme (user-documented overrideables for nav appearance) */
-
-  .distill-site-nav {
-    color: rgba(255, 255, 255, 0.8);
-    background-color: #0F2E3D;
-    font-size: 15px;
-    font-weight: 300;
-  }
-
-  .distill-site-nav a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .distill-site-nav a:hover {
-    color: white;
-  }
-
-  @media print {
-    .distill-site-nav {
-      display: none;
-    }
-  }
-
-  .distill-site-header {
-
-  }
-
-  .distill-site-footer {
-
-  }
-
-
-  /* Site Header */
-
-  .distill-site-header {
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 3;
-  }
-
-  .distill-site-header .nav-left {
-    display: inline-block;
-    margin-left: 8px;
-  }
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header .nav-left {
-      margin-left: 0;
-    }
-  }
-
-
-  .distill-site-header .nav-right {
-    float: right;
-    margin-right: 8px;
-  }
-
-  .distill-site-header a,
-  .distill-site-header .title {
-    display: inline-block;
-    text-align: center;
-    padding: 14px 10px 14px 10px;
-  }
-
-  .distill-site-header .title {
-    font-size: 18px;
-    min-width: 150px;
-  }
-
-  .distill-site-header .logo {
-    padding: 0;
-  }
-
-  .distill-site-header .logo img {
-    display: none;
-    max-height: 20px;
-    width: auto;
-    margin-bottom: -4px;
-  }
-
-  .distill-site-header .nav-image img {
-    max-height: 18px;
-    width: auto;
-    display: inline-block;
-    margin-bottom: -3px;
-  }
-
-
-
-  @media screen and (min-width: 1000px) {
-    .distill-site-header .logo img {
-      display: inline-block;
-    }
-    .distill-site-header .nav-left {
-      margin-left: 20px;
-    }
-    .distill-site-header .nav-right {
-      margin-right: 20px;
-    }
-    .distill-site-header .title {
-      padding-left: 12px;
-    }
-  }
-
-
-  .distill-site-header .nav-toggle {
-    display: none;
-  }
-
-  .nav-dropdown {
-    display: inline-block;
-    position: relative;
-  }
-
-  .nav-dropdown .nav-dropbtn {
-    border: none;
-    outline: none;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 16px 10px;
-    background-color: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    margin: 0;
-    margin-top: 1px;
-    z-index: 2;
-  }
-
-  .nav-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    min-width: 200px;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 4px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-    z-index: 1;
-    margin-top: 2px;
-    white-space: nowrap;
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-
-  .nav-dropdown-content hr {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .nav-dropdown-active {
-    display: block;
-  }
-
-  .nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
-    color: black;
-    padding: 6px 24px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-
-  .nav-dropdown-content .nav-dropdown-header {
-    display: block;
-    padding: 5px 24px;
-    padding-bottom: 0;
-    text-transform: uppercase;
-    font-size: 14px;
-    color: #999999;
-    white-space: nowrap;
-  }
-
-  .nav-dropdown:hover .nav-dropbtn {
-    color: white;
-  }
-
-  .nav-dropdown-content a:hover {
-    background-color: #ddd;
-    color: black;
-  }
-
-  .nav-right .nav-dropdown-content {
-    margin-left: -45%;
-    right: 0;
-  }
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header a, .distill-site-header .nav-dropdown  {display: none;}
-    .distill-site-header a.nav-toggle {
-      float: right;
-      display: block;
-    }
-    .distill-site-header .title {
-      margin-left: 0;
-    }
-    .distill-site-header .nav-right {
-      margin-right: 0;
-    }
-    .distill-site-header {
-      overflow: hidden;
-    }
-    .nav-right .nav-dropdown-content {
-      margin-left: 0;
-    }
-  }
-
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header.responsive {position: relative; min-height: 500px; }
-    .distill-site-header.responsive a.nav-toggle {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .distill-site-header.responsive a,
-    .distill-site-header.responsive .nav-dropdown {
-      display: block;
-      text-align: left;
-    }
-    .distill-site-header.responsive .nav-left,
-    .distill-site-header.responsive .nav-right {
-      width: 100%;
-    }
-    .distill-site-header.responsive .nav-dropdown {float: none;}
-    .distill-site-header.responsive .nav-dropdown-content {position: relative;}
-    .distill-site-header.responsive .nav-dropdown .nav-dropbtn {
-      display: block;
-      width: 100%;
-      text-align: left;
-    }
-  }
-
-  /* Site Footer */
-
-  .distill-site-footer {
-    width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 3;
-    margin-top: 30px;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    text-align: center;
-  }
-
-  /* Headroom */
-
-  d-title {
-    padding-top: 6rem;
-  }
-
-  @media print {
-    d-title {
-      padding-top: 4rem;
-    }
-  }
-
-  .headroom {
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-
-  .headroom--transition {
-    transition: all .4s ease-in-out;
-  }
-
-  .headroom--unpinned {
-    top: -100px;
-  }
-
-  .headroom--pinned {
-    top: 0;
-  }
-
-  /* adjust viewport for navbar height */
-  /* helps vertically center bootstrap (non-distill) content */
-  .min-vh-100 {
-    min-height: calc(100vh - 100px) !important;
-  }
-
-  </style>
-
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
-  <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
-  <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
-  <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
-
-  <script type="application/javascript">
-
-  function getMeta(metaName) {
-    var metas = document.getElementsByTagName('meta');
-    for (let i = 0; i < metas.length; i++) {
-      if (metas[i].getAttribute('name') === metaName) {
-        return metas[i].getAttribute('content');
-      }
-    }
-    return '';
-  }
-
-  function offsetURL(url) {
-    var offset = getMeta('distill:offset');
-    return offset ? offset + '/' + url : url;
-  }
-
-  function createFuseIndex() {
-
-    // create fuse index
-    var options = {
-      keys: [
-        { name: 'title', weight: 20 },
-        { name: 'categories', weight: 15 },
-        { name: 'description', weight: 10 },
-        { name: 'contents', weight: 5 },
-      ],
-      ignoreLocation: true,
-      threshold: 0
-    };
-    var fuse = new window.Fuse([], options);
-
-    // fetch the main search.json
-    return fetch(offsetURL('search.json'))
-      .then(function(response) {
-        if (response.status == 200) {
-          return response.json().then(function(json) {
-            // index main articles
-            json.articles.forEach(function(article) {
-              fuse.add(article);
-            });
-            // download collections and index their articles
-            return Promise.all(json.collections.map(function(collection) {
-              return fetch(offsetURL(collection)).then(function(response) {
-                if (response.status === 200) {
-                  return response.json().then(function(articles) {
-                    articles.forEach(function(article) {
-                      fuse.add(article);
-                    });
-                  })
-                } else {
-                  return Promise.reject(
-                    new Error('Unexpected status from search index request: ' +
-                              response.status)
-                  );
-                }
-              });
-            })).then(function() {
-              return fuse;
-            });
-          });
-
-        } else {
-          return Promise.reject(
-            new Error('Unexpected status from search index request: ' +
-                        response.status)
-          );
-        }
-      });
-  }
-
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-
-    // get search element (bail if we don't have one)
-    var searchEl = window.document.getElementById('distill-search');
-    if (!searchEl)
-      return;
-
-    createFuseIndex()
-      .then(function(fuse) {
-
-        // make search box visible
-        searchEl.classList.remove('hidden');
-
-        // initialize autocomplete
-        var options = {
-          autoselect: true,
-          hint: false,
-          minLength: 2,
-        };
-        window.autocomplete(searchEl, options, [{
-          source: function(query, callback) {
-            const searchOptions = {
-              isCaseSensitive: false,
-              shouldSort: true,
-              minMatchCharLength: 2,
-              limit: 10,
-            };
-            var results = fuse.search(query, searchOptions);
-            callback(results
-              .map(function(result) { return result.item; })
-            );
-          },
-          templates: {
-            suggestion: function(suggestion) {
-              var img = suggestion.preview && Object.keys(suggestion.preview).length > 0
-                ? `<img src="${offsetURL(suggestion.preview)}"</img>`
-                : '';
-              var html = `
-                <div class="search-item">
-                  <h3>${suggestion.title}</h3>
-                  <div class="search-item-description">
-                    ${suggestion.description || ''}
-                  </div>
-                  <div class="search-item-preview">
-                    ${img}
-                  </div>
-                </div>
-              `;
-              return html;
-            }
-          }
-        }]).on('autocomplete:selected', function(event, suggestion) {
-          window.location.href = offsetURL(suggestion.path);
-        });
-        // remove inline display style on autocompleter (we want to
-        // manage responsive display via css)
-        $('.algolia-autocomplete').css("display", "");
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-
-  });
-
-  </script>
-
-  <style type="text/css">
-
-  .nav-search {
-    font-size: x-small;
-  }
-
-  /* Algolioa Autocomplete */
-
-  .algolia-autocomplete {
-    display: inline-block;
-    margin-left: 10px;
-    vertical-align: sub;
-    background-color: white;
-    color: black;
-    padding: 6px;
-    padding-top: 8px;
-    padding-bottom: 0;
-    border-radius: 6px;
-    border: 1px #0F2E3D solid;
-    width: 180px;
-  }
-
-
-  @media screen and (max-width: 768px) {
-    .distill-site-nav .algolia-autocomplete {
-      display: none;
-      visibility: hidden;
-    }
-    .distill-site-nav.responsive .algolia-autocomplete {
-      display: inline-block;
-      visibility: visible;
-    }
-    .distill-site-nav.responsive .algolia-autocomplete .aa-dropdown-menu {
-      margin-left: 0;
-      width: 400px;
-      max-height: 400px;
-    }
-  }
-
-  .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
-    width: 90%;
-    outline: none;
-    border: none;
-  }
-
-  .algolia-autocomplete .aa-hint {
-    color: #999;
-  }
-  .algolia-autocomplete .aa-dropdown-menu {
-    width: 550px;
-    max-height: 70vh;
-    overflow-x: visible;
-    overflow-y: scroll;
-    padding: 5px;
-    margin-top: 3px;
-    margin-left: -150px;
-    background-color: #fff;
-    border-radius: 5px;
-    border: 1px solid #999;
-    border-top: none;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
-    cursor: pointer;
-    padding: 5px 4px;
-    border-bottom: 1px solid #eee;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
-    border-bottom: none;
-    margin-bottom: 2px;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
-    overflow: hidden;
-    font-size: 0.8em;
-    line-height: 1.4em;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
-    font-size: 1rem;
-    margin-block-start: 0;
-    margin-block-end: 5px;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
-    display: inline-block;
-    overflow: hidden;
-    height: 2.8em;
-    width: 80%;
-    margin-right: 4%;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
-    display: inline-block;
-    width: 15%;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
-    height: 3em;
-    width: auto;
-    display: none;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
-    display: initial;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
-    background-color: #eee;
-  }
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
-    font-weight: bold;
-    font-style: normal;
-  }
-
-  </style>
-
-
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
 
@@ -2029,712 +1432,404 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   </script>
 
-  <style type="text/css">
-  /* base variables */
-
-  /* Edit the CSS properties in this file to create a custom
-     Distill theme. Only edit values in the right column
-     for each row; values shown are the CSS defaults.
-     To return any property to the default,
-     you may set its value to: unset
-     All rows must end with a semi-colon.                      */
-
-  /* Optional: embed custom fonts here with `@import`          */
-  /* This must remain at the top of this file.                 */
-
-
-
-  html {
-    /*-- Main font sizes --*/
-    --title-size:      50px;
-    --body-size:       1.06rem;
-    --code-size:       14px;
-    --aside-size:      12px;
-    --fig-cap-size:    13px;
-    /*-- Main font colors --*/
-    --title-color:     #000000;
-    --header-color:    rgba(0, 0, 0, 0.8);
-    --body-color:      rgba(0, 0, 0, 0.8);
-    --aside-color:     rgba(0, 0, 0, 0.6);
-    --fig-cap-color:   rgba(0, 0, 0, 0.6);
-    /*-- Specify custom fonts ~~~ must be imported above   --*/
-    --heading-font:    sans-serif;
-    --mono-font:       monospace;
-    --body-font:       sans-serif;
-    --navbar-font:     sans-serif;  /* websites + blogs only */
-  }
-
-  /*-- ARTICLE METADATA --*/
-  d-byline {
-    --heading-size:    0.6rem;
-    --heading-color:   rgba(0, 0, 0, 0.5);
-    --body-size:       0.8rem;
-    --body-color:      rgba(0, 0, 0, 0.8);
-  }
-
-  /*-- ARTICLE TABLE OF CONTENTS --*/
-  .d-contents {
-    --heading-size:    18px;
-    --contents-size:   13px;
-  }
-
-  /*-- ARTICLE APPENDIX --*/
-  d-appendix {
-    --heading-size:    15px;
-    --heading-color:   rgba(0, 0, 0, 0.65);
-    --text-size:       0.8em;
-    --text-color:      rgba(0, 0, 0, 0.5);
-  }
-
-  /*-- WEBSITE HEADER + FOOTER --*/
-  /* These properties only apply to Distill sites and blogs  */
-
-  .distill-site-header {
-    --title-size:       18px;
-    --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
-  }
-
-  .distill-site-footer {
-    --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
-  }
-
-  /*-- Additional custom styles --*/
-  /* Add any additional CSS rules below                      */
-  </style>
-  <style type="text/css">
-  /* base variables */
-
-  /* Edit the CSS properties in this file to create a custom
-     Distill theme. Only edit values in the right column
-     for each row; values shown are the CSS defaults.
-     To return any property to the default,
-     you may set its value to: unset
-     All rows must end with a semi-colon.                      */
-
-  /* Optional: embed custom fonts here with `@import`          */
-  /* This must remain at the top of this file.                 */
-
-  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono');
-
-  @import url('https://fonts.googleapis.com/css2?family=Newsreader');
-
-  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text');
-
-  html {
-    /*-- Main font sizes --*/
-    --title-size:      50px;
-    --body-size:       1.06rem;
-    --code-size:       14px;
-    --aside-size:      12px;
-    --fig-cap-size:    13px;
-    /*-- Main font colors --*/
-    --title-color:     #000000;
-    --header-color:    rgba(0, 0, 0, 0.8);
-    --body-color:      rgba(0, 0, 0, 0.8);
-    --aside-color:     rgba(0, 0, 0, 0.6);
-    --fig-cap-color:   rgba(0, 0, 0, 0.6);
-    /*-- Specify custom fonts ~~~ must be imported above   --*/
-    --heading-font:    'Newsreader', serif;
-    --mono-font:       'Roboto Mono', monospace;
-    --body-font:       'Crimson Text', sans-serif;
-    --navbar-font:     'Newsreader', serif;  /* websites + blogs only */
-  }
-
-  /*-- ARTICLE METADATA --*/
-  d-byline {
-    --heading-size:    0.6rem;
-    --heading-color:   rgba(0, 0, 0, 0.5);
-    --body-size:       0.8rem;
-    --body-color:      rgba(0, 0, 0, 0.8);
-  }
-
-  /*-- ARTICLE TABLE OF CONTENTS --*/
-  .d-contents {
-    --heading-size:    18px;
-    --contents-size:   13px;
-  }
-
-  /*-- ARTICLE APPENDIX --*/
-  d-appendix {
-    --heading-size:    15px;
-    --heading-color:   rgba(0, 0, 0, 0.65);
-    --text-size:       0.8em;
-    --text-color:      rgba(0, 0, 0, 0.5);
-  }
-
-  /*-- WEBSITE HEADER + FOOTER --*/
-  /* These properties only apply to Distill sites and blogs  */
-
-  .distill-site-header {
-    --title-size:       18px;
-    --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
-  }
-
-  .distill-site-footer {
-    --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
-  }
-
-  /*-- Additional custom styles --*/
-  /* Add any additional CSS rules below                      */
-  </style>
-  <style type="text/css">
-  /* base style */
-
-  /* FONT FAMILIES */
-
-  :root {
-    --heading-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-    --mono-default: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    --body-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-  }
-
-  body,
-  .posts-list .post-preview p,
-  .posts-list .description p {
-    font-family: var(--body-font), var(--body-default);
-  }
-
-  h1, h2, h3, h4, h5, h6,
-  .posts-list .post-preview h2,
-  .posts-list .description h2 {
-    font-family: var(--heading-font), var(--heading-default);
-  }
-
-  d-article div.sourceCode code,
-  d-article pre code {
-    font-family: var(--mono-font), var(--mono-default);
-  }
-
-
-  /*-- TITLE --*/
-  d-title h1,
-  .posts-list > h1 {
-    color: var(--title-color, black);
-  }
-
-  d-title h1 {
-    font-size: var(--title-size, 50px);
-  }
-
-  /*-- HEADERS --*/
-  d-article h1,
-  d-article h2,
-  d-article h3,
-  d-article h4,
-  d-article h5,
-  d-article h6 {
-    color: var(--header-color, rgba(0, 0, 0, 0.8));
-  }
-
-  /*-- BODY --*/
-  d-article > p,  /* only text inside of <p> tags */
-  d-article > ul, /* lists */
-  d-article > ol {
-    color: var(--body-color, rgba(0, 0, 0, 0.8));
-    font-size: var(--body-size, 1.06rem);
-  }
-
-
-  /*-- CODE --*/
-  d-article div.sourceCode code,
-  d-article pre code {
-    font-size: var(--code-size, 14px);
-  }
-
-  /*-- ASIDE --*/
-  d-article aside {
-    font-size: var(--aside-size, 12px);
-    color: var(--aside-color, rgba(0, 0, 0, 0.6));
-  }
-
-  /*-- FIGURE CAPTIONS --*/
-  figure .caption,
-  figure figcaption,
-  .figure .caption {
-    font-size: var(--fig-cap-size, 13px);
-    color: var(--fig-cap-color, rgba(0, 0, 0, 0.6));
-  }
-
-  /*-- METADATA --*/
-  d-byline h3 {
-    font-size: var(--heading-size, 0.6rem);
-    color: var(--heading-color, rgba(0, 0, 0, 0.5));
-  }
-
-  d-byline {
-    font-size: var(--body-size, 0.8rem);
-    color: var(--body-color, rgba(0, 0, 0, 0.8));
-  }
-
-  d-byline a,
-  d-article d-byline a {
-    color: var(--body-color, rgba(0, 0, 0, 0.8));
-  }
-
-  /*-- TABLE OF CONTENTS --*/
-  .d-contents nav h3 {
-    font-size: var(--heading-size, 18px);
-  }
-
-  .d-contents nav a {
-    font-size: var(--contents-size, 13px);
-  }
-
-  /*-- APPENDIX --*/
-  d-appendix h3 {
-    font-size: var(--heading-size, 15px);
-    color: var(--heading-color, rgba(0, 0, 0, 0.65));
-  }
-
-  d-appendix {
-    font-size: var(--text-size, 0.8em);
-    color: var(--text-color, rgba(0, 0, 0, 0.5));
-  }
-
-  d-appendix d-footnote-list a.footnote-backlink {
-    color: var(--text-color, rgba(0, 0, 0, 0.5));
-  }
-
-  /*-- WEBSITE HEADER + FOOTER --*/
-  .distill-site-header .title {
-    font-size: var(--title-size, 18px);
-    font-family: var(--navbar-font), var(--heading-default);
-  }
-
-  .distill-site-header a,
-  .nav-dropdown .nav-dropbtn {
-    font-family: var(--navbar-font), var(--heading-default);
-  }
-
-  .nav-dropdown .nav-dropbtn {
-    color: var(--text-color, rgba(255, 255, 255, 0.8));
-    font-size: var(--text-size, 15px);
-  }
-
-  .distill-site-header a:hover,
-  .nav-dropdown:hover .nav-dropbtn {
-    color: var(--hover-color, white);
-  }
-
-  .distill-site-header {
-    font-size: var(--text-size, 15px);
-    color: var(--text-color, rgba(255, 255, 255, 0.8));
-    background-color: var(--bkgd-color, #0F2E3D);
-  }
-
-  .distill-site-footer {
-    font-size: var(--text-size, 15px);
-    color: var(--text-color, rgba(255, 255, 255, 0.8));
-    background-color: var(--bkgd-color, #0F2E3D);
-  }
-
-  .distill-site-footer a:hover {
-    color: var(--hover-color, white);
-  }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
-  <script src="site_libs/popper-2.6.0/popper.min.js"></script>
-  <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
-  <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
-  <script src="site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
-  <script src="site_libs/anchor-4.2.2/anchor.min.js"></script>
-  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
-  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
-  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
+  <script src="ceo-departures_files/header-attrs-2.7/header-attrs.js"></script>
+  <script src="ceo-departures_files/jquery-1.11.3/jquery.min.js"></script>
+  <script src="ceo-departures_files/popper-2.6.0/popper.min.js"></script>
+  <link href="ceo-departures_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="ceo-departures_files/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="ceo-departures_files/tippy-6.2.7/tippy.umd.min.js"></script>
+  <script src="ceo-departures_files/anchor-4.2.2/anchor.min.js"></script>
+  <script src="ceo-departures_files/bowser-1.9.3/bowser.min.js"></script>
+  <script src="ceo-departures_files/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="ceo-departures_files/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
-  ```
-   <script>
-     document.addEventListener("DOMContentLoaded", function () {
-       if (!/posts/.test(location.pathname)) {
-         return;
-       }
-
-       var script = document.createElement("script");
-       script.src = "https://utteranc.es/client.js";
-       script.setAttribute("repo", "rnnh/TidyTuesday");
-       script.setAttribute("issue-term", "title");
-       script.setAttribute("crossorigin", "anonymous");
-       script.setAttribute("label", "comments 💬");
-       script.setAttribute("theme", "github-light");
-
-       /* wait for article to load, append script to article element */
-       var observer = new MutationObserver(function (mutations, observer) {
-         var article = document.querySelector("d-article");
-         if (article) {
-           observer.disconnect();
-           /* HACK: article scroll */
-           article.setAttribute("style", "overflow-y: hidden");
-           article.appendChild(script);
-         }
-       });
-
-       observer.observe(document.body, { childList: true });
-     });
-   </script>
-   ```
   <!--/radix_placeholder_site_in_header-->
 
 
 </head>
 
-<body class="layout-listing">
+<body>
 
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Ronan's #TidyTuesday blog","authors":[]}
+{"title":"Predicting voluntary CEO departures using machine learning","description":"Graphs and analysis using the #TidyTuesday data set for week 18 of 2021\n  (27/4/2021): \"CEO Departures\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-27T00:00:00.000+00:00","citationText":"Harrington, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
 <!--radix_placeholder_navigation_before_body-->
-<header class="header header--fixed" role="banner">
-<nav class="distill-site-nav distill-site-header">
-<div class="nav-left">
-<a href="index.html" class="title">TidyTuesday.netlify.app</a>
-<input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
-</div>
-<div class="nav-right">
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="https://github.com/rnnh/TidyTuesday/">
-<i class="fa fa-github" aria-hidden="true"></i>
-</a>
-<a href="index.xml">
-<i class="fa fa-rss" aria-hidden="true"></i>
-</a>
-<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
-</div>
-</nav>
-</header>
 <!--/radix_placeholder_navigation_before_body-->
 <!--radix_placeholder_site_before_body-->
 <!--/radix_placeholder_site_before_body-->
-<!--radix_placeholder_article_listing-->
-
-
-<script type="application/javascript">
-
-function init_posts_list() {
-
-  function load_image(img) {
-    var src = $(img).attr('data-src');
-    if (src) {
-      $(img).attr('src', src);
-      $(img).load(function() {
-        img.removeAttribute('data-src');
-      });
-    }
-  }
-
-  function set_posts_visible(posts, visible) {
-    if (visible) {
-
-      // show bottom border by default
-      $(posts).removeClass('post-preview-last');
-
-      // apply limits if need be
-      var max_posts = 25;
-      var apply_limits = $('.posts-container').hasClass('posts-apply-limit');
-      if (apply_limits && posts.length > max_posts) {
-        posts = $(posts).slice(0, max_posts);
-      } else {
-        $('.posts-more a').addClass('hidden');
-      }
-
-      // apply last style
-      $(posts.slice(-1)[0]).addClass('post-preview-last');
-
-      $(posts).removeClass('hidden');
-      $(posts).find('img[data-src]').each(function(i, img) {
-        load_image(img);
-      });
-    } else {
-      $(posts).addClass('hidden');
-    }
-  }
-
-  function apply_hash_filter() {
-
-    // clear active state
-    $('.categories .active').removeClass('active');
-
-    // mark all posts invisible to start
-    set_posts_visible($('.posts-list').children('a'), false);
-
-    // if we have a hash filter
-    if (window.location.hash && window.location.hash.startsWith("#category:")) {
-
-      // mark posts that match the category visible
-      var page_category = window.location.hash.replace(/^#category:/, "");
-      var posts = $('.post-metadata').map(function(idx, script) {
-        var metadata = $.parseJSON($(script).html());
-        var post = null;
-        $.each(metadata.categories, function(idx, category) {
-          category = category.replace(/ /g,"_");
-          if ((page_category || '').toLowerCase() === "articles" || category === page_category) {
-            post = $(script).parent().get();
-            return false;
-          }
-        });
-        return post;
-      });
-      set_posts_visible(posts, true);
-
-      // mark the hash active
-      $('.categories li>a[href="' + window.location.hash + '"]').addClass('active');
-
-      // update the list_caption
-      var list_caption = $('.posts-list-caption');
-      var caption = (page_category || '').toLowerCase() === "articles"
-        ? list_caption.attr('data-caption')
-        : ('Category: ' + page_category.replace(/_/g," "));
-      list_caption.text(caption);
-
-    } else {
-
-      // no hash filter, make all posts visible (subject to max display)
-      set_posts_visible($('.posts-list').children(), true);
-
-      // reset list caption
-      var list_caption = $('.posts-list-caption');
-      list_caption.text(list_caption.attr('data-caption'));
-
-
-    }
-  }
-
-  // more articles
-  function apply_post_limits(apply) {
-    if (apply) {
-      $('.posts-container').addClass('posts-apply-limit');
-      $('.posts-more a').removeClass('hidden');
-    } else {
-      $('.posts-container').removeClass('posts-apply-limit');
-      $('.posts-more a').addClass('hidden');
-    }
-  }
-
-  // click handling for tags
-  $('.dt-tag').click(function(ev) {
-    window.location.hash = '#category:' + $(this).text().replace(/ /g, "_");
-    return false;
-  })
-
-  // hash filter handling
-  apply_hash_filter();
-  $(window).on('hashchange',function() {
-    apply_post_limits(true);
-    apply_hash_filter();
-  });
-
-  // more articles link
-  $('.posts-more a').click(function(e) {
-    e.preventDefault();
-    apply_post_limits(false);
-    apply_hash_filter();
-    return false;
-  });
-
-}
-
-</script>
-
-
-
-<div class="posts-container posts-apply-limit l-page">
-<div class="posts-list">
-<h1 class="posts-list-caption" data-caption="Ronan&#39;s #TidyTuesday blog">Ronan's #TidyTuesday blog</h1>
-<a href="posts/2021-04-27-ceo-departures/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 27, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-04-27-ceo-departures/ceo-departures_files/figure-html5/fig2-1.png"/>
-</div>
-<div class="description">
-<h2>Predicting voluntary CEO departures using machine learning</h2>
-<div class="dt-tags"></div>
-<p>Graphs and analysis using the #TidyTuesday data set for week 18 of 2021
-  (27/4/2021): "CEO Departures"</p>
-</div>
-</a>
-<a href="posts/2021-04-21-netflix-titles/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 21, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-04-21-netflix-titles/netflix-titles_files/figure-html5/figure1-1.png"/>
-</div>
-<div class="description">
-<h2>Films with MPA ratings on Netflix</h2>
-<div class="dt-tags"></div>
-<p>Graphs and analysis using the #TidyTuesday data set for week 17 of 2021
-  (20/4/2021): "Netflix Titles"</p>
-</div>
-</a>
-<a href="posts/2021-04-16-us-post-offices/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 16, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure2-1.png"/>
-</div>
-<div class="description">
-<h2>Post offices in the USA from 1772 to 2000</h2>
-<div class="dt-tags"></div>
-<p>Graphs and analysis using the #TidyTuesday data set for week 16 of 2021
-  (13/4/2021): "US post offices"</p>
-</div>
-</a>
-<a href="posts/2021-04-07-global-deforestation/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 7, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-04-07-global-deforestation/global-deforestation_files/figure-html5/figure1-1.png"/>
-</div>
-<div class="description">
-<h2>Plotting deforestation and its causes</h2>
-<div class="dt-tags"></div>
-<p>Graphs and analysis using the #TidyTuesday data set for week 15 of 2021
-  (6/4/2021): "Global deforestation"</p>
-</div>
-</a>
-<a href="posts/2021-04-06-makeup-shades/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">April 6, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-04-06-makeup-shades/makeup-shades_files/figure-html5/figure1-1.png"/>
-</div>
-<div class="description">
-<h2>Plotting foundations according to shade</h2>
-<div class="dt-tags"></div>
-<p>Graphs and analysis using the #TidyTuesday data set for week 14 of 2021
-  (30/3/2021): "Makeup Shades"</p>
-</div>
-</a>
-<a href="posts/2021-03-30-un-votes/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">March 30, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2021-03-30-un-votes/un-votes_files/figure-html5/figure2-1.png"/>
-</div>
-<div class="description">
-<h2>UN Votes: Plotting votes on United Nations resolutions</h2>
-<div class="dt-tags"></div>
-<p>Graphs and analysis using the #TidyTuesday data set for week 13 of 2021
-  (23/3/2021): "UN Votes"</p>
-</div>
-</a>
-<a href="posts/2021-03-23-video-games-and-sliced/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">March 23, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2021-03-23-video-games-and-sliced/../../images/video-games-and-sliced-1.png"/>
-</div>
-<div class="description">
-<h2>Video Games and Sliced</h2>
-<div class="dt-tags"></div>
-<p>Graphs and analysis using the #TidyTuesday data set for week 12 of 2021
-  (16/3/2021): "Video Games and Sliced"</p>
-</div>
-</a>
-<a href="posts/2021-03-21-bechdel-test/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">March 21, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img data-src="posts/2021-03-21-bechdel-test/../../images/bechdel-test-1.gif"/>
-</div>
-<div class="description">
-<h2>Bechdel Test</h2>
-<div class="dt-tags"></div>
-<p>Graphs using the #TidyTuesday data set for week 11 of 2021 (9/3/2021):
-"Bechdel Test"</p>
-</div>
-</a>
-<a href="posts/welcome/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">March 21, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Ronan Harrington</div>
-</div>
-</div>
-<div class="thumbnail">
-<img/>
-</div>
-<div class="description">
-<h2>Welcome</h2>
-<div class="dt-tags"></div>
-<p>Welcome to my TidyTuesday blog. This site features graphs and analysis
-of various data sets from the R for Data Science (R4DS) #TidyTuesday project.</p>
-</div>
-</a>
-</div>
-<div class="posts-more">
-<a href="#">More articles &raquo;</a>
-</div>
-</div>
-<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
-<h1>Ronan’s #TidyTuesday blog</h1>
+<h1>Predicting voluntary CEO departures using machine learning</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-
+<p><p>Graphs and analysis using the #TidyTuesday data set for week 18 of 2021 (27/4/2021): “CEO Departures”</p></p>
 </div>
 
+<div class="d-byline">
+  Ronan Harrington <a href="https://github.com/rnnh/" class="uri">https://github.com/rnnh/</a> 
+  
+<br/>04-27-2021
+</div>
 
 <div class="d-article">
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#setup">Setup</a>
+<ul>
+<li><a href="#data-wrangling">Data wrangling</a></li>
+</ul></li>
+<li><a href="#setting-parameters-for-machine-learning-model">Setting parameters for machine learning model</a></li>
+<li><a href="#creating-a-model-using-the-training-subset">Creating a model using the training subset</a></li>
+<li><a href="#creating-a-model-using-the-full-data-set">Creating a model using the full data set</a></li>
+<li><a href="#confusion-matrices-for-training-and-full-models">Confusion matrices for training and full models</a></li>
+<li><a href="#significant-words-according-to-the-final-model">Significant words according to the final model</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+</div>
+<h2 id="summary">Summary</h2>
+<p>In this post, a machine learning model is created using this week’s #TidyTuesday data set: <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-04-27/readme.md">CEO Departures</a>. This data set contains descriptions of thousands of CEO departures and reasons for these departures. After filtering missing values from the data set and simplifying the departure reasons to “Voluntary” and “Involuntary”, a machine learning model is trained to distinguish between these departure categories. The model used is a linear support-vector machine (SVM) instructed to categorise departures based on individual words used in the departure descriptions. The final model is limited by class imbalance in the data set, as most of the CEO departures were voluntary.</p>
+<h2 id="setup">Setup</h2>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading libraries</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/thebioengineer/tidytuesdayR'>tidytuesdayR</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidymodels.tidymodels.org'>tidymodels</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/tidymodels/textrecipes'>textrecipes</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/tidymodels/themis'>themis</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://parsnip.tidymodels.org'>parsnip</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>doParallel</span><span class='op'>)</span>
+
+<span class='co'># Installing the GitHub version of {parsnip} to use svm_linear()</span>
+<span class='co'>#devtools::install_github("tidymodels/parsnip")</span>
+
+<span class='co'># Loading data set</span>
+<span class='va'>tt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/tidytuesdayR/man/tt_load.html'>tt_load</a></span><span class='op'>(</span><span class='st'>"2021-04-27"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>
+    Downloading file 1 of 1: `departures.csv`</code></pre>
+</div>
+<h3 id="data-wrangling">Data wrangling</h3>
+<p>Wrangling data for machine learning and visualisation.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating a new variable "depart_vol" to record CEO departures as</span>
+<span class='co'>## Voluntary or Involuntary</span>
+<span class='va'>departures</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>departures</span> <span class='op'>%&gt;%</span> <span class='fu'>mutate</span><span class='op'>(</span>depart_vol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>departure_code</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># Setting descrptive factor levels for "depart_vol"</span>
+<span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>departures</span><span class='op'>$</span><span class='va'>depart_vol</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+  <span class='st'>"Involuntary"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>departures</span><span class='op'>$</span><span class='va'>depart_vol</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span>,
+  <span class='st'>"Voluntary"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>departures</span><span class='op'>$</span><span class='va'>depart_vol</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>6</span><span class='op'>]</span>,
+  <span class='st'>"Other"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>departures</span><span class='op'>$</span><span class='va'>depart_vol</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>]</span>
+  <span class='op'>)</span>
+
+<span class='co'># Filtering "depart_vol" and "notes" to a new object: "depart_notes"</span>
+<span class='va'>depart_notes</span> <span class='op'>&lt;-</span> <span class='va'>departures</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>notes</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>depart_vol</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>depart_vol</span> <span class='op'>!=</span> <span class='st'>"Other"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>select</span><span class='op'>(</span><span class='va'>depart_vol</span>, <span class='va'>notes</span><span class='op'>)</span>
+
+<span class='co'># Dropping empty factor levels. In this case, the level "Other" is empty</span>
+<span class='va'>depart_notes</span><span class='op'>$</span><span class='va'>depart_vol</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/droplevels.html'>droplevels</a></span><span class='op'>(</span><span class='va'>depart_notes</span><span class='op'>$</span><span class='va'>depart_vol</span><span class='op'>)</span>
+<span class='co'># Printing the number of Involuntary and Voluntary CEO departures with descriptions</span>
+<span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>depart_notes</span><span class='op'>$</span><span class='va'>depart_vol</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>
+Involuntary   Voluntary 
+       1694        3771 </code></pre>
+</div>
+<h2 id="setting-parameters-for-machine-learning-model">Setting parameters for machine learning model</h2>
+<p>In this section…</p>
+<ul>
+<li>The filtered data set is split into training and test data</li>
+<li>10-fold cross-validation (CV) is set for the training subset to get a more accurate estimate of training performance</li>
+<li>Feature engineering parameters are set</li>
+<li>The linear SVM model parameters are set</li>
+<li>Feature engineering and model parameters are combined into a workflow</li>
+<li>Performance metrics are selected</li>
+</ul>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Setting seed for reproducibility</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='co'># Splitting depart_notes into training and test data</span>
+<span class='va'>departures_split</span> <span class='op'>&lt;-</span> <span class='va'>depart_notes</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>initial_split</span><span class='op'>(</span>strata <span class='op'>=</span> <span class='va'>depart_vol</span><span class='op'>)</span>
+
+<span class='co'># Creating training and test sets using departures_split</span>
+<span class='va'>departures_train</span> <span class='op'>&lt;-</span> <span class='fu'>training</span><span class='op'>(</span><span class='va'>departures_split</span><span class='op'>)</span>
+<span class='va'>departures_test</span> <span class='op'>&lt;-</span> <span class='fu'>testing</span><span class='op'>(</span><span class='va'>departures_split</span><span class='op'>)</span>
+
+<span class='co'># Setting seed for reproducibility</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='co'># Setting 10-fold cross-validation (CV) using training data</span>
+<span class='va'>departures_folds</span> <span class='op'>&lt;-</span> <span class='fu'>vfold_cv</span><span class='op'>(</span><span class='va'>departures_train</span>, strata <span class='op'>=</span> <span class='va'>depart_vol</span><span class='op'>)</span>
+<span class='co'># Printing 10-fold CV splits</span>
+<span class='va'>departures_folds</span>
+</code></pre>
+</div>
+</details>
+<pre><code>#  10-fold cross-validation using stratification 
+# A tibble: 10 x 2
+   splits             id    
+   &lt;list&gt;             &lt;chr&gt; 
+ 1 &lt;split [3689/411]&gt; Fold01
+ 2 &lt;split [3690/410]&gt; Fold02
+ 3 &lt;split [3690/410]&gt; Fold03
+ 4 &lt;split [3690/410]&gt; Fold04
+ 5 &lt;split [3690/410]&gt; Fold05
+ 6 &lt;split [3690/410]&gt; Fold06
+ 7 &lt;split [3690/410]&gt; Fold07
+ 8 &lt;split [3690/410]&gt; Fold08
+ 9 &lt;split [3690/410]&gt; Fold09
+10 &lt;split [3691/409]&gt; Fold10</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Feature engineering</span>
+<span class='co'>## Creating preprocessing recipe for predicting voluntary/involuntary departures</span>
+<span class='va'>departures_rec</span> <span class='op'>&lt;-</span>  <span class='fu'>recipe</span><span class='op'>(</span><span class='va'>depart_vol</span> <span class='op'>~</span> <span class='va'>notes</span>, data <span class='op'>=</span> <span class='va'>departures_train</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='co'># Splitting the "notes" variable into individual tokens (words)</span>
+  <span class='fu'><a href='https://textrecipes.tidymodels.org/reference/step_tokenize.html'>step_tokenize</a></span><span class='op'>(</span><span class='va'>notes</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='co'># Limiting number of tokens used in model</span>
+  <span class='fu'><a href='https://textrecipes.tidymodels.org/reference/step_tokenfilter.html'>step_tokenfilter</a></span><span class='op'>(</span><span class='va'>notes</span>, max_tokens <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='co'># Weighing tokens by tf-idf</span>
+  <span class='fu'><a href='https://textrecipes.tidymodels.org/reference/step_tfidf.html'>step_tfidf</a></span><span class='op'>(</span><span class='va'>notes</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='co'># Normalising numeric predictors</span>
+  <span class='fu'>step_normalize</span><span class='op'>(</span><span class='fu'>all_numeric_predictors</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='co'># Upsampling to address class imbalance</span>
+  <span class='fu'><a href='https://themis.tidymodels.org/reference/step_smote.html'>step_smote</a></span><span class='op'>(</span><span class='va'>depart_vol</span><span class='op'>)</span>
+
+<span class='co'># Specifying the machine learning model</span>
+<span class='co'>## This model will use a linear Support Vector Machine (SVM)</span>
+<span class='va'>svm_spec</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://parsnip.tidymodels.org/reference/svm_linear.html'>svm_linear</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_args.html'>set_mode</a></span><span class='op'>(</span><span class='st'>"classification"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_engine.html'>set_engine</a></span><span class='op'>(</span><span class='st'>"LiblineaR"</span><span class='op'>)</span>
+
+<span class='co'># Combining the feature engineering recipe and model spec to create a workflow</span>
+<span class='va'>departures_wf</span> <span class='op'>&lt;-</span> <span class='fu'>workflow</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>add_recipe</span><span class='op'>(</span><span class='va'>departures_rec</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>add_model</span><span class='op'>(</span><span class='va'>svm_spec</span><span class='op'>)</span>
+<span class='co'># Printing the workflow</span>
+<span class='va'>departures_wf</span>
+</code></pre>
+</div>
+</details>
+<pre><code>══ Workflow ══════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: svm_linear()
+
+── Preprocessor ──────────────────────────────────────────────────────
+5 Recipe Steps
+
+• step_tokenize()
+• step_tokenfilter()
+• step_tfidf()
+• step_normalize()
+• step_smote()
+
+── Model ─────────────────────────────────────────────────────────────
+Linear Support Vector Machine Specification (classification)
+
+Computational engine: LiblineaR </code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Selecting the metrics used for modelling</span>
+<span class='va'>departures_metrics</span> <span class='op'>&lt;-</span> <span class='fu'>metric_set</span><span class='op'>(</span><span class='va'>accuracy</span>, <span class='va'>recall</span>, <span class='va'>precision</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+</div>
+<h2 id="creating-a-model-using-the-training-subset">Creating a model using the training subset</h2>
+<p>In this section, a linear SVM model is created using the training subset with 10-fold CV.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Setting up parallel processing</span>
+<span class='va'>cl</span> <span class='op'>&lt;-</span> <span class='fu'>makePSOCKcluster</span><span class='op'>(</span><span class='fu'>detectCores</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>6</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/doParallel/man/registerDoParallel.html'>registerDoParallel</a></span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span>
+
+<span class='co'># Setting seed for reproducibility</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='co'># Fitting models using resampling</span>
+<span class='va'>svm_results</span> <span class='op'>&lt;-</span> <span class='fu'>fit_resamples</span><span class='op'>(</span>
+  <span class='va'>departures_wf</span>, <span class='co'># Specifying workflow</span>
+  <span class='va'>departures_folds</span>, <span class='co'># Specifying cross validation folds</span>
+  metrics <span class='op'>=</span> <span class='va'>departures_metrics</span>, <span class='co'># Metrics used for modelling</span>
+  control <span class='op'>=</span> <span class='fu'>control_resamples</span><span class='op'>(</span>save_pred <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># Saving predictions for confusion matrix</span>
+<span class='op'>)</span>
+
+<span class='co'># Printing performance metrics of SVM model</span>
+<span class='fu'>collect_metrics</span><span class='op'>(</span><span class='va'>svm_results</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code># A tibble: 3 x 6
+  .metric   .estimator  mean     n std_err .config             
+  &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 accuracy  binary     0.797    10 0.00593 Preprocessor1_Model1
+2 precision binary     0.662    10 0.00992 Preprocessor1_Model1
+3 recall    binary     0.706    10 0.0121  Preprocessor1_Model1</code></pre>
+</div>
+<h2 id="creating-a-model-using-the-full-data-set">Creating a model using the full data set</h2>
+<p>In this section, the final linear SVM model is created using the full data set.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Setting seed for reproducibility</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+
+<span class='co'># Fitting the final model</span>
+<span class='va'>final_fitted</span> <span class='op'>&lt;-</span> <span class='fu'>last_fit</span><span class='op'>(</span><span class='va'>departures_wf</span>, <span class='va'>departures_split</span>,
+                      metrics <span class='op'>=</span> <span class='va'>departures_metrics</span><span class='op'>)</span>
+
+<span class='co'># Printing performance metrics of final fitted model</span>
+<span class='fu'>collect_metrics</span><span class='op'>(</span><span class='va'>final_fitted</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code># A tibble: 3 x 4
+  .metric   .estimator .estimate .config             
+  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               
+1 accuracy  binary         0.815 Preprocessor1_Model1
+2 recall    binary         0.733 Preprocessor1_Model1
+3 precision binary         0.690 Preprocessor1_Model1</code></pre>
+</div>
+<h2 id="confusion-matrices-for-training-and-full-models">Confusion matrices for training and full models</h2>
+<p>In this section, confusion matrices are printed for the linear SVM models created using the training subset and full data set. The confusion matrix for the final model is plotted to illustrate the differences between this model’s predictions and the true values in the data set. From this plot, we can see that there is a class imbalance in the data set: most of the CEO departures with descriptions were Voluntary. As a result, Voluntary CEO departures are more accurately predicted based on event descriptions than Involuntary departures. Class imbalances can be addressed by upsampling (creating new examples of the minority class), which is used in the feature engineering of this model. Ideally, this data set would have more descriptions of Involuntary CEO departures.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Printing the confusion matrix of the model trained using the 10-fold cv</span>
+<span class='co'>## training data</span>
+<span class='va'>svm_results</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>conf_mat_resampled</span><span class='op'>(</span>tidy <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>            Involuntary Voluntary
+Involuntary        89.8      45.9
+Voluntary          37.3     237.0</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Printing the confusion matrix of the final fitted model</span>
+<span class='fu'>collect_predictions</span><span class='op'>(</span><span class='va'>final_fitted</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>conf_mat</span><span class='op'>(</span><span class='va'>depart_vol</span>, <span class='va'>.pred_class</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<pre><code>             Truth
+Prediction    Involuntary Voluntary
+  Involuntary         310       139
+  Voluntary           113       803</code></pre>
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Visualising confusion matrix of the final fitted model</span>
+<span class='fu'>collect_predictions</span><span class='op'>(</span><span class='va'>final_fitted</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>conf_mat</span><span class='op'>(</span><span class='va'>depart_vol</span>, <span class='va'>.pred_class</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>autoplot</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>labs</span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Prediction vs Truth for final linear SVM model"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Class imbalance is an issue; most of the observations were of Voluntary CEO departures"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<div class="figure"><span id="fig:fig1"></span>
+<img src="ceo-departures_files/figure-html5/fig1-1.png" alt="Confusion matrix for the final linear SVM model." width="768" />
+<p class="caption">
+Figure 1: Confusion matrix for the final linear SVM model.
+</p>
+</div>
+</div>
+<h2 id="significant-words-according-to-the-final-model">Significant words according to the final model</h2>
+<p>In this section, the most important words for predicting whether a CEO departure was Involuntary or Voluntary are visualised. This is based on the coefficients from the final linear SVM model: words with higher predictive value are given coefficients with larger absolute values.</p>
+<p>From this plot, we can see that descriptions of Involuntary CEO departures are more likely to include the words “health”, “died”, “charge” and “dropped”. Descriptions of Voluntary CEO departures are more likely to include the words “retired”, “voluntarily”, “join” and “consulting”. Involuntary CEO departures described in the data set are likely due to poor health, death and litigation; Voluntary CEO departures are likely due to retirement, former executives joining other companies, or moving into consulting.</p>
+<div class="layout-chunk" data-layout="l-body">
+<details>
+<summary>
+Show code
+</summary>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Extracting model fit</span>
+<span class='va'>departures_fit</span> <span class='op'>&lt;-</span> <span class='fu'>pull_workflow_fit</span><span class='op'>(</span><span class='va'>final_fitted</span><span class='op'>$</span><span class='va'>.workflow</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+
+<span class='co'># Visualising the most important words for predicting whether a CEO departure</span>
+<span class='co'>## was voluntary</span>
+<span class='fu'><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></span><span class='op'>(</span><span class='va'>departures_fit</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>term</span> <span class='op'>!=</span> <span class='st'>"Bias"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>group_by</span><span class='op'>(</span>sign <span class='op'>=</span> <span class='va'>estimate</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>slice_max</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='va'>estimate</span><span class='op'>)</span>, n <span class='op'>=</span> <span class='fl'>15</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>ungroup</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>mutate</span><span class='op'>(</span>term <span class='op'>=</span> <span class='fu'>str_remove</span><span class='op'>(</span><span class='va'>term</span>, <span class='st'>"tfidf_notes_"</span><span class='op'>)</span>, <span class='co'># Tidying terms</span>
+         sign <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>sign</span>, <span class='st'>"More likely from Voluntary CEO departures"</span>,
+                       <span class='st'>"More likely from Involuntary CEO departures"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='va'>estimate</span><span class='op'>)</span>, <span class='fu'>fct_reorder</span><span class='op'>(</span><span class='va'>term</span>, <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='va'>estimate</span><span class='op'>)</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='va'>sign</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_col</span><span class='op'>(</span>show.legend <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>facet_wrap</span><span class='op'>(</span><span class='op'>~</span><span class='va'>sign</span>, scales <span class='op'>=</span> <span class='st'>"free"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>labs</span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Coefficient from linear SVM"</span>, y <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>scale_fill_brewer</span><span class='op'>(</span>palette <span class='op'>=</span> <span class='st'>"Set1"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme_classic</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>labs</span><span class='op'>(</span>titles <span class='op'>=</span> <span class='st'>"Which words are more likely to be used when a CEO leaves Involuntarily vs. Voluntarily?"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Importance assigned by linear SVM model, based on descriptions of CEO departures"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</details>
+<div class="figure"><span id="fig:fig2"></span>
+<img src="ceo-departures_files/figure-html5/fig2-1.png" alt="Words most likely to appear in CEO departure descriptions in each category, according to the linear SVM model." width="768" />
+<p class="caption">
+Figure 2: Words most likely to appear in CEO departure descriptions in each category, according to the linear SVM model.
+</p>
+</div>
+</div>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://juliasilge.com/blog/netflix-titles/">“Which #TidyTuesday Netflix titles are movies and which are TV shows?” by Julia Silge</a></li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
