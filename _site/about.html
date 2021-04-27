@@ -85,20 +85,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-  <title>TidyTuesday.netlify.app: About this blog</title>
+  <title>Ronan's #TidyTuesday blog: About this blog</title>
 
 
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
+  <link rel="icon" type="image/png" href="images/favicon.png"/>
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="TidyTuesday.netlify.app: About this blog"/>
+  <meta property="og:title" content="Ronan&#39;s #TidyTuesday blog: About this blog"/>
   <meta property="og:type" content="article"/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="TidyTuesday.netlify.app"/>
+  <meta property="og:site_name" content="Ronan&#39;s #TidyTuesday blog"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="TidyTuesday.netlify.app: About this blog"/>
+  <meta property="twitter:title" content="Ronan&#39;s #TidyTuesday blog: About this blog"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
@@ -2151,12 +2153,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     --heading-color:   rgba(0, 0, 0, 0.5);
     --body-size:       0.8rem;
     --body-color:      rgba(0, 0, 0, 0.8);
+    --hover-color:      red;
   }
 
   /*-- ARTICLE TABLE OF CONTENTS --*/
   .d-contents {
     --heading-size:    18px;
     --contents-size:   13px;
+    --hover-color:      red;
   }
 
   /*-- ARTICLE APPENDIX --*/
@@ -2164,7 +2168,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     --heading-size:    15px;
     --heading-color:   rgba(0, 0, 0, 0.65);
     --text-size:       0.8em;
-    --text-color:      rgba(0, 0, 0, 0.5);
+    --text-color:      black;
   }
 
   /*-- WEBSITE HEADER + FOOTER --*/
@@ -2172,17 +2176,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   .distill-site-header {
     --title-size:       18px;
-    --text-color:       rgba(255, 255, 255, 0.8);
+    --text-color:       black;
     --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
+    --hover-color:      red;
+    --bkgd-color:       white;
   }
 
   .distill-site-footer {
-    --text-color:       rgba(255, 255, 255, 0.8);
+    --text-color:       black;
     --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
+    --hover-color:      red;
+    --bkgd-color:       white;
   }
 
   /*-- Additional custom styles --*/
@@ -2401,7 +2405,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <header class="header header--fixed" role="banner">
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
-<a href="index.html" class="title">TidyTuesday.netlify.app</a>
+<a href="index.html" class="title">Ronan's #TidyTuesday blog</a>
 <input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
 </div>
 <div class="nav-right">
@@ -2430,8 +2434,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
 <div class="d-article">
-<p>This site features graphs and analysis of various data sets from the R for Data Science (R4DS) <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday project</a>.</p>
-<p>The source code for this website can be found at: <a href="https://github.com/rnnh/TidyTuesday" class="uri">https://github.com/rnnh/TidyTuesday</a></p>
+<p>Reproducible visualisation and analysis of <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday data sets</a>, created using <a href="https://github.com/rstudio/distill">distill for R Markdown</a>. These data sets are provided by the <a href="https://github.com/rfordatascience">R for Data Science (R4DS)</a> community. This blog can be viewed locally by downloading the GitHub repository and opening <a href="https://github.com/rnnh/TidyTuesday/blob/main/_site/index.html">the index page</a> in a web browser. It is also available at <strong><a href="https://tidytuesday.netlify.app/" class="uri">https://tidytuesday.netlify.app/</a></strong>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
@@ -2447,6 +2450,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="appendix-bottom">
 <h3 id="updates-and-corrections">Corrections</h3>
 <p>If you see mistakes or want to suggest changes, please <a href="https://github.com/rnnh/TidyTuesday/issues/new">create an issue</a> on the source repository.</p>
+<h3 id="reuse">Reuse</h3>
+<p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/rnnh/TidyTuesday/">https://github.com/rnnh/TidyTuesday/</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
 </div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->

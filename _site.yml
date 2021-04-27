@@ -1,10 +1,12 @@
-name: "TidyTuesday"
-title: "TidyTuesday.netlify.app"
+name: "Ronan's #TidyTuesday blog"
+title: "Ronan's #TidyTuesday blog"
 description: |
   Ronan's #TidyTuesday blog. Visualisations and analysis of various data sets
   created by the R for Data Science (R4DS) community
 theme: theme.css
+favicon: images/favicon.png
 repository_url: https://github.com/rnnh/TidyTuesday/
+creative_commons: CC BY
 base_url: https://tidytuesday.netlify.app/
 output_dir: "_site"
 navbar:

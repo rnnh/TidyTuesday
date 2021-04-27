@@ -85,11 +85,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-<title>TidyTuesday.netlify.app: Welcome</title>
+<title>Ronan's #TidyTuesday blog: Welcome</title>
 
 <meta property="description" itemprop="description" content="Welcome to my TidyTuesday blog. This site features graphs and analysis&#10;of various data sets from the R for Data Science (R4DS) #TidyTuesday project."/>
 
 <link rel="canonical" href="https://tidytuesday.netlify.app/posts/welcome/"/>
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
+<link rel="icon" type="image/png" href="../../images/favicon.png"/>
 
 <!--  https://schema.org/Article -->
 <meta property="article:published" itemprop="datePublished" content="2021-03-21"/>
@@ -97,22 +99,23 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <meta name="article:author" content="Ronan Harrington"/>
 
 <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-<meta property="og:title" content="TidyTuesday.netlify.app: Welcome"/>
+<meta property="og:title" content="Ronan&#39;s #TidyTuesday blog: Welcome"/>
 <meta property="og:type" content="article"/>
 <meta property="og:description" content="Welcome to my TidyTuesday blog. This site features graphs and analysis&#10;of various data sets from the R for Data Science (R4DS) #TidyTuesday project."/>
 <meta property="og:url" content="https://tidytuesday.netlify.app/posts/welcome/"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:site_name" content="TidyTuesday.netlify.app"/>
+<meta property="og:site_name" content="Ronan&#39;s #TidyTuesday blog"/>
 
 <!--  https://dev.twitter.com/cards/types/summary -->
 <meta property="twitter:card" content="summary"/>
-<meta property="twitter:title" content="TidyTuesday.netlify.app: Welcome"/>
+<meta property="twitter:title" content="Ronan&#39;s #TidyTuesday blog: Welcome"/>
 <meta property="twitter:description" content="Welcome to my TidyTuesday blog. This site features graphs and analysis&#10;of various data sets from the R for Data Science (R4DS) #TidyTuesday project."/>
 <meta property="twitter:url" content="https://tidytuesday.netlify.app/posts/welcome/"/>
 
 <!--  https://scholar.google.com/intl/en/scholar/inclusion.html#indexing -->
-<meta name="citation_title" content="TidyTuesday.netlify.app: Welcome"/>
+<meta name="citation_title" content="Ronan&#39;s #TidyTuesday blog: Welcome"/>
 <meta name="citation_fulltext_html_url" content="https://tidytuesday.netlify.app/posts/welcome/"/>
+<meta name="citation_fulltext_world_readable" content=""/>
 <meta name="citation_online_date" content="2021/03/21"/>
 <meta name="citation_publication_date" content="2021/03/21"/>
 <meta name="citation_author" content="Ronan Harrington"/>
@@ -120,7 +123,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_rmarkdown_metadata-->
 
 <script type="text/json" id="radix-rmarkdown-metadata">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["Welcome"]},{"type":"character","attributes":{},"value":["Welcome to my TidyTuesday blog. This site features graphs and analysis\nof various data sets from the R for Data Science (R4DS) #TidyTuesday project."]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["03-21-2021"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/welcome/"]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/welcome/"]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Welcome"]},{"type":"character","attributes":{},"value":["Welcome to my TidyTuesday blog. This site features graphs and analysis\nof various data sets from the R for Data Science (R4DS) #TidyTuesday project."]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["03-21-2021"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained"]}},"value":[{"type":"logical","attributes":{},"value":[false]}]}]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/welcome/"]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/welcome/"]}]}
 </script>
 <!--/radix_placeholder_rmarkdown_metadata-->
   
@@ -2171,12 +2174,14 @@ d-byline {
   --heading-color:   rgba(0, 0, 0, 0.5);
   --body-size:       0.8rem;
   --body-color:      rgba(0, 0, 0, 0.8);
+  --hover-color:      red;
 }
 
 /*-- ARTICLE TABLE OF CONTENTS --*/
 .d-contents {
   --heading-size:    18px;
   --contents-size:   13px;
+  --hover-color:      red;
 }
 
 /*-- ARTICLE APPENDIX --*/
@@ -2184,7 +2189,7 @@ d-appendix {
   --heading-size:    15px;
   --heading-color:   rgba(0, 0, 0, 0.65);
   --text-size:       0.8em;
-  --text-color:      rgba(0, 0, 0, 0.5);
+  --text-color:      black;
 }
 
 /*-- WEBSITE HEADER + FOOTER --*/
@@ -2192,17 +2197,17 @@ d-appendix {
 
 .distill-site-header {
   --title-size:       18px;
-  --text-color:       rgba(255, 255, 255, 0.8);
+  --text-color:       black;
   --text-size:        15px;
-  --hover-color:      white;
-  --bkgd-color:       #0F2E3D;
+  --hover-color:      red;
+  --bkgd-color:       white;
 }
 
 .distill-site-footer {
-  --text-color:       rgba(255, 255, 255, 0.8);
+  --text-color:       black;
   --text-size:        15px;
-  --hover-color:      white;
-  --bkgd-color:       #0F2E3D;
+  --hover-color:      red;
+  --bkgd-color:       white;
 }
 
 /*-- Additional custom styles --*/
@@ -2422,7 +2427,7 @@ d-appendix d-footnote-list a.footnote-backlink {
 <header class="header header--fixed" role="banner">
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
-<a href="../../index.html" class="title">TidyTuesday.netlify.app</a>
+<a href="../../index.html" class="title">Ronan's #TidyTuesday blog</a>
 <input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
 </div>
 <div class="nav-right">
@@ -2484,13 +2489,15 @@ d-appendix d-footnote-list a.footnote-backlink {
 <div class="appendix-bottom">
   <h3 id="updates-and-corrections">Corrections</h3>
   <p>If you see mistakes or want to suggest changes, please <a href="https://github.com/rnnh/TidyTuesday/issues/new">create an issue</a> on the source repository.</p>
+  <h3 id="reuse">Reuse</h3>
+  <p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/rnnh/TidyTuesday/">https://github.com/rnnh/TidyTuesday/</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
   <h3 id="citation">Citation</h3>
   <p>For attribution, please cite this work as</p>
-  <pre class="citation-appendix short">Harrington (2021, March 21). TidyTuesday.netlify.app: Welcome. Retrieved from https://tidytuesday.netlify.app/posts/welcome/</pre>
+  <pre class="citation-appendix short">Harrington (2021, March 21). Ronan's #TidyTuesday blog: Welcome. Retrieved from https://tidytuesday.netlify.app/posts/welcome/</pre>
   <p>BibTeX citation</p>
   <pre class="citation-appendix long">@misc{harrington2021welcome,
   author = {Harrington, Ronan},
-  title = {TidyTuesday.netlify.app: Welcome},
+  title = {Ronan's #TidyTuesday blog: Welcome},
   url = {https://tidytuesday.netlify.app/posts/welcome/},
   year = {2021}
 }</pre>

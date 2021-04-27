@@ -86,26 +86,28 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-  <title>TidyTuesday.netlify.app: Ronan's #TidyTuesday blog</title>
+  <title>Ronan's #TidyTuesday blog: Posts</title>
 
 
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
+  <link rel="icon" type="image/png" href="images/favicon.png"/>
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="TidyTuesday.netlify.app: Ronan&#39;s #TidyTuesday blog"/>
+  <meta property="og:title" content="Ronan&#39;s #TidyTuesday blog: Posts"/>
   <meta property="og:type" content="article"/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="TidyTuesday.netlify.app"/>
+  <meta property="og:site_name" content="Ronan&#39;s #TidyTuesday blog"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="TidyTuesday.netlify.app: Ronan&#39;s #TidyTuesday blog"/>
+  <meta property="twitter:title" content="Ronan&#39;s #TidyTuesday blog: Posts"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","site","listing"]}},"value":[{"type":"character","attributes":{},"value":["Ronan's #TidyTuesday blog"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["posts"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","site","listing"]}},"value":[{"type":"character","attributes":{},"value":["Posts"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["posts"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2152,12 +2154,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     --heading-color:   rgba(0, 0, 0, 0.5);
     --body-size:       0.8rem;
     --body-color:      rgba(0, 0, 0, 0.8);
+    --hover-color:      red;
   }
 
   /*-- ARTICLE TABLE OF CONTENTS --*/
   .d-contents {
     --heading-size:    18px;
     --contents-size:   13px;
+    --hover-color:      red;
   }
 
   /*-- ARTICLE APPENDIX --*/
@@ -2165,7 +2169,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     --heading-size:    15px;
     --heading-color:   rgba(0, 0, 0, 0.65);
     --text-size:       0.8em;
-    --text-color:      rgba(0, 0, 0, 0.5);
+    --text-color:      black;
   }
 
   /*-- WEBSITE HEADER + FOOTER --*/
@@ -2173,17 +2177,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   .distill-site-header {
     --title-size:       18px;
-    --text-color:       rgba(255, 255, 255, 0.8);
+    --text-color:       black;
     --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
+    --hover-color:      red;
+    --bkgd-color:       white;
   }
 
   .distill-site-footer {
-    --text-color:       rgba(255, 255, 255, 0.8);
+    --text-color:       black;
     --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
+    --hover-color:      red;
+    --bkgd-color:       white;
   }
 
   /*-- Additional custom styles --*/
@@ -2394,7 +2398,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Ronan's #TidyTuesday blog","authors":[]}
+{"title":"Posts","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2402,7 +2406,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <header class="header header--fixed" role="banner">
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
-<a href="index.html" class="title">TidyTuesday.netlify.app</a>
+<a href="index.html" class="title">Ronan's #TidyTuesday blog</a>
 <input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
 </div>
 <div class="nav-right">
@@ -2555,7 +2559,7 @@ function init_posts_list() {
 
 <div class="posts-container posts-apply-limit l-page">
 <div class="posts-list">
-<h1 class="posts-list-caption" data-caption="Ronan&#39;s #TidyTuesday blog">Ronan's #TidyTuesday blog</h1>
+<h1 class="posts-list-caption" data-caption="Posts">Posts</h1>
 <a href="posts/2021-04-27-ceo-departures/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":[]}</script>
 <div class="metadata">
@@ -2726,7 +2730,7 @@ of various data sets from the R for Data Science (R4DS) #TidyTuesday project.</p
 <!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
-<h1>Ronan’s #TidyTuesday blog</h1>
+<h1>Posts</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 
@@ -2749,6 +2753,8 @@ of various data sets from the R for Data Science (R4DS) #TidyTuesday project.</p
 <div class="appendix-bottom">
 <h3 id="updates-and-corrections">Corrections</h3>
 <p>If you see mistakes or want to suggest changes, please <a href="https://github.com/rnnh/TidyTuesday/issues/new">create an issue</a> on the source repository.</p>
+<h3 id="reuse">Reuse</h3>
+<p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/rnnh/TidyTuesday/">https://github.com/rnnh/TidyTuesday/</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
 </div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
