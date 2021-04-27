@@ -50,7 +50,7 @@ Wrangling data for machine learning and visualisation.
 # Creating a new variable "depart_vol" to record CEO departures as
 ## Voluntary or Involuntary
 departures <- tt$departures %>% mutate(depart_vol = factor(departure_code))
-# Setting descrptive factor levels for "depart_vol"
+# Setting descriptive factor levels for "depart_vol"
 levels(departures$depart_vol) <- list(
   "Involuntary" = levels(departures$depart_vol)[1:4],
   "Voluntary" = levels(departures$depart_vol)[5:6],
