@@ -28,3 +28,4 @@ rss:
 collections:
   posts:
     share: [twitter, linkedin]
+    custom: _custom.html

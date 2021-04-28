@@ -116,8 +116,9 @@ tt$allShades %>%
   geom_vline(xintercept = 0.50, linetype = "dashed") +
   geom_vline(xintercept = 0.75, linetype = "dashed") +
   theme(legend.position = "none") +
-  labs(y = "", x = "Lightness",
-       title = "Distribution of foundations from different brands according to lightness")
+  labs(y = "Brands", x = "Lightness",
+       title = "Foundation shade distributions",
+       subtitle = "Distribution of foundations from different brands according to lightness")
 ```
 
 ## Plotting keywords associated with foundations of different shades

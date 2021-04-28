@@ -58,8 +58,137 @@ created by the R for Data Science (R4DS) community
       <title>Plotting foundations according to shade</title>
       <dc:creator>Ronan Harrington</dc:creator>
       <link>https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades</link>
-      <description>Graphs and analysis using the #TidyTuesday data set for week 14 of 2021
-  (30/3/2021): "Makeup Shades"</description>
+      <description>
+
+
+&lt;h2 id="setup-and-data-preparation"&gt;Setup and data preparation&lt;/h2&gt;
+&lt;p&gt;Loading the &lt;code&gt;R&lt;/code&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-03-30/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
+library(tidyverse)
+library(tidytuesdayR)
+library(viridis)
+library(tidytext)
+library(forcats)
+library(ggridges)
+
+# Loading data set
+tt &amp;lt;- tt_load(&amp;quot;2021-03-30&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+    Downloading file 1 of 5: `ulta.csv`
+    Downloading file 2 of 5: `sephora.csv`
+    Downloading file 3 of 5: `allShades.csv`
+    Downloading file 4 of 5: `allNumbers.csv`
+    Downloading file 5 of 5: `allCategories.csv`&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Wrangling data for visualisation.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Selecting the 14 brands with the most foundations in the data set as
+# &amp;quot;top_brands&amp;quot;
+top_brands &amp;lt;- tt$allShades %&amp;gt;%
+  select(brand) %&amp;gt;%
+  count(brand) %&amp;gt;%
+  slice_max(order_by = n, n = 14)
+
+# Selecting foundation names broken into individual words and lightness values 
+# rounded to the nearest significant digit as &amp;quot;simplified_names&amp;quot;
+simplified_names &amp;lt;- tt$allShades %&amp;gt;%
+  mutate(rounded = signif(lightness, digits = 1)) %&amp;gt;%
+  filter(!is.na(name)) %&amp;gt;%
+  filter(rounded %in% c(0.2, 0.4, 0.6, 0.8, 1.0)) %&amp;gt;%
+  select(name, rounded) %&amp;gt;%
+  unnest_tokens(word, name) %&amp;gt;%
+  count(rounded, word, sort = T)
+
+# Counting the total number of words per rounded lightness value
+total_words &amp;lt;- simplified_names %&amp;gt;%
+  group_by(rounded) %&amp;gt;%
+  summarise(total = sum(n))
+
+# Added word count totals and tf-idf values to &amp;quot;simplified_names&amp;quot;, and changing
+# &amp;quot;rounded&amp;quot; to a factor variable with informative levels
+simplified_names &amp;lt;- left_join(simplified_names, total_words, by = &amp;quot;rounded&amp;quot;)
+simplified_names &amp;lt;- simplified_names %&amp;gt;%
+  bind_tf_idf(word, rounded, n)
+simplified_names$rounded &amp;lt;- as.factor(simplified_names$rounded)
+table(simplified_names$rounded)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+0.2 0.4 0.6 0.8   1 
+ 28 148 221 217  50 &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;levels(simplified_names$rounded) &amp;lt;- c(&amp;quot;Lightness: 0.2, n = 28&amp;quot;,
+                                      &amp;quot;Lightness: 0.4, n = 148&amp;quot;,
+                                      &amp;quot;Lightness: 0.6, n = 221&amp;quot;,
+                                      &amp;quot;Lightness: 0.8, n = 217&amp;quot;,
+                                      &amp;quot;Lightness: 1.0, n = 50&amp;quot;)
+simplified_names&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 664 x 7
+   rounded                 word       n total     tf   idf tf_idf
+   &amp;lt;fct&amp;gt;                   &amp;lt;chr&amp;gt;  &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt;
+ 1 Lightness: 0.8, n = 217 light    156  1512 0.103  0.511 0.0527
+ 2 Lightness: 0.6, n = 221 medium   129  1401 0.0921 0.223 0.0205
+ 3 Lightness: 0.6, n = 221 tan      118  1401 0.0842 0.511 0.0430
+ 4 Lightness: 0.8, n = 217 ivory    113  1512 0.0747 0.223 0.0167
+ 5 Lightness: 0.8, n = 217 beige    104  1512 0.0688 0.223 0.0153
+ 6 Lightness: 0.4, n = 148 deep      99   748 0.132  0     0     
+ 7 Lightness: 0.8, n = 217 fair      92  1512 0.0608 0.511 0.0311
+ 8 Lightness: 0.6, n = 221 beige     90  1401 0.0642 0.223 0.0143
+ 9 Lightness: 0.8, n = 217 warm      82  1512 0.0542 0.223 0.0121
+10 Lightness: 0.6, n = 221 warm      80  1401 0.0571 0.223 0.0127
+# … with 654 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="plotting-foundations-according-to-lightness"&gt;Plotting foundations according to lightness&lt;/h2&gt;
+&lt;p&gt;In this plot, each point represents a single foundation from the 14 most represented brands in the data set. The colour of each point corresponds to the dominant shade of each foundation. These points are arranged according to the lightness of each foundation.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting all the foundations from &amp;quot;top_brands&amp;quot; according to lightness
+tt$allShades %&amp;gt;%
+  filter(brand %in% top_brands$brand) %&amp;gt;%
+  ggplot(aes(lightness, brand, colour = hex)) +
+  geom_jitter() +
+  scale_colour_identity() +
+  xlim(0, 1) +
+  theme_classic() +
+  geom_vline(xintercept = 0.25, linetype = &amp;quot;dashed&amp;quot;) +
+  geom_vline(xintercept = 0.50, linetype = &amp;quot;dashed&amp;quot;) +
+  geom_vline(xintercept = 0.75, linetype = &amp;quot;dashed&amp;quot;) +
+  labs(y = &amp;quot;&amp;quot;, x = &amp;quot;Lightness&amp;quot;,
+       title = &amp;quot;Foundations from different brands plotted according to lightness&amp;quot;,
+       subtitle = &amp;quot;Each point represents the dominant colour of each foundation&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="file106753b50008_files/figure-html/figure1-1.png" width="768" /&gt;&lt;/p&gt;
+&lt;h2 id="plotting-distributions-of-foundation-lightness"&gt;Plotting distributions of foundation lightness&lt;/h2&gt;
+&lt;p&gt;In this plot, the distributions of foundations from the brands in the previous graph are plotted according to lightness. Across all these brands, lighter shades are more represented than darker shades.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting the distribution of foundations from &amp;quot;top_brands&amp;quot; according to
+# lightness
+tt$allShades %&amp;gt;%
+  filter(brand %in% top_brands$brand) %&amp;gt;%
+  ggplot(aes(lightness, brand, fill = brand, group = brand)) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis(discrete = TRUE) +
+  xlim(0, 1) +
+  theme_ridges() +
+  geom_vline(xintercept = 0.25, linetype = &amp;quot;dashed&amp;quot;) +
+  geom_vline(xintercept = 0.50, linetype = &amp;quot;dashed&amp;quot;) +
+  geom_vline(xintercept = 0.75, linetype = &amp;quot;dashed&amp;quot;) +
+  theme(legend.position = &amp;quot;none&amp;quot;) +
+  labs(y = &amp;quot;Brands&amp;quot;, x = &amp;quot;Lightness&amp;quot;,
+       title = &amp;quot;Foundation shade distributions&amp;quot;,
+       subtitle = &amp;quot;Distribution of foundations from different brands according to lightness&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="file106753b50008_files/figure-html/figure2-1.png" width="768" /&gt;&lt;/p&gt;
+&lt;h2 id="plotting-keywords-associated-with-foundations-of-different-shades"&gt;Plotting keywords associated with foundations of different shades&lt;/h2&gt;
+&lt;p&gt;In this section, keywords associated with foundations of different shades are plotted. This is done by…&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;taking all the available foundation names as a corpus&lt;/li&gt;
+&lt;li&gt;splitting that corpus into different documents based on rounded lightness values&lt;/li&gt;
+&lt;li&gt;calculating &lt;a href="https://www.tidytextmining.com/tfidf.html"&gt;tf-idf&lt;/a&gt; to find significant words used to describe foundations according to their shade&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;From this plot, we can see that the darkest (“Lightness: 0.2”) and lightest (“Lightness: 0.8”) foundations are associated with more descriptive, unique keywords than the intermediate shades.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;simplified_names %&amp;gt;%
+  group_by(rounded) %&amp;gt;%
+  slice_max(n = 5, order_by = tf_idf) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  ggplot(aes(tf_idf, fct_reorder(word, tf_idf), fill = rounded)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~rounded, ncol = 2, scales = &amp;quot;free&amp;quot;) +
+  theme_classic() +
+  labs(x = &amp;quot;Term frequency-inverse document freqeuncy (tf-idf)&amp;quot;, y = &amp;quot;Keywords&amp;quot;,
+       title = &amp;quot;Keywords associated with foundations of different lightnesses&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="file106753b50008_files/figure-html/figure3-1.png" width="672" /&gt;&lt;/p&gt;
+&lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
+      <distill:md5>e9f26d09e7c854e119b65d369b0f2792</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades</guid>
       <pubDate>Tue, 06 Apr 2021 00:00:00 +0000</pubDate>
       <media:content url="https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades/makeup-shades_files/figure-html5/figure1-1.png" medium="image" type="image/png" width="1536" height="1536"/>
