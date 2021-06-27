@@ -55,7 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
 code span.cf { color: #007ba5; } /* ControlFlow */
@@ -76,7 +76,7 @@ code span.kw { color: #007ba5; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
 code span.ot { color: #007ba5; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
@@ -134,7 +134,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["global-deforestation_files/anchor-4.2.2/anchor.min.js","global-deforestation_files/bowser-1.9.3/bowser.min.js","global-deforestation_files/distill-2.2.21/template.v2.js","global-deforestation_files/figure-html5/figure1-1.png","global-deforestation_files/figure-html5/figure2-1.png","global-deforestation_files/header-attrs-2.7/header-attrs.js","global-deforestation_files/jquery-1.11.3/jquery.min.js","global-deforestation_files/popper-2.6.0/popper.min.js","global-deforestation_files/tippy-6.2.7/tippy-bundle.umd.min.js","global-deforestation_files/tippy-6.2.7/tippy-light-border.css","global-deforestation_files/tippy-6.2.7/tippy.css","global-deforestation_files/tippy-6.2.7/tippy.umd.min.js","global-deforestation_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["global-deforestation_files/anchor-4.2.2/anchor.min.js","global-deforestation_files/bowser-1.9.3/bowser.min.js","global-deforestation_files/distill-2.2.21/template.v2.js","global-deforestation_files/figure-html5/figure1-1.png","global-deforestation_files/figure-html5/figure2-1.png","global-deforestation_files/header-attrs-2.7/header-attrs.js","global-deforestation_files/header-attrs-2.9.1/header-attrs.js","global-deforestation_files/jquery-1.11.3/jquery.min.js","global-deforestation_files/popper-2.6.0/popper.min.js","global-deforestation_files/tippy-6.2.7/tippy-bundle.umd.min.js","global-deforestation_files/tippy-6.2.7/tippy-light-border.css","global-deforestation_files/tippy-6.2.7/tippy.css","global-deforestation_files/tippy-6.2.7/tippy.umd.min.js","global-deforestation_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content="../.."/>
@@ -1887,7 +1887,10 @@ function init_distill() {
 
     // hoverable references
     $('span.citation[data-cites]').each(function() {
-      var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+      var refs = $(this).attr('data-cites').split(" ");
+      var refHtml = refs.map(function(ref) {
+        return "<p>" + $('#ref-' + ref).html() + "</p>";
+      }).join("\n");
       window.tippy(this, {
         allowHTML: true,
         content: refHtml,
@@ -2374,7 +2377,7 @@ d-appendix d-footnote-list a.footnote-backlink {
   color: var(--hover-color, white);
 }</style>
 <!--/radix_placeholder_distill-->
-  <script src="../../site_libs/header-attrs-2.7/header-attrs.js"></script>
+  <script src="../../site_libs/header-attrs-2.9.1/header-attrs.js"></script>
   <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
   <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -2425,7 +2428,7 @@ d-appendix d-footnote-list a.footnote-backlink {
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Plotting deforestation and its causes","description":"Graphs and analysis using the #TidyTuesday data set for week 15 of 2021\n  (6/4/2021): \"Global deforestation\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-07T00:00:00.000+00:00","citationText":"Harrington, 2021"}
+{"title":"Plotting deforestation and its causes","description":"Graphs and analysis using the #TidyTuesday data set for week 15 of 2021\n  (6/4/2021): \"Global deforestation\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-07T00:00:00.000+01:00","citationText":"Harrington, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2481,12 +2484,10 @@ d-appendix d-footnote-list a.footnote-backlink {
 <p>Loading the <code>R</code> libraries and <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-04-06/readme.md">data set</a>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading libraries</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/thebioengineer/tidytuesdayR'>tidytuesdayR</a></span><span class='op'>)</span>
 
 <span class='co'># Loading data</span>
@@ -2504,9 +2505,7 @@ Show code
 <p>Wrangling data for visualisation.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating a function to tidy the tt$brazil_loss data set</span>
 <span class='co'>## The function "tidy_brazil_loss" takes a variable name as an argument.</span>
@@ -2551,9 +2550,7 @@ Show code
 [10] &quot;small_scale_clearing&quot;           
 [11] &quot;tree_plantations_including_palm&quot;</code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Setting more descriptive factor levels for tidy_brazil$cause</span>
 <span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>tidy_brazil</span><span class='op'>$</span><span class='va'>cause</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Commercial crops"</span>,
@@ -2588,9 +2585,7 @@ Show code
 10  2010 Commercial crops 100000
 # … with 133 more rows</code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Getting the six countries with the highest net forest conversion</span>
 <span class='va'>net_forest_max</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>forest</span> <span class='op'>%&gt;%</span> 
@@ -2616,9 +2611,7 @@ Show code
 <p>In this section, the causes of deforestation in Brazil are plotted, along with the observed forest loss in hectares associated with each cause. Each cause is faceted into its own section of the plot, with the y-axis changing according to the scale of deforestation. For perspective, a dashed line is added at 10,000 hectares of forest loss for each cause. From this plot, we can see that creating pasture for livestock lead to massive deforestation from 2001 until ~2005, and deforestation due to mining did not cross the 10,000 hectares threshold until 2013.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting the causes of deforestation in Brazil</span>
 <span class='va'>tidy_brazil</span> <span class='op'>%&gt;%</span>
@@ -2640,9 +2633,7 @@ Show code
 <p>In this section, net forest conversions in hectares over time are plotted for twelve countries. These countries had the highest and lowest net changes in forest area in the data set. Dashed lines are added to put the scale of forest gains and losses into perspective. For each country, a dashed green line is added at a net increase of 250,000 hectares of forest, and a dashed red line is added at a net decrease of 250,000 hectares.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting net change in forest area across different countries</span>
 <span class='va'>tt</span><span class='op'>$</span><span class='va'>forest</span> <span class='op'>%&gt;%</span>

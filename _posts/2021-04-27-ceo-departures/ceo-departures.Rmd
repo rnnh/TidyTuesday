@@ -135,7 +135,7 @@ In this section, a linear SVM model is created using the training subset with 10
 
 ```{r training, code_folding=TRUE, include=TRUE}
 # Setting up parallel processing
-cl <- makePSOCKcluster(detectCores() - 6)
+cl <- makePSOCKcluster(detectCores() - 1)
 registerDoParallel(cl)
 
 # Setting seed for reproducibility

@@ -55,7 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
 code span.cf { color: #007ba5; } /* ControlFlow */
@@ -76,7 +76,7 @@ code span.kw { color: #007ba5; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
 code span.ot { color: #007ba5; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
@@ -1887,7 +1887,10 @@ function init_distill() {
 
     // hoverable references
     $('span.citation[data-cites]').each(function() {
-      var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+      var refs = $(this).attr('data-cites').split(" ");
+      var refHtml = refs.map(function(ref) {
+        return "<p>" + $('#ref-' + ref).html() + "</p>";
+      }).join("\n");
       window.tippy(this, {
         allowHTML: true,
         content: refHtml,
@@ -2374,7 +2377,7 @@ d-appendix d-footnote-list a.footnote-backlink {
   color: var(--hover-color, white);
 }</style>
 <!--/radix_placeholder_distill-->
-  <script src="../../site_libs/header-attrs-2.7/header-attrs.js"></script>
+  <script src="../../site_libs/header-attrs-2.9.1/header-attrs.js"></script>
   <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
   <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -2425,7 +2428,7 @@ d-appendix d-footnote-list a.footnote-backlink {
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"UN Votes: Plotting votes on United Nations resolutions","description":"Graphs and analysis using the #TidyTuesday data set for week 13 of 2021\n  (23/3/2021): \"UN Votes\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-03-30T00:00:00.000+00:00","citationText":"Harrington, 2021"}
+{"title":"UN Votes: Plotting votes on United Nations resolutions","description":"Graphs and analysis using the #TidyTuesday data set for week 13 of 2021\n  (23/3/2021): \"UN Votes\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-03-30T00:00:00.000+01:00","citationText":"Harrington, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2483,14 +2486,12 @@ d-appendix d-footnote-list a.footnote-backlink {
 <p>Loading the <code>R</code> libraries and <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-03-23/readme.md">data set</a>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading libraries</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://forcats.tidyverse.org'>forcats</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/juliasilge/tidytext'>tidytext</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/thebioengineer/tidytuesdayR'>tidytuesdayR</a></span><span class='op'>)</span>
 
 <span class='co'># Loading data</span>
@@ -2506,9 +2507,7 @@ Show code
 <p>Wrangling data for visualisation.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Extracting US votes on each UN resolution</span>
 <span class='va'>US_votes</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>unvotes</span> <span class='op'>%&gt;%</span>
@@ -2535,9 +2534,7 @@ Show code
 </details>
 <pre><code>[1] &quot;FALSE&quot; &quot;TRUE&quot; </code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>important_votes</span><span class='op'>$</span><span class='va'>agree_with_US</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Votes in disagreement with US"</span>,
                                            <span class='st'>"Votes in agreement with US"</span><span class='op'>)</span>
@@ -2564,9 +2561,7 @@ Show code
 #   country &lt;chr&gt;, country_code &lt;chr&gt;, vote &lt;chr&gt;, US_vote &lt;chr&gt;,
 #   agree_with_US &lt;fct&gt;, short_name &lt;chr&gt;, issue &lt;chr&gt;</code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Counting the number of votes for each country that coincide with the US vote</span>
 <span class='co'># on each resolution</span>
@@ -2609,9 +2604,7 @@ Show code
 <p>One of the variables in this data set is <code>importantvote</code>, which is used to record whether or not each United Nations (UN) resolution is classified as important by the United States (US) State Department. This is taken from its “Voting Practices in the United Nations” report. This variable is used to select UN resolutions important to the US. For these important resolutions, the vote of each country is compared with the US vote. The number of times each country votes with or against the US is counted; the countries that have agreed/disagreed on the most resolutions are plotted below.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting countries that have agreed/disagreed with the most US votes</span>
 <span class='va'>agree_with_US_count</span> <span class='op'>%&gt;%</span>
@@ -2632,9 +2625,7 @@ Show code
 <p>The comparison of each UN resolution vote with the US vote is also used in this plot. In this case, it is used to gauge the amount of consensus on each issue.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting votes on different categories of UN resolutions over time</span>
 <span class='va'>votes_by_issue</span> <span class='op'>%&gt;%</span>
@@ -2663,9 +2654,7 @@ Show code
 <p>These keywords outline which UN resolution issues pertain to different countries. For example, resolutions on “Human rights” frequently use the words “situation” and “Iran”; resolutions on “Economic development” frequently use the words “embargo” and “Cuba”; resolutions on “Colonialism” frequently use the words “territories” and “Palestinian”.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting keywords in UN resolution descriptions</span>
 <span class='va'>issue_descr_words</span> <span class='op'>%&gt;%</span>
@@ -2689,9 +2678,7 @@ Show code
 <p>This pie chart illustrates the percentage of UN votes on each issue in the data set.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting percentage of votes in each UN resolution category</span>
 <span class='va'>important_votes</span> <span class='op'>%&gt;%</span> 

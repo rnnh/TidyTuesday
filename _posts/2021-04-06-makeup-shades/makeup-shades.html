@@ -55,7 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
 code span.cf { color: #007ba5; } /* ControlFlow */
@@ -76,7 +76,7 @@ code span.kw { color: #007ba5; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
 code span.ot { color: #007ba5; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
@@ -1262,7 +1262,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          return "<p>" + $('#ref-' + ref).html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -1433,7 +1436,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="makeup-shades_files/header-attrs-2.7/header-attrs.js"></script>
+  <script src="makeup-shades_files/header-attrs-2.9.1/header-attrs.js"></script>
   <script src="makeup-shades_files/jquery-1.11.3/jquery.min.js"></script>
   <script src="makeup-shades_files/popper-2.6.0/popper.min.js"></script>
   <link href="makeup-shades_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -1454,7 +1457,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Plotting foundations according to shade","description":"Graphs and analysis using the #TidyTuesday data set for week 14 of 2021\n  (30/3/2021): \"Makeup Shades\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-06T00:00:00.000+00:00","citationText":"Harrington, 2021"}
+{"title":"Plotting foundations according to shade","description":"Graphs and analysis using the #TidyTuesday data set for week 14 of 2021\n  (30/3/2021): \"Makeup Shades\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-06T00:00:00.000+01:00","citationText":"Harrington, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1492,9 +1495,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>Loading the <code>R</code> libraries and <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-03-30/readme.md">data set</a>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading libraries</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
@@ -1519,9 +1520,7 @@ Show code
 <p>Wrangling data for visualisation.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Selecting the 14 brands with the most foundations in the data set as</span>
 <span class='co'># "top_brands"</span>
@@ -1559,9 +1558,7 @@ Show code
 0.2 0.4 0.6 0.8   1 
  28 148 221 217  50 </code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>simplified_names</span><span class='op'>$</span><span class='va'>rounded</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Lightness: 0.2, n = 28"</span>,
                                       <span class='st'>"Lightness: 0.4, n = 148"</span>,
@@ -1591,9 +1588,7 @@ Show code
 <p>In this plot, each point represents a single foundation from the 14 most represented brands in the data set. The colour of each point corresponds to the dominant shade of each foundation. These points are arranged according to the lightness of each foundation.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting all the foundations from "top_brands" according to lightness</span>
 <span class='va'>tt</span><span class='op'>$</span><span class='va'>allShades</span> <span class='op'>%&gt;%</span>
@@ -1618,9 +1613,7 @@ Show code
 <p>In this plot, the distributions of foundations from the brands in the previous graph are plotted according to lightness. Across all these brands, lighter shades are more represented than darker shades.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting the distribution of foundations from "top_brands" according to</span>
 <span class='co'># lightness</span>
@@ -1653,9 +1646,7 @@ Show code
 <p>From this plot, we can see that the darkest (“Lightness: 0.2”) and lightest (“Lightness: 0.8”) foundations are associated with more descriptive, unique keywords than the intermediate shades.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>simplified_names</span> <span class='op'>%&gt;%</span>
   <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>rounded</span><span class='op'>)</span> <span class='op'>%&gt;%</span>

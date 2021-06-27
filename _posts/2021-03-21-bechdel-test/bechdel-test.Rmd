@@ -8,7 +8,7 @@ author:
     url: https://github.com/rnnh/
 date: 03-21-2021
 repository_url: https://github.com/rnnh/TidyTuesday/
-preview: ../../images/bechdel-test-1.gif
+preview: bechdel-test_files/figure-html5/figure1-1.gif
 output:
   distill::distill_article:
     self_contained: false
@@ -82,9 +82,6 @@ p <- ratings_by_year %>%
 
 # Rendering the animation as a .gif
 animate(p, nframes = 400, fps = 20, renderer = magick_renderer())
-
-# Saving the .gif
-gganimate::anim_save("../../images/bechdel-test-1.gif")
 ```
 
 ## Plotting the directors most likely to pass/fail the Bechdel Test
@@ -141,9 +138,6 @@ results_by_director %>%
   labs(x = "term frequency–inverse document frequency (tf-idf)", y = NULL) +
   labs(title = "Directors most likely to Pass/Fail the Bechdel Test") +
   theme_bw()
-
-# Saving the plot
-ggsave("../../images/bechdel-test-2.png")
 ```
 
 ## Plotting the writers most likely to pass/fail the Bechdel Test
@@ -198,7 +192,4 @@ results_by_writer %>%
   labs(x = "term frequency–inverse document frequency (tf-idf)", y = NULL) +
   labs(title = "Writers most likely to Pass/Fail the Bechdel Test") +
   theme_bw()
-
-# Saving the plot
-ggsave("../../images/bechdel-test-3.png")
 ```

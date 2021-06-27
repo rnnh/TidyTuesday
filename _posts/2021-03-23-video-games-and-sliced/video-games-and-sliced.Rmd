@@ -8,7 +8,7 @@ author:
     url: https://github.com/rnnh/
 date: 03-23-2021
 repository_url: https://github.com/rnnh/TidyTuesday/
-preview: ../../images/video-games-and-sliced-1.png
+preview: video-games-and-sliced_files/figure-html5/figure1-1.png
 output:
   distill::distill_article:
     self_contained: false
@@ -54,11 +54,6 @@ games %>%
        y = "Highest number of players at the same time",
        x = "Average number of players at the same time",
        colour = "Game")
-```
-
-```{r, include=FALSE}
-# Saving the last plot to use as the preview image for this post
-ggsave("../../images/video-games-and-sliced-1.png")
 ```
 
 ## Combining "year" and "month" into a new variable

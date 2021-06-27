@@ -55,7 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
 code span.cf { color: #007ba5; } /* ControlFlow */
@@ -76,7 +76,7 @@ code span.kw { color: #007ba5; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
 code span.ot { color: #007ba5; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
@@ -1262,7 +1262,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          return "<p>" + $('#ref-' + ref).html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -1433,7 +1436,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="ceo-departures_files/header-attrs-2.7/header-attrs.js"></script>
+  <script src="ceo-departures_files/header-attrs-2.9.1/header-attrs.js"></script>
   <script src="ceo-departures_files/jquery-1.11.3/jquery.min.js"></script>
   <script src="ceo-departures_files/popper-2.6.0/popper.min.js"></script>
   <link href="ceo-departures_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -1454,7 +1457,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Predicting voluntary CEO departures using machine learning","description":"Graphs and analysis using the #TidyTuesday data set for week 18 of 2021\n  (27/4/2021): \"CEO Departures\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-27T00:00:00.000+00:00","citationText":"Harrington, 2021"}
+{"title":"Predicting voluntary CEO departures using machine learning","description":"Graphs and analysis using the #TidyTuesday data set for week 18 of 2021\n  (27/4/2021): \"CEO Departures\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-27T00:00:00.000+01:00","citationText":"Harrington, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1500,9 +1503,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h2 id="setup">Setup</h2>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading libraries</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
@@ -1528,9 +1529,7 @@ Show code
 <p>Wrangling data for machine learning and visualisation.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating a new variable "depart_vol" to record CEO departures as</span>
 <span class='co'>## Voluntary or Involuntary</span>
@@ -1571,9 +1570,7 @@ Involuntary   Voluntary
 </ul>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Setting seed for reproducibility</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
@@ -1598,20 +1595,18 @@ Show code
 # A tibble: 10 x 2
    splits             id    
    &lt;list&gt;             &lt;chr&gt; 
- 1 &lt;split [3689/411]&gt; Fold01
- 2 &lt;split [3690/410]&gt; Fold02
- 3 &lt;split [3690/410]&gt; Fold03
- 4 &lt;split [3690/410]&gt; Fold04
- 5 &lt;split [3690/410]&gt; Fold05
- 6 &lt;split [3690/410]&gt; Fold06
- 7 &lt;split [3690/410]&gt; Fold07
- 8 &lt;split [3690/410]&gt; Fold08
- 9 &lt;split [3690/410]&gt; Fold09
-10 &lt;split [3691/409]&gt; Fold10</code></pre>
+ 1 &lt;split [3688/410]&gt; Fold01
+ 2 &lt;split [3688/410]&gt; Fold02
+ 3 &lt;split [3688/410]&gt; Fold03
+ 4 &lt;split [3688/410]&gt; Fold04
+ 5 &lt;split [3688/410]&gt; Fold05
+ 6 &lt;split [3688/410]&gt; Fold06
+ 7 &lt;split [3688/410]&gt; Fold07
+ 8 &lt;split [3688/410]&gt; Fold08
+ 9 &lt;split [3689/409]&gt; Fold09
+10 &lt;split [3689/409]&gt; Fold10</code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Feature engineering</span>
 <span class='co'>## Creating preprocessing recipe for predicting voluntary/involuntary departures</span>
@@ -1660,9 +1655,7 @@ Linear Support Vector Machine Specification (classification)
 
 Computational engine: LiblineaR </code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Selecting the metrics used for modelling</span>
 <span class='va'>departures_metrics</span> <span class='op'>&lt;-</span> <span class='fu'>metric_set</span><span class='op'>(</span><span class='va'>accuracy</span>, <span class='va'>recall</span>, <span class='va'>precision</span><span class='op'>)</span>
@@ -1674,12 +1667,10 @@ Show code
 <p>In this section, a linear SVM model is created using the training subset with 10-fold CV.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Setting up parallel processing</span>
-<span class='va'>cl</span> <span class='op'>&lt;-</span> <span class='fu'>makePSOCKcluster</span><span class='op'>(</span><span class='fu'>detectCores</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>6</span><span class='op'>)</span>
+<span class='va'>cl</span> <span class='op'>&lt;-</span> <span class='fu'>makePSOCKcluster</span><span class='op'>(</span><span class='fu'>detectCores</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/doParallel/man/registerDoParallel.html'>registerDoParallel</a></span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span>
 
 <span class='co'># Setting seed for reproducibility</span>
@@ -1700,17 +1691,15 @@ Show code
 <pre><code># A tibble: 3 x 6
   .metric   .estimator  mean     n std_err .config             
   &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
-1 accuracy  binary     0.797    10 0.00593 Preprocessor1_Model1
-2 precision binary     0.662    10 0.00992 Preprocessor1_Model1
-3 recall    binary     0.706    10 0.0121  Preprocessor1_Model1</code></pre>
+1 accuracy  binary     0.804    10 0.00592 Preprocessor1_Model1
+2 precision binary     0.677    10 0.0102  Preprocessor1_Model1
+3 recall    binary     0.706    10 0.00925 Preprocessor1_Model1</code></pre>
 </div>
 <h2 id="creating-a-model-using-the-full-data-set">Creating a model using the full data set</h2>
 <p>In this section, the final linear SVM model is created using the full data set.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Setting seed for reproducibility</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
@@ -1727,17 +1716,15 @@ Show code
 <pre><code># A tibble: 3 x 4
   .metric   .estimator .estimate .config             
   &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;               
-1 accuracy  binary         0.815 Preprocessor1_Model1
-2 recall    binary         0.733 Preprocessor1_Model1
-3 precision binary         0.690 Preprocessor1_Model1</code></pre>
+1 accuracy  binary         0.813 Preprocessor1_Model1
+2 recall    binary         0.708 Preprocessor1_Model1
+3 precision binary         0.694 Preprocessor1_Model1</code></pre>
 </div>
 <h2 id="confusion-matrices-for-training-and-full-models">Confusion matrices for training and full models</h2>
 <p>In this section, confusion matrices are printed for the linear SVM models created using the training subset and full data set. The confusion matrix for the final model is plotted to illustrate the differences between this model’s predictions and the true values in the data set. From this plot, we can see that there is a class imbalance in the data set: most of the CEO departures with descriptions were Voluntary. As a result, Voluntary CEO departures are more accurately predicted based on event descriptions than Involuntary departures. Class imbalances can be addressed by upsampling (creating new examples of the minority class), which is used in the feature engineering of this model. Ideally, this data set would have more descriptions of Involuntary CEO departures.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Printing the confusion matrix of the model trained using the 10-fold cv</span>
 <span class='co'>## training data</span>
@@ -1747,12 +1734,10 @@ Show code
 </div>
 </details>
 <pre><code>            Involuntary Voluntary
-Involuntary        89.8      45.9
-Voluntary          37.3     237.0</code></pre>
+Involuntary        89.7      42.9
+Voluntary          37.3     239.9</code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Printing the confusion matrix of the final fitted model</span>
 <span class='fu'>collect_predictions</span><span class='op'>(</span><span class='va'>final_fitted</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -1762,12 +1747,10 @@ Show code
 </details>
 <pre><code>             Truth
 Prediction    Involuntary Voluntary
-  Involuntary         310       139
-  Voluntary           113       803</code></pre>
+  Involuntary         300       132
+  Voluntary           124       811</code></pre>
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Visualising confusion matrix of the final fitted model</span>
 <span class='fu'>collect_predictions</span><span class='op'>(</span><span class='va'>final_fitted</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -1790,9 +1773,7 @@ Figure 1: Confusion matrix for the final linear SVM model.
 <p>From this plot, we can see that descriptions of Involuntary CEO departures are more likely to include the words “health”, “died”, “charge” and “dropped”. Descriptions of Voluntary CEO departures are more likely to include the words “retired”, “voluntarily”, “join” and “consulting”. Involuntary CEO departures described in the data set are likely due to poor health, death and litigation; Voluntary CEO departures are likely due to retirement, former executives joining other companies, or moving into consulting.</p>
 <div class="layout-chunk" data-layout="l-body">
 <details>
-<summary>
-Show code
-</summary>
+<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Extracting model fit</span>
 <span class='va'>departures_fit</span> <span class='op'>&lt;-</span> <span class='fu'>pull_workflow_fit</span><span class='op'>(</span><span class='va'>final_fitted</span><span class='op'>$</span><span class='va'>.workflow</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
