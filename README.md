@@ -5,10 +5,11 @@ by [Ronan Harrington](https://github.com/rnnh/)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f8211364-bd13-41ac-97b2-e9ed92e9c615/deploy-status)](https://app.netlify.com/sites/tidytuesday/deploys)
 ![GitHub repo size](https://img.shields.io/github/repo-size/rnnh/TidyTuesday)
 
+**<https://tidytuesday.netlify.app/>**
+
 Reproducible visualisation and analysis of [#TidyTuesday data sets](https://github.com/rfordatascience/tidytuesday), created using [distill for R Markdown](https://github.com/rstudio/distill).
 These data sets are provided by the [R for Data Science (R4DS)](https://github.com/rfordatascience) community.
 This blog can be viewed locally by downloading this GitHub repository and opening [the index page](_site/index.html) in a web browser.
-It is also available at **<https://tidytuesday.netlify.app/>**.
 Full article content via [RSS is now available](https://github.com/rnnh/TidyTuesday/commit/3608329d5a880c6d9647c0d4e21c9763388de618) though this blog's [index.xml](https://tidytuesday.netlify.app/index.xml) page.
 
 ## Posts
