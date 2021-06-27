@@ -214,7 +214,7 @@ collect_predictions(final_fitted) %&amp;gt;%
   labs(title = &amp;quot;Prediction vs Truth for final linear SVM model&amp;quot;,
        subtitle = &amp;quot;Class imbalance is an issue; most of the observations were of Voluntary CEO departures&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="fileb5f533e788a5_files/figure-html/fig1-1.png" alt="Confusion matrix for the final linear SVM model." width="768" /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-27-ceo-departures/ceo-departures_files/figure-html5/fig1-1.png" alt="Confusion matrix for the final linear SVM model." width="768" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig1)Confusion matrix for the final linear SVM model.
 &lt;/p&gt;
@@ -244,7 +244,7 @@ tidy(departures_fit) %&amp;gt;%
   labs(titles = &amp;quot;Which words are more likely to be used when a CEO leaves Involuntarily vs. Voluntarily?&amp;quot;,
        subtitle = &amp;quot;Importance assigned by linear SVM model, based on descriptions of CEO departures&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="fileb5f533e788a5_files/figure-html/fig2-1.png" alt="Words most likely to appear in CEO departure descriptions in each category, according to the linear SVM model." width="768" /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-27-ceo-departures/ceo-departures_files/figure-html5/fig2-1.png" alt="Words most likely to appear in CEO departure descriptions in each category, according to the linear SVM model." width="768" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig2)Words most likely to appear in CEO departure descriptions in each category, according to the linear SVM model.
 &lt;/p&gt;
@@ -337,7 +337,7 @@ netflix_movies %&amp;gt;%
   labs(x = &amp;quot;Film rating&amp;quot;, y = &amp;quot;Film duration (minutes)&amp;quot;,
        title = &amp;quot;Films aimed at younger audiences tend to be shorter&amp;quot;,
        subtitle = &amp;quot;Film rating vs duration in minutes, dashed line at 90 minutes&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f52334878_files/figure-html/figure1-1.png" width="672" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles/netflix-titles_files/figure-html5/figure1-1.png" width="672" /&gt;&lt;/p&gt;
 &lt;h2 id="netflix-is-adding-fewer-films-for-kids"&gt;Netflix is adding fewer films for kids&lt;/h2&gt;
 &lt;p&gt;For this plot, I selected MPA rated films again, and the year they were added to Netflix. Each column represents a single year, and each column is divided according to the percentage of films in each MPA rating added that year. From this plot, we can see that Netflix is adding fewer films for kids (G and PG).&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Summarising films added to Netflix annually by MPA rating
@@ -357,7 +357,7 @@ netflix_movies %&amp;gt;%
   labs(y = &amp;quot;Percentage of films added&amp;quot;, x = &amp;quot;Year&amp;quot;, fill = &amp;quot;MPA rating&amp;quot;,
        title = &amp;quot;MPA rated films added to Netflix each year&amp;quot;,
        subtitle = &amp;quot;Year vs Percentage of Motion Picture Association (MPA) rated films added&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f52334878_files/figure-html/figure2-1.png" width="672" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles/netflix-titles_files/figure-html5/figure2-1.png" width="672" /&gt;&lt;/p&gt;
 &lt;h2 id="significant-words-in-category-descriptions"&gt;Significant words in category descriptions&lt;/h2&gt;
 &lt;p&gt;In this section, significant words used to describe titles in the most common Netflix categories are plotted. This is done by…&lt;/p&gt;
 &lt;ul&gt;
@@ -377,7 +377,7 @@ top_listing_words %&amp;gt;%
        fill = &amp;quot;Netflix categories&amp;quot;,
        title = &amp;quot;Significant words in common Netflix category descriptions&amp;quot;,
        subtitle = &amp;quot;Words that appear often in these categories and not others&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f52334878_files/figure-html/figure3-1.png" width="672" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles/netflix-titles_files/figure-html5/figure3-1.png" width="672" /&gt;&lt;/p&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>e799417712f4d36701f78c221a47c24f</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2021-04-21-netflix-titles</guid>
@@ -433,7 +433,7 @@ p &amp;lt;- ggplot(usa_shapefile) +
 
 # Rendering the animation as a .gif
 animate(p, nframes = 400, fps = 5, renderer = magick_renderer())&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f544695430_files/figure-html/figure1-1.gif" /&gt;&lt;!-- --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure1-1.gif" /&gt;&lt;!-- --&gt;&lt;/p&gt;
 &lt;p&gt;Here are all these post offices in one static plot.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# All the post offices on the USA shapefile in a static plot
 ggplot(usa_shapefile) +
@@ -445,7 +445,7 @@ ggplot(usa_shapefile) +
   theme(legend.position = &amp;quot;none&amp;quot;) +
   labs(title = &amp;quot;Post offices in the US&amp;quot;,
        subtitle = &amp;quot;Lighter points indicate rarer postmarks&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f544695430_files/figure-html/figure2-1.png" width="576" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure2-1.png" width="576" /&gt;&lt;/p&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>61d674b4560a255967cc7a77f7ec7983</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices</guid>
@@ -571,7 +571,7 @@ tidy_brazil %&amp;gt;%
   labs(y = &amp;quot;Forest loss (hectares)&amp;quot;, x = &amp;quot;Time&amp;quot;,
        title = &amp;quot;Forest loss due to different causes in Brazil&amp;quot;,
        subtitle = &amp;quot;Dashed line added at 10,000 hectares for perspective&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f51f0ada0_files/figure-html/figure1-1.png" width="768" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/global-deforestation_files/figure-html5/figure1-1.png" width="768" /&gt;&lt;/p&gt;
 &lt;h2 id="plotting-net-change-in-forest-area-across-different-countries"&gt;Plotting net change in forest area across different countries&lt;/h2&gt;
 &lt;p&gt;In this section, net forest conversions in hectares over time are plotted for twelve countries. These countries had the highest and lowest net changes in forest area in the data set. Dashed lines are added to put the scale of forest gains and losses into perspective. For each country, a dashed green line is added at a net increase of 250,000 hectares of forest, and a dashed red line is added at a net decrease of 250,000 hectares.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting net change in forest area across different countries
@@ -589,7 +589,7 @@ tt$forest %&amp;gt;%
   labs(y = &amp;quot;Net forest conversion (hectares)&amp;quot;, x = &amp;quot;Time&amp;quot;,
        title = &amp;quot;Countries with highest and lowest net changes in forest area&amp;quot;,
        subtitle = &amp;quot;Dashed lines at +250,000 hectares (green) and -250,000 hectares (red)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f51f0ada0_files/figure-html/figure2-1.png" width="1152" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation/global-deforestation_files/figure-html5/figure2-1.png" width="1152" /&gt;&lt;/p&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>b6feae663f19c7bbcd27be4153aacaa4</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2021-04-07-global-deforestation</guid>
@@ -690,7 +690,7 @@ tt$allShades %&amp;gt;%
   labs(y = &amp;quot;&amp;quot;, x = &amp;quot;Lightness&amp;quot;,
        title = &amp;quot;Foundations from different brands plotted according to lightness&amp;quot;,
        subtitle = &amp;quot;Each point represents the dominant colour of each foundation&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f56da42efd_files/figure-html/figure1-1.png" width="768" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades/makeup-shades_files/figure-html5/figure1-1.png" width="768" /&gt;&lt;/p&gt;
 &lt;h2 id="plotting-distributions-of-foundation-lightness"&gt;Plotting distributions of foundation lightness&lt;/h2&gt;
 &lt;p&gt;In this plot, the distributions of foundations from the brands in the previous graph are plotted according to lightness. Across all these brands, lighter shades are more represented than darker shades.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting the distribution of foundations from &amp;quot;top_brands&amp;quot; according to
@@ -709,7 +709,7 @@ tt$allShades %&amp;gt;%
   labs(y = &amp;quot;Brands&amp;quot;, x = &amp;quot;Lightness&amp;quot;,
        title = &amp;quot;Foundation shade distributions&amp;quot;,
        subtitle = &amp;quot;Distribution of foundations from different brands according to lightness&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f56da42efd_files/figure-html/figure2-1.png" width="768" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades/makeup-shades_files/figure-html5/figure2-1.png" width="768" /&gt;&lt;/p&gt;
 &lt;h2 id="plotting-keywords-associated-with-foundations-of-different-shades"&gt;Plotting keywords associated with foundations of different shades&lt;/h2&gt;
 &lt;p&gt;In this section, keywords associated with foundations of different shades are plotted. This is done by…&lt;/p&gt;
 &lt;ul&gt;
@@ -728,7 +728,7 @@ tt$allShades %&amp;gt;%
   theme_classic() +
   labs(x = &amp;quot;Term frequency-inverse document freqeuncy (tf-idf)&amp;quot;, y = &amp;quot;Keywords&amp;quot;,
        title = &amp;quot;Keywords associated with foundations of different lightnesses&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f56da42efd_files/figure-html/figure3-1.png" width="672" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades/makeup-shades_files/figure-html5/figure3-1.png" width="672" /&gt;&lt;/p&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>d62613f34765ca67660681339d745c61</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2021-04-06-makeup-shades</guid>
@@ -844,7 +844,7 @@ agree_with_US_count %&amp;gt;%
   labs(x = &amp;quot;Votes on important UN resolutions&amp;quot;, y = &amp;quot;Countries&amp;quot;,
        title = &amp;quot;Votes on important United Nations (UN) resolutions&amp;quot;,
        subtitle = &amp;quot;Resolution importance classified by the United States (US) State Department&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f557cebca6_files/figure-html/figure1-1.png" width="768" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-30-un-votes/un-votes_files/figure-html5/figure1-1.png" width="768" /&gt;&lt;/p&gt;
 &lt;h2 id="plotting-votes-on-un-resolutions-on-different-issues"&gt;Plotting votes on UN resolutions on different issues&lt;/h2&gt;
 &lt;p&gt;The comparison of each UN resolution vote with the US vote is also used in this plot. In this case, it is used to gauge the amount of consensus on each issue.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting votes on different categories of UN resolutions over time
@@ -859,7 +859,7 @@ votes_by_issue %&amp;gt;%
        title = &amp;quot;Votes on UN resolutions over time by issue&amp;quot;,
        subtitle = &amp;quot;Agreement/disagreement with US vote used to gauge consensus on each issue&amp;quot;,
        colour = NULL)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f557cebca6_files/figure-html/figure2-1.png" width="768" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-30-un-votes/un-votes_files/figure-html5/figure2-1.png" width="768" /&gt;&lt;/p&gt;
 &lt;h2 id="plotting-keywords-in-un-resolution-descriptions"&gt;Plotting keywords in UN resolution descriptions&lt;/h2&gt;
 &lt;p&gt;The different issues covered by each UN resolution is taken directly from the data set (&lt;code&gt;tt$issues&lt;/code&gt;). In this section, significant words used to describe UN resolutions on each issue are plotted. This is done by…&lt;/p&gt;
 &lt;ul&gt;
@@ -881,7 +881,7 @@ issue_descr_words %&amp;gt;%
   labs(x = &amp;quot;Term frequency-inverse document freqeuncy (tf-idf)&amp;quot;,
        title = &amp;quot;Keywords in UN resolution descriptions across different categories&amp;quot;,
        subtitle = &amp;quot;tf-idf applied to resolution descriptions on different issues&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f557cebca6_files/figure-html/figure3-1.png" width="672" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-30-un-votes/un-votes_files/figure-html5/figure3-1.png" width="672" /&gt;&lt;/p&gt;
 &lt;h2 id="plotting-the-percentage-of-un-votes-on-each-issue-in-data-set"&gt;Plotting the percentage of UN votes on each issue in data set&lt;/h2&gt;
 &lt;p&gt;This pie chart illustrates the percentage of UN votes on each issue in the data set.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting percentage of votes in each UN resolution category
@@ -900,7 +900,7 @@ important_votes %&amp;gt;%
   labs(title = &amp;quot;Percentage of UN resolution votes on different issues&amp;quot;,
        subtitle = &amp;quot;Data set covers 6,202 UN resolutions from 1946 to 2019&amp;quot;,
        fill = &amp;quot;Issue&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f557cebca6_files/figure-html/figure4-1.png" width="672" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-30-un-votes/un-votes_files/figure-html5/figure4-1.png" width="672" /&gt;&lt;/p&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>b068b182b8e9775259db9d795f9f3223</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2021-03-30-un-votes</guid>
@@ -939,7 +939,7 @@ games &amp;lt;- readr::read_csv(&amp;#39;https://raw.githubusercontent.com/rford
        y = &amp;quot;Highest number of players at the same time&amp;quot;,
        x = &amp;quot;Average number of players at the same time&amp;quot;,
        colour = &amp;quot;Game&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f56b7a4a31_files/figure-html/figure1-1.png" width="576" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-23-video-games-and-sliced/video-games-and-sliced_files/figure-html5/figure1-1.png" width="576" /&gt;&lt;/p&gt;
 &lt;h2 id="combining-year-and-month-into-a-new-variable"&gt;Combining “year” and “month” into a new variable&lt;/h2&gt;
 &lt;p&gt;Combining the &lt;code&gt;year&lt;/code&gt; and &lt;code&gt;month&lt;/code&gt; variables makes it easier to track when each observation was recorded. Creating this new &lt;code&gt;year_month&lt;/code&gt; variable using the &lt;code&gt;as.date()&lt;/code&gt; function from &lt;code&gt;{lubridate}&lt;/code&gt; ensures that it will be interpreted as a date.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Creating a &amp;quot;year_month&amp;quot; variable with the year and month of each observation
@@ -995,7 +995,7 @@ games&lt;/code&gt;&lt;/pre&gt;
     x = &amp;quot;Time&amp;quot;,
     y = &amp;quot;Gains/Losses in average number of players&amp;quot;
   )&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="fileb5f56b7a4a31_files/figure-html/figure2-1.png" width="864" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-23-video-games-and-sliced/video-games-and-sliced_files/figure-html5/figure2-1.png" width="864" /&gt;&lt;/p&gt;
 &lt;h2 id="discussion"&gt;Discussion&lt;/h2&gt;
 &lt;p&gt;The two plots in this post illustrate peak number of players online, average number of players online, and changes in that average for three games. Of these games, PLAYERUNKNOWN’S BATTLEGROUNDS (PUBG) has the highest values for peak and average players by far. However, these high points were not sustained, with dramatic losses in average number of players per month in 2018. By contrast, Dota 2 has maintained a relatively steady player base, without dramatic gains or losses. Counter-Strike: Global Offensive’s spike in popularity around April 2020 coincides with the introduction of lockdown measures.&lt;/p&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
@@ -1076,7 +1076,7 @@ p &amp;lt;- ratings_by_year %&amp;gt;%
 # Rendering the animation as a .gif
 animate(p, nframes = 400, fps = 20, renderer = magick_renderer())&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="fileb5f525e1626d_files/figure-html/figure1-1.gif" alt="The percentage of films released each year with various Bechdel test results"  /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test/bechdel-test_files/figure-html5/figure1-1.gif" alt="The percentage of films released each year with various Bechdel test results"  /&gt;
 &lt;p class="caption"&gt;
 (#fig:figure1)The percentage of films released each year with various Bechdel test results
 &lt;/p&gt;
@@ -1136,7 +1136,7 @@ results_by_director %&amp;gt;%
   labs(title = &amp;quot;Directors most likely to Pass/Fail the Bechdel Test&amp;quot;) +
   theme_bw()&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="fileb5f525e1626d_files/figure-html/figure2-1.png" alt="Directors most likely to produce films that pass/fail the Bechdel test" width="672" /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test/bechdel-test_files/figure-html5/figure2-1.png" alt="Directors most likely to produce films that pass/fail the Bechdel test" width="672" /&gt;
 &lt;p class="caption"&gt;
 (#fig:figure2)Directors most likely to produce films that pass/fail the Bechdel test
 &lt;/p&gt;
@@ -1193,7 +1193,7 @@ results_by_writer %&amp;gt;%
   labs(title = &amp;quot;Writers most likely to Pass/Fail the Bechdel Test&amp;quot;) +
   theme_bw()&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="fileb5f525e1626d_files/figure-html/figure3-1.png" alt="Writers most likely to produce films that pass/fail the Bechdel test" width="672" /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test/bechdel-test_files/figure-html5/figure3-1.png" alt="Writers most likely to produce films that pass/fail the Bechdel test" width="672" /&gt;
 &lt;p class="caption"&gt;
 (#fig:figure3)Writers most likely to produce films that pass/fail the Bechdel test
 &lt;/p&gt;
