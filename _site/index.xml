@@ -13,7 +13,110 @@ created by the R for Data Science (R4DS) community
       <link>https://tidytuesday.netlify.app/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Tue, 27 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Aug 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Adjusting variable distribution and exploring data using mass linear regression</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-08-15-bea-infrastructure-investment</link>
+      <description>
+        
+        &lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In this post, the &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-10/readme.md"&gt;BEA Infrastructure Investment&lt;/a&gt; data set from the &lt;a href="https://github.com/rfordatascience/tidytuesday"&gt;#TidyTuesday&lt;/a&gt; project is used to illustrate variable transformation and the &lt;a href="https://rdrr.io/cran/exploreR/man/masslm.html"&gt;exploreR::masslm()&lt;/a&gt; function. The variable for gross infrastructure investment adjusted for inflation is transformed to make it less skewed. Using these transformed investment values, multiple linear models are then created to quickly see which variables in the data set have the largest impact on infrastructure investment.&lt;/p&gt;
+&lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Loading the &lt;code&gt;R&lt;/code&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-10/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
+library(tidyverse)
+library(tidytuesdayR)
+library(exploreR)
+
+# Loading data
+tt &amp;lt;- tt_load(&amp;quot;2021-08-10&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+    Downloading file 1 of 3: `ipd.csv`
+    Downloading file 2 of 3: `chain_investment.csv`
+    Downloading file 3 of 3: `investment.csv`&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="plotting-distribution-of-inflation-adjusted-infrastructure-investments"&gt;Plotting distribution of inflation-adjusted infrastructure investments&lt;/h2&gt;
+&lt;p&gt;In this section, the gross infrastructure investment (chained 2021 dollars) in millions of USD are plotted with and without a &lt;span class="math inline"&gt;\(\log{10}\)&lt;/span&gt; transformation. From the histograms below, we can see that applying a &lt;span class="math inline"&gt;\(\log{10}\)&lt;/span&gt; transformation gives the variable a less skewed distribution. This transformation should be considered for statistical testing of inflation-adjusted infrastructure investments.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Creating tbl_df with gross_inv_chain values
+untransformed_tbl_df &amp;lt;- tibble(
+  gross_inv_chain = tt$chain_investment$gross_inv_chain,
+  transformation = &amp;quot;Untransformed&amp;quot;
+  )
+
+# Creating tbl_df with log10(gross_inv_chain) values
+log10_tbl_df &amp;lt;- tibble(
+  gross_inv_chain = log10(tt$chain_investment$gross_inv_chain),
+  transformation = &amp;quot;Log10&amp;quot;
+)
+
+# Combining the above tibbles into one tbl_df
+gross_inv_chain_tbl_df &amp;lt;- rbind(untransformed_tbl_df, log10_tbl_df)
+
+# Plotting distribution of inflation-adjusted infrastructure investments
+gross_inv_chain_tbl_df %&amp;gt;%
+  ggplot(aes(x = gross_inv_chain, fill = transformation)) +
+  geom_histogram(show.legend = FALSE, position = &amp;quot;identity&amp;quot;,
+                 bins = 12, colour = &amp;quot;black&amp;quot;) +
+  facet_wrap(~transformation, scales = &amp;quot;free&amp;quot;) +
+  labs(fill.position = &amp;quot;none&amp;quot;, y = NULL,
+       x = &amp;quot;Gross infrastructure investments adjusted for inflation (millions USD)&amp;quot;,
+       title = &amp;quot;Distributions of untransformed and log transformed infrastructure investments&amp;quot;,
+       subtitle = &amp;quot;Log transformed investments are more normally distributed&amp;quot;) +
+  scale_fill_brewer(palette = &amp;quot;Set1&amp;quot;) +
+  theme_classic()&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-08-15-bea-infrastructure-investment/bea-infrastructure-investment_files/figure-html5/figure_1-1.png" alt="The transformed variable is more appropriate for parametric statistical tests." width="768" /&gt;
+&lt;p class="caption"&gt;
+(#fig:figure_1)The transformed variable is more appropriate for parametric statistical tests.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="exploring-a-data-set-using-mass-linear-regression"&gt;Exploring a data set using mass linear regression&lt;/h2&gt;
+&lt;p&gt;In this section, &lt;a href="https://rdrr.io/cran/exploreR/man/masslm.html"&gt;exploreR::masslm()&lt;/a&gt; is applied to a copy of the data set with &lt;span class="math inline"&gt;\(\log{10}\)&lt;/span&gt; transformed investment values. The masslm() function from the exploreR package quickly produces a linear model of the dependent variable and every other variable in the data set. It then returns a data frame containing the features of each linear model that are useful when selecting predictor variables:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;R squared&lt;/strong&gt; The proportion of variation in the dependent (response) variable that is explained by the independent (predictor) variable.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;p-value&lt;/strong&gt; The statistical significance of the model. A p-value &lt;span class="math inline"&gt;\(\lt 5\%\)&lt;/span&gt; is typically considered significant.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This function is useful for quickly determining which variables should be included in predictive models. Note that the data set used should satisfy the assumptions of linear models, including a normally distributed response variable. In this case, the &lt;span class="math inline"&gt;\(\log{10}\)&lt;/span&gt; transformed investment variable is close to normal.&lt;/p&gt;
+&lt;p&gt;From this mass linear regression model, we can see that investment category is the single variable that explains the largest proportion of variation in &lt;span class="math inline"&gt;\(\log{10}\)&lt;/span&gt; investment; and the linear model with group number is the most significant, followed by year.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Creating a copy of the chain_investment data set with log10 transformed
+# gross investment values
+chain_investment_df &amp;lt;- tt$chain_investment %&amp;gt;%
+  # Creating a log10 transformed copy of gross_inv_chain
+  mutate(gross_inv_transformed = log10(gross_inv_chain)) %&amp;gt;%
+  # Removing -Inf values
+  filter(gross_inv_transformed != -Inf) %&amp;gt;%
+  # Selecting variables to include in the data frame
+  select(category, meta_cat, group_num, year, gross_inv_transformed)
+
+# Applying mass linear regression
+transformed_investment_masslm &amp;lt;- masslm(chain_investment_df,
+                                        dv.var = &amp;quot;gross_inv_transformed&amp;quot;)
+
+# Printing the masslm results in order of R squared values (decreasing)
+transformed_investment_masslm %&amp;gt;%
+  arrange(-R.squared)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;         IV Coefficient    P.value  R.squared
+1  category   -0.579900  8.471e-10 0.63754622
+2  meta_cat    0.349300  7.848e-10 0.37782201
+3 group_num   -0.058750 3.625e-204 0.14695670
+4      year    0.009507  7.007e-59 0.04377399&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Printing the masslm results in order of p-values
+transformed_investment_masslm %&amp;gt;%
+  arrange(P.value)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;         IV Coefficient    P.value  R.squared
+1 group_num   -0.058750 3.625e-204 0.14695670
+2      year    0.009507  7.007e-59 0.04377399
+3  meta_cat    0.349300  7.848e-10 0.37782201
+4  category   -0.579900  8.471e-10 0.63754622&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="references"&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;exploreR vignette: &lt;a href="https://mran.microsoft.com/snapshot/2016-02-27/web/packages/exploreR/vignettes/exploreR.html"&gt;The How and Why of Simple Tools&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
+      <guid>https://tidytuesday.netlify.app/posts/2021-08-15-bea-infrastructure-investment</guid>
+      <pubDate>Sun, 15 Aug 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-08-15-bea-infrastructure-investment/bea-infrastructure-investment_files/figure-html5/figure_1-1.png" medium="image" type="image/png" width="1536" height="960"/>
+    </item>
     <item>
       <title>Predicting voluntary CEO departures using machine learning</title>
       <dc:creator>Ronan Harrington</dc:creator>
@@ -922,7 +1025,7 @@ library(tidyverse)
 # Reading in the raw data from GitHub (I would use &amp;quot;tt_load&amp;quot;, but I hit an API
 # rate limt)
 games &amp;lt;- readr::read_csv(&amp;#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-03-16/games.csv&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="plotting-peak-vs.-average-number-of-players-using-200-observations"&gt;Plotting Peak vs. Average number of players using 200 observations&lt;/h2&gt;
+&lt;h2 id="plotting-peak-vs.-average-number-of-players-using-200-observations"&gt;Plotting Peak vs. Average number of players using 200 observations&lt;/h2&gt;
 &lt;p&gt;For this plot, the top 200 observations for average number of players at the same time are selected using &lt;code&gt;slice_max(order_by = avg, n = 200)&lt;/code&gt;. The peak and average number of players for these observations are plotted on a scatter plot. The colour of the points indicates the game used for each observation. Models are fit to illustrate trends in the data; these trends follow the featured three games. The game “Cyberpunk 2077” was filtered out before creating this plot, as it occurred in only one of the 200 observations.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;games %&amp;gt;%
   select(gamename, avg, peak) %&amp;gt;%
