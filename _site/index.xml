@@ -13,7 +13,292 @@ created by the R for Data Science (R4DS) community
       <link>https://tidytuesday.netlify.app/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 15 Aug 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 18 Aug 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Text mining Star Trek dialogue and classifying characters using machine learning</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands</link>
+      <description>
+
+
+&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In this article, the &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-17/readme.md"&gt;Star Trek voice commands&lt;/a&gt; data set from the &lt;a href="https://github.com/rfordatascience/tidytuesday"&gt;#TidyTuesday&lt;/a&gt; project is used to investigate character diction using text mining, and train a machine learning model to distinguish between people and computers in the data set. The techniques used in this article are taken from the following textbooks, both of which are freely available online:&lt;/p&gt;
+&lt;ol style="list-style-type: decimal"&gt;
+&lt;li&gt;&lt;a href="https://www.tidytextmining.com/index.html"&gt;Text Mining with R&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://smltar.com/"&gt;Supervised Machine Learning for Text Analysis in R&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Loading the &lt;code&gt;R&lt;/code&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-17/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
+library(tidytuesdayR) # For loading data set
+library(textrecipes) # For adding tf-idf to recipies (step_tfidf)
+library(tidyverse) # For the ggplot2, dplyr, forcats libraries
+library(tidytext) # For text mining
+library(glmnet) # For lasso model
+library(tidymodels) # For various modelling libraries
+
+# Loading data set
+tt &amp;lt;- tt_load(&amp;quot;2021-08-17&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+    Downloading file 1 of 1: `computer.csv`&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="most-spoken-words-by-prominent-characters"&gt;Most spoken words by prominent characters&lt;/h2&gt;
+&lt;p&gt;The first graph plots the words most frequently used by prominent characters when talking to computers. They were chosen by selecting characters in the data set that appeared more than 150 times each.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Creating a vector of characters with most interactions with computers
+chars_with_most_interactions &amp;lt;- tt$computer %&amp;gt;%
+  filter(char_type != &amp;quot;Computer&amp;quot;) %&amp;gt;% # Filtering out rows for computer lines
+  count(char, sort = TRUE) %&amp;gt;% # Counting the number of rows for each character
+  filter(n &amp;gt;= 150) %&amp;gt;% # Filtering out characters with under 150 lines
+  pull(char) # Pulling the names of the characters as a vector
+
+# Counting words spoken per character
+character_words &amp;lt;- tt$computer %&amp;gt;%
+  filter(char %in% chars_with_most_interactions) %&amp;gt;% # Selecting rows
+  unnest_tokens(word, interaction) %&amp;gt;% # Creating a row per word in interaction
+  anti_join(get_stopwords(), by = &amp;quot;word&amp;quot;) %&amp;gt;% # Removing stop words
+  count(char, word, sort = TRUE) # Counting words per character
+
+# Plotting most spoken words per character
+character_words %&amp;gt;%
+  group_by(char) %&amp;gt;%
+  slice_max(n, n = 15, with_ties = FALSE) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  ggplot(aes(n, fct_reorder(word, n), fill = char)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~char, ncol = 2, scales = &amp;quot;free&amp;quot;) +
+  scale_fill_viridis_d() +
+  theme_classic() +
+  labs(title = &amp;quot;Words most frequently spoken by prominent characters&amp;quot;,
+       x = &amp;quot;Utterances&amp;quot;, y = &amp;quot;Words&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands/star-trek-voice-commands_files/figure-html5/fig1-1.png" alt="The most frequently spoken word is `computer`." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig1)The most frequently spoken word is &lt;code&gt;computer&lt;/code&gt;.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="words-specific-to-prominent-characters"&gt;Words specific to prominent characters&lt;/h2&gt;
+&lt;p&gt;From Figure 1, we can see that the most frequently spoken word across all four characters is “computer”. This is not surprising, as this data set records interactions between characters and computers, with characters addressing the computers as “computer”. An expected result, but it does not tell us anything about the characters. What if we wanted to see which words were specific to each character?&lt;/p&gt;
+&lt;p&gt;To see which words are specific to these characters, we can use &lt;em&gt;term frequency-inverse document frequency (tf-idf)&lt;/em&gt; to measure word importance. For a given word, tf-idf increases the more often it is used, and decreases relative to the number of documents it appears in. In this case, each “document” refers to a character. So even though “computer” is the most frequent term used by the characters, it will have a low tf-idf value as it is used by every character (therefore it appears in every document).&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Counting total number of words spoken per character
+total_words &amp;lt;- character_words %&amp;gt;% 
+  group_by(char) %&amp;gt;%  # Grouping words by character
+  summarize(total = sum(n)) # Counting words spoken per character (&amp;quot;total&amp;quot;)
+
+# Joining tbl_dfs: adding &amp;quot;total&amp;quot; variable to character_words
+character_words &amp;lt;- left_join(character_words, total_words)
+
+# Adding tf_idf to character_words
+character_words &amp;lt;- character_words %&amp;gt;%
+  bind_tf_idf(term = word, document = char, n = n) %&amp;gt;%
+  arrange(desc(tf_idf)) # Arranging rows by descending tf_idf values
+
+# Printing a summary of the character_words object
+glimpse(character_words)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Rows: 1,492
+Columns: 7
+$ char   &amp;lt;chr&amp;gt; &amp;quot;Riker&amp;quot;, &amp;quot;Riker&amp;quot;, &amp;quot;Riker&amp;quot;, &amp;quot;Riker&amp;quot;, &amp;quot;Riker&amp;quot;, &amp;quot;Riker&amp;quot;,…
+$ word   &amp;lt;chr&amp;gt; &amp;quot;little&amp;quot;, &amp;quot;omega&amp;quot;, &amp;quot;indeed&amp;quot;, &amp;quot;jazz&amp;quot;, &amp;quot;good&amp;quot;, &amp;quot;audienc…
+$ n      &amp;lt;int&amp;gt; 18, 15, 14, 14, 24, 12, 12, 12, 12, 12, 12, 12, 12, 1…
+$ total  &amp;lt;int&amp;gt; 1144, 1144, 1144, 1144, 1144, 1144, 1144, 1144, 1144,…
+$ tf     &amp;lt;dbl&amp;gt; 0.015734266, 0.013111888, 0.012237762, 0.012237762, 0…
+$ idf    &amp;lt;dbl&amp;gt; 1.3862944, 1.3862944, 1.3862944, 1.3862944, 0.6931472…
+$ tf_idf &amp;lt;dbl&amp;gt; 0.02181232, 0.01817694, 0.01696514, 0.01696514, 0.014…&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting words with the top tf-idf values per character
+character_words %&amp;gt;%
+  group_by(char) %&amp;gt;%
+  slice_max(tf_idf, n = 15, with_ties = FALSE) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  ggplot(aes(tf_idf, fct_reorder(word, tf_idf), fill = char)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~char, ncol = 2, scales = &amp;quot;free&amp;quot;) +
+  scale_fill_viridis_d() +
+  theme_classic() +
+  labs(title = &amp;quot;Spoken words specific to each character&amp;quot;,
+       subtitle = &amp;quot;Words listed are used often by each character relative to other characters&amp;quot;,
+       y = &amp;quot;Words&amp;quot;,
+       x = &amp;quot;term frequency-inverse document frequency (tf-idf)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands/star-trek-voice-commands_files/figure-html5/fig2-1.png" alt="Data is the most likely character to say please when addressing a computer. Riker likes jazz. Picard likes to say his own name" width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig2)Data is the most likely character to say please when addressing a computer. Riker likes jazz. Picard likes to say his own name
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="specifying-a-model-to-classify-people-and-computers-in-the-data-set"&gt;Specifying a model to classify People and Computers in the data set&lt;/h2&gt;
+&lt;p&gt;In this section, a machine learning model for classifying interactions into categories is set up. The variable “char_type” divides the data set into two categories: the lines spoken by people to computers (char_type = “Person”) and responses from the computers (char_type = “Computer”). The goal of this model is to look at the dialogue in the “interaction” variable, and determine whether that dialogue was spoken by a “Person” or “Computer” character based on the words used. To do this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The data set is split into a subset for training the machine learning model and a subset for testing the model&lt;/li&gt;
+&lt;li&gt;The training data is split into ten folds, each with its own training and testing sections (10-fold cross-validation)&lt;/li&gt;
+&lt;li&gt;A number of preprocessing steps for the data set are defined&lt;/li&gt;
+&lt;li&gt;The type of machine learning model is defined (a lasso regularised model)&lt;/li&gt;
+&lt;li&gt;The preprocessing steps and model type are combined into a workflow&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The preprocessing for this data set includes a &lt;em&gt;downsampling&lt;/em&gt; step. There is a class imbalance in this dataset, as there are over twice the number of “Person” interactions as “Computer” ones. Including the downsampling step addresses this class imbalance by removing observations of the majority class (“Person”) during training.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Summarising the values in the char_type variable
+tt$computer %&amp;gt;% select(char_type) %&amp;gt;% table()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;.
+Computer   Person 
+     708     1506 &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Setting seed for reproducibility
+set.seed(20210818)
+# Splitting data into training and test subsets
+char_type_split &amp;lt;- tt$computer %&amp;gt;%
+  initial_split(strata = char_type) # Ensures equal proportion of char_type
+
+# Creating training and test sets using departures_split
+char_type_train &amp;lt;- training(char_type_split)
+char_type_test &amp;lt;- testing(char_type_split)
+
+# Setting seed for reproducibility
+set.seed(20210818)
+# Setting up 10-fold cross-validation (CV) using training data
+char_type_folds &amp;lt;- vfold_cv(char_type_train,
+                            strata = char_type) # Ensures equal proportion of char_type
+
+# Creating preprocessing recipe for predicting if lines are spoken by a computer
+char_type_rec &amp;lt;-  recipe(char_type ~ interaction, data = char_type_train) %&amp;gt;%
+  step_tokenize(interaction) %&amp;gt;% # Splitting interaction variable into words
+  step_tokenfilter(interaction, max_tokens = 1500) %&amp;gt;% # Limiting tokens used
+  step_tfidf(interaction) %&amp;gt;% # Weighing tokens by tf-idf
+  themis::step_downsample(char_type) # Downsampling to address class imbalance
+
+# Specifying a lasso regularised model
+lasso_spec &amp;lt;- logistic_reg(penalty = 0.01, mixture = 1) %&amp;gt;%
+  set_mode(&amp;quot;classification&amp;quot;) %&amp;gt;%
+  set_engine(&amp;quot;glmnet&amp;quot;)
+
+# Creating a supervised machine learning workflow
+char_type_wf &amp;lt;- workflow() %&amp;gt;%
+  add_recipe(char_type_rec) %&amp;gt;%
+  add_model(lasso_spec)
+
+# Printing workflow
+char_type_wf&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;══ Workflow ══════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: logistic_reg()
+
+── Preprocessor ──────────────────────────────────────────────────────
+4 Recipe Steps
+
+• step_tokenize()
+• step_tokenfilter()
+• step_tfidf()
+• step_downsample()
+
+── Model ─────────────────────────────────────────────────────────────
+Logistic Regression Model Specification (classification)
+
+Main Arguments:
+  penalty = 0.01
+  mixture = 1
+
+Computational engine: glmnet &lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="fitting-the-model-to-resampled-training-data"&gt;Fitting the model to resampled training data&lt;/h2&gt;
+&lt;p&gt;Now that the machine learning workflow is in place, the model can be evaluated using the training data. It will be fit to the training model ten times, as specified in the 10-fold cross-validation above. As each of these folds tests the model using a different set of observations for training and testing, it gives a more accurate estimate of the performance of the model than just training and testing once.&lt;/p&gt;
+&lt;p&gt;Two metrics are used to estimate model performance:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;accuracy&lt;/strong&gt; is the proportion of the data that is predicted correctly. The closer to 1 (100%), the better&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ROC AUC (Receiver Operating Characteristic Area Under Curve)&lt;/strong&gt; measures how well a classifier performs at different thresholds. The closer to 1, the better. A ROC AUC closer to 0.5 indicates that the model is no better than random guessing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The ROC curve is plotted for each of the training data resamples. The ROC curve is a plot of true positive rate (observations given the correct class) versus false positive rate. Essentially, the closer the ROC curve is to the top-right of the plot, the higher its true positive rate, the lower its false positive rate, the larger the area under the curve. If the machine learning model was just guessing, it would have a 50/50 chance of classifying a given observation correctly: this would result in a ROC curve that is a straight line through the origin, with an AUC of 0.5 (50%).&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Fitting model to resampled folds to estimate performance
+char_type_rs &amp;lt;- fit_resamples(
+  object = char_type_wf, # Machine learning workflow
+  resamples = char_type_folds, # 10-fold cross-validation
+  control = control_resamples(save_pred = TRUE)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Collecting predictions from resampled folds
+char_type_rs_predictions &amp;lt;- collect_predictions(char_type_rs)
+
+# Collecting model performance metrics metrics
+char_type_rs_metrics &amp;lt;- collect_metrics(char_type_rs)
+# Printing performance metrics
+char_type_rs_metrics&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 2 x 6
+  .metric  .estimator  mean     n std_err .config             
+  &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;      &amp;lt;dbl&amp;gt; &amp;lt;int&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;               
+1 accuracy binary     0.870    10 0.00626 Preprocessor1_Model1
+2 roc_auc  binary     0.948    10 0.00629 Preprocessor1_Model1&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting ROC curves for resampled folds
+char_type_rs_predictions %&amp;gt;%
+  group_by(id) %&amp;gt;%
+  roc_curve(truth = char_type, .pred_Computer) %&amp;gt;%
+  autoplot() + 
+  scale_color_viridis_d() +
+  labs(color = &amp;quot;Resample (fold)&amp;quot;,
+       title = &amp;quot;ROC curve for character type based on interaction&amp;quot;,
+       subtitle = &amp;quot;True Positive Rate (TPR) v.s. False Positive Rate (FPR)&amp;quot;,
+       x = &amp;quot;FPR (1 - Specificity)&amp;quot;, y = &amp;quot;TPR (Sensitivity)&amp;quot;) +
+  theme_bw()&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands/star-trek-voice-commands_files/figure-html5/fig3-1.png" alt="The machine learning model is far better at classifying characer types than random guessing." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig3)The machine learning model is far better at classifying characer types than random guessing.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="evaluating-the-model-using-the-test-data"&gt;Evaluating the model using the test data&lt;/h2&gt;
+&lt;p&gt;From the 10-fold cross-validation training, we can see that this model is effective at classifying character type based on words used in interactions. To put this model to the test, we can use it to classify unseen data. Again, accuracy and ROC AUC will be used to evaluate model performance on the test data. A confusion matrix will also be plotted to illustrate performance: this matrix summarises model predictions versus the true values for observations in the test data.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Fitting model to training data, evaluating performance on test data
+char_type_last_fit &amp;lt;- last_fit(char_type_wf, char_type_split)
+# Printing metrics for final fit
+collect_metrics(char_type_last_fit)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 2 x 4
+  .metric  .estimator .estimate .config             
+  &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;          &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;               
+1 accuracy binary         0.886 Preprocessor1_Model1
+2 roc_auc  binary         0.939 Preprocessor1_Model1&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting confusion matrix of testing data
+collect_predictions(char_type_last_fit) %&amp;gt;%
+  conf_mat(truth = char_type, estimate = .pred_class) %&amp;gt;%
+  autoplot(type = &amp;quot;heatmap&amp;quot;) +
+  scale_fill_continuous() +
+  labs(title = &amp;quot;Confusion matrix of lasso classification model performance on test subset&amp;quot;,
+       subtitle = &amp;quot;Sum of True Positives and False Positives for both classes: Computer and Person&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands/star-trek-voice-commands_files/figure-html5/fig4-1.png" alt="The model correctly classifies most observations in the test data." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig4)The model correctly classifies most observations in the test data.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="important-words-in-the-final-model"&gt;Important words in the final model&lt;/h2&gt;
+&lt;p&gt;The model is effective at classifying observations in the test data, with an accuracy of 89% and a ROC AUC of 95%. At this point, we may want to know more about how the model works. For example, which words had the largest impact on the model’s decision to classify a character type as “Computer” or “Person”? To see which words were important in the final model, we can extract the coefficient assigned to each word in the final fit, and plot the words with the highest values.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Extracting model fit
+char_type_workflow_fit &amp;lt;- pull_workflow_fit(char_type_last_fit$.workflow[[1]])
+
+# Visualising the most important words for predicting whether a line was spoken
+# by a Computer or Person character
+tidy(char_type_workflow_fit) %&amp;gt;%
+  filter(term != &amp;quot;Bias&amp;quot;, term != &amp;quot;(Intercept)&amp;quot;) %&amp;gt;%
+  group_by(sign = estimate &amp;gt; 0) %&amp;gt;%
+  slice_max(abs(estimate), n = 15) %&amp;gt;% 
+  ungroup() %&amp;gt;%
+  mutate(term = str_remove(term, &amp;quot;tfidf_interaction_&amp;quot;), # Tidying terms
+         sign = ifelse(sign, &amp;quot;More likely from a Person&amp;quot;,
+                       &amp;quot;More likely a Computer&amp;quot;)) %&amp;gt;%
+  ggplot(aes(abs(estimate), fct_reorder(term, abs(estimate)), fill = sign)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sign, scales = &amp;quot;free&amp;quot;) +
+  theme_classic() +
+  scale_fill_viridis_d() +
+  labs(titles = &amp;quot;Which words are more likely to be used by a Computer vs. Person character?&amp;quot;,
+       subtitle = &amp;quot;Importance assigned by lasso classification model, based lines spoken&amp;quot;,
+       x = &amp;quot;Coefficient from lasso regularised model&amp;quot;, y = &amp;quot;Words&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands/star-trek-voice-commands_files/figure-html5/fig5-1.png" alt="The model's most important word for classifying `Person` characters was `computer`." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig5)The model’s most important word for classifying &lt;code&gt;Person&lt;/code&gt; characters was &lt;code&gt;computer&lt;/code&gt;.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="references"&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.tidytextmining.com/tfidf.html"&gt;Text Mining with R, Chapter 3 Analyzing word and document frequency: tf-idf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://smltar.com/mlclassification.html"&gt;Supervised Machine Learning for Text Analysis in R, Chapter 7 Classification&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
+      <distill:md5>f28cfd9e1ed9f4e8a97506a5fb762b20</distill:md5>
+      <guid>https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands</guid>
+      <pubDate>Wed, 18 Aug 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2021-08-18-star-trek-voice-commands/star-trek-voice-commands_files/figure-html5/fig4-1.png" medium="image" type="image/png" width="1728" height="960"/>
+    </item>
     <item>
       <title>Adjusting variable distribution and exploring data using mass linear regression</title>
       <dc:creator>Ronan Harrington</dc:creator>
