@@ -11,6 +11,7 @@ Reproducible visualisation and analysis of [#TidyTuesday data sets](https://gith
 These data sets are provided by the [R for Data Science (R4DS)](https://github.com/rfordatascience) community.
 This blog can be viewed locally by downloading this GitHub repository and opening [the index page](_site/index.html) in a web browser.
 Full article content via [RSS is now available](https://github.com/rnnh/TidyTuesday/commit/3608329d5a880c6d9647c0d4e21c9763388de618) though this blog's [index.xml](https://tidytuesday.netlify.app/index.xml) page.
+As featured on [R-bloggers.com](https://www.r-bloggers.com/author/ronan-harrington/).
 
 ## Posts
 
