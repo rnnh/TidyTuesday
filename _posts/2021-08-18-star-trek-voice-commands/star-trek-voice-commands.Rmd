@@ -1,7 +1,7 @@
 ---
 title: "Text mining Star Trek dialogue and classifying characters using machine learning"
 description: |
-  Graphas, text mining and analysis using the #TidyTuesday data set for week 34 of 2021
+  Graphs, text mining and analysis using the #TidyTuesday data set for week 34 of 2021
     (17/8/2021): "Star Trek voice commands"
 author:
   - name: Ronan Harrington
