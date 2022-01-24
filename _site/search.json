@@ -4,15 +4,15 @@
       "path": "about.html",
       "title": "About this blog",
       "author": [],
-      "contents": "\nReproducible visualisation and analysis of #TidyTuesday data sets, created using distill for R Markdown. These data sets are provided by the R for Data Science (R4DS) community. This blog can be viewed locally by downloading the GitHub repository and opening the index page in a web browser. It is also available at https://tidytuesday.netlify.app/.\n\n\n\n",
-      "last_modified": "2021-08-15T19:46:02+01:00"
+      "contents": "\r\nReproducible visualisation and analysis of #TidyTuesday data sets, created using distill for R Markdown. These data sets are provided by the R for Data Science (R4DS) community. This blog can be viewed locally by downloading the GitHub repository and opening the index page in a web browser. It is also available at https://tidytuesday.netlify.app/.\r\n\r\n\r\n\r\n",
+      "last_modified": "2022-01-23T23:04:28+00:00"
     },
     {
       "path": "index.html",
       "title": "Posts",
       "author": [],
-      "contents": "\n\n\n\n",
-      "last_modified": "2021-08-15T19:46:04+01:00"
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2022-01-23T23:04:30+00:00"
     }
   ],
   "collections": ["posts/posts.json"]

@@ -13,7 +13,215 @@ created by the R for Data Science (R4DS) community
       <link>https://tidytuesday.netlify.app/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 18 Aug 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 23 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses</link>
+      <description>
+
+
+&lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Loading the &lt;code&gt;R&lt;/code&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-11/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
+library(geomtextpath) # For adding text to ggplot2 curves
+library(tidytuesdayR) # For loading data set
+library(ggbeeswarm) # For creating a beeswarm plot
+library(tidyverse) # For the ggplot2, dplyr libraries
+library(gganimate) # For plot animation
+library(ggthemes) # For more ggplot2 themes
+library(viridis) # For plot themes
+
+# Loading data set
+tt &amp;lt;- tt_load(&amp;quot;2022-01-11&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+    Downloading file 1 of 2: `colony.csv`
+    Downloading file 2 of 2: `stressor.csv`&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="data-wrangling"&gt;Data wrangling&lt;/h2&gt;
+&lt;p&gt;In this section, the Bee Colony data is wrangled into two tidy sets:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tidied_colony_counts_overall&lt;/code&gt; contains quarterly colony counts for the USA&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tidied_colony_counts_per_state&lt;/code&gt; contains quarterly colony counts for various states within the USA&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To create these sets, the original data is filtered to select for the appropriate states, and the “tidy_colony_data()” function is applied. These sets are tidy as &lt;a href="https://tidyr.tidyverse.org/articles/tidy-data.html#tidy-data"&gt;each column is a variable, each row is an observation, and every cell has a single value&lt;/a&gt;. The types of observations in these data sets are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Total colonies&lt;/code&gt;: Bee colonies counted&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Lost&lt;/code&gt;: Bee colonies lost&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Added&lt;/code&gt;: Bee colonies added&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Renovated&lt;/code&gt;: Bee colonies renovated&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Creating subsets of the original bee colony data
+colony_counts_overall &amp;lt;- tt$colony %&amp;gt;%
+  filter(state == &amp;quot;United States&amp;quot;)
+
+colony_counts_per_state &amp;lt;- tt$colony %&amp;gt;%
+  filter(state != &amp;quot;United States&amp;quot; &amp;amp; state != &amp;quot;Other states&amp;quot;)
+
+# Defining a function to tidy bee colony count data, which takes
+# &amp;quot;messy_colony_data&amp;quot; as an argument
+tidy_colony_data &amp;lt;- function(messy_colony_data){
+  # Writing the result of the following piped steps to &amp;quot;tidied_colony_data&amp;quot;
+  tidied_colony_data &amp;lt;- messy_colony_data %&amp;gt;%
+    # Selecting variables
+    select(year, colony_n, colony_lost, colony_added, colony_reno) %&amp;gt;%
+    # Dropping rows with missing values
+    drop_na() %&amp;gt;%
+    # Changing columns to rows
+    pivot_longer(!year, names_to = &amp;quot;type&amp;quot;, values_to = &amp;quot;count&amp;quot;) %&amp;gt;%
+    # Setting &amp;quot;type&amp;quot; as a factor variable
+    mutate(type = factor(type)) %&amp;gt;%
+    # Recoding the levels of the &amp;quot;type&amp;quot; factor
+    mutate(type = fct_recode(type,
+                             &amp;quot;Total colonies&amp;quot; = &amp;quot;colony_n&amp;quot;,
+                             &amp;quot;Lost&amp;quot; = &amp;quot;colony_lost&amp;quot;,
+                             &amp;quot;Added&amp;quot; = &amp;quot;colony_added&amp;quot;,
+                             &amp;quot;Renovated&amp;quot; = &amp;quot;colony_reno&amp;quot;)) %&amp;gt;%
+    # Reordering &amp;quot;type&amp;quot; factor levels
+    mutate(type = fct_relevel(type,
+                              &amp;quot;Total colonies&amp;quot;, &amp;quot;Lost&amp;quot;, &amp;quot;Added&amp;quot;, &amp;quot;Renovated&amp;quot;))
+  # Returning &amp;quot;tidied_colony_data&amp;quot;
+  return(tidied_colony_data)
+}
+
+# Using this function to tidy the subsets
+tidied_colony_counts_overall &amp;lt;- tidy_colony_data(colony_counts_overall)
+
+tidied_colony_counts_per_state &amp;lt;- tidy_colony_data(colony_counts_per_state)
+
+# Printing a summary of the subsets before tidying...
+colony_counts_overall&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 26 x 10
+    year months  state colony_n colony_max colony_lost colony_lost_pct
+   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;    &amp;lt;dbl&amp;gt;      &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;           &amp;lt;dbl&amp;gt;
+ 1  2015 Januar~ Unit~  2824610         NA      500020              18
+ 2  2015 April-~ Unit~  2849500         NA      352860              12
+ 3  2015 July-S~ Unit~  3132880         NA      457100              15
+ 4  2015 Octobe~ Unit~  2874760         NA      412380              14
+ 5  2016 Januar~ Unit~  2594590         NA      428800              17
+ 6  2016 April-~ Unit~  2801470         NA      329820              12
+ 7  2016 July-S~ Unit~  3181180         NA      397290              12
+ 8  2016 Octobe~ Unit~  3032060         NA      502350              17
+ 9  2017 Januar~ Unit~  2615590         NA      361850              14
+10  2017 April-~ Unit~  2886030         NA      225680               8
+# ... with 16 more rows, and 3 more variables: colony_added &amp;lt;dbl&amp;gt;,
+#   colony_reno &amp;lt;dbl&amp;gt;, colony_reno_pct &amp;lt;dbl&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;colony_counts_per_state&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 1,196 x 10
+    year months  state colony_n colony_max colony_lost colony_lost_pct
+   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;    &amp;lt;dbl&amp;gt;      &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;           &amp;lt;dbl&amp;gt;
+ 1  2015 Januar~ Alab~     7000       7000        1800              26
+ 2  2015 Januar~ Ariz~    35000      35000        4600              13
+ 3  2015 Januar~ Arka~    13000      14000        1500              11
+ 4  2015 Januar~ Cali~  1440000    1690000      255000              15
+ 5  2015 Januar~ Colo~     3500      12500        1500              12
+ 6  2015 Januar~ Conn~     3900       3900         870              22
+ 7  2015 Januar~ Flor~   305000     315000       42000              13
+ 8  2015 Januar~ Geor~   104000     105000       14500              14
+ 9  2015 Januar~ Hawa~    10500      10500         380               4
+10  2015 Januar~ Idaho    81000      88000        3700               4
+# ... with 1,186 more rows, and 3 more variables: colony_added &amp;lt;dbl&amp;gt;,
+#   colony_reno &amp;lt;dbl&amp;gt;, colony_reno_pct &amp;lt;dbl&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# ...and after tidying
+tidied_colony_counts_overall&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 100 x 3
+    year type             count
+   &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt;            &amp;lt;dbl&amp;gt;
+ 1  2015 Total colonies 2824610
+ 2  2015 Lost            500020
+ 3  2015 Added           546980
+ 4  2015 Renovated       270530
+ 5  2015 Total colonies 2849500
+ 6  2015 Lost            352860
+ 7  2015 Added           661860
+ 8  2015 Renovated       692850
+ 9  2015 Total colonies 3132880
+10  2015 Lost            457100
+# ... with 90 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;tidied_colony_counts_per_state&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 4,208 x 3
+    year type           count
+   &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt;          &amp;lt;dbl&amp;gt;
+ 1  2015 Total colonies  7000
+ 2  2015 Lost            1800
+ 3  2015 Added           2800
+ 4  2015 Renovated        250
+ 5  2015 Total colonies 35000
+ 6  2015 Lost            4600
+ 7  2015 Added           3400
+ 8  2015 Renovated       2100
+ 9  2015 Total colonies 13000
+10  2015 Lost            1500
+# ... with 4,198 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="plotting-bee-colony-observations-using-ggbeeswarm"&gt;Plotting Bee Colony observations using {ggbeeswarm}&lt;/h2&gt;
+&lt;p&gt;The first graph plots a point for each type of observation using &lt;a href="https://github.com/eclarke/ggbeeswarm"&gt;geom_beeswarm()&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting Bee Colony observations using geom_beeswarm() from {ggbeeswarm}
+tidied_colony_counts_per_state %&amp;gt;%
+  ggplot(aes(x = type, y = count)) +
+  geom_beeswarm(cex = 4, colour = &amp;quot;yellow&amp;quot;) +
+  scale_y_log10() +
+  theme_solarized_2(light = FALSE) +
+  facet_wrap(~type, scales = &amp;quot;free&amp;quot;) +
+  theme(legend.position=&amp;quot;none&amp;quot;, axis.text.x = element_blank()) +
+  labs(title = &amp;quot;Bee Colonies Counted, Lost, Added, Renovated&amp;quot;,
+       subtitle = &amp;quot;Created using {ggbeeswarm}&amp;quot;,
+       x = NULL, y = &amp;quot;Number of bee colonies (log10)&amp;quot;,
+       fill = NULL)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="file96c1612b98_files/figure-html/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig1)Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="animating-bee-colony-observations-over-time"&gt;Animating Bee Colony observations over time&lt;/h2&gt;
+&lt;p&gt;While the previous plot is thematically appropriate, it could be better. This graph plots the same points over time in an animation, with the year plotted given in the subtitle. This graph uses standard {ggplot2} &lt;a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html"&gt;jittered points&lt;/a&gt;, as well as a box plot to illustrate the distribution of the points. These box plots have notches, showing 95% confidence intervals for the median. Distributions with notches that do not overlap differ significantly.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Defining an animation showing bee colony counts over time
+p &amp;lt;- tidied_colony_counts_per_state %&amp;gt;%
+  ggplot(aes(x = count, y = fct_reorder(type, count))) +
+  geom_jitter(color = &amp;quot;yellow&amp;quot;, alpha = 0.8) +
+  geom_boxplot(width = 0.2, alpha = 0.8, notch = TRUE, colour = &amp;quot;cyan&amp;quot;) +
+  scale_x_log10() +
+  theme_solarized_2(light = FALSE) +
+  theme(legend.position=&amp;quot;none&amp;quot;, axis.ticks.y = element_blank(),
+        axis.line.y = element_blank()) +
+  transition_time(as.integer(year)) +
+  labs(title = &amp;quot;Bee Colonies Counted, Lost, Added, Renovated, per year&amp;quot;,
+       subtitle = &amp;quot;Year: {frame_time}&amp;quot;,
+       x = &amp;quot;Number of bee colonies (log10)&amp;quot;, y = NULL)
+
+# Rendering the animation as a .gif
+animate(p, nframes = 180, start_pause = 20,  end_pause = 20,
+        renderer = magick_renderer())&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="file96c1612b98_files/figure-html/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig2)Animation showing bee colony counts from 2015 to 2021.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="plotting-the-distribution-of-different-bee-colony-observation-types"&gt;Plotting the distribution of different Bee Colony observation types&lt;/h2&gt;
+&lt;p&gt;From the previous plot, we can see that the &lt;code&gt;Added&lt;/code&gt; and &lt;code&gt;Renovated&lt;/code&gt; variables have similar distributions based on their box plots. Distributions can also be visualised using density plots. In this graph, the distribution of different types of observation in the data set are plotted.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Creating a density plot for different observation types
+tidied_colony_counts_overall %&amp;gt;%
+  filter(type != &amp;quot;Total colonies&amp;quot;) %&amp;gt;%
+  ggplot(aes(x = count, colour = type, label = type)) +
+  geom_textdensity(size = 7, fontface = 2, hjust = 0.89, vjust = 0.3,
+                   linewidth = 1.2) +
+  theme_solarized_2(light = FALSE) +
+  theme(legend.position = &amp;quot;none&amp;quot;) +
+  labs(title = &amp;quot;Distribution of Bee Colony Counts&amp;quot;,
+       subtitle = &amp;quot;Distributions of Bee Colonies Addded, Renovated, Lost&amp;quot;,
+       x = &amp;quot;Number of bee colonies&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="file96c1612b98_files/figure-html/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig3)A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
+      <distill:md5>725e1dc3490d51b56043dfb572d2f41a</distill:md5>
+      <guid>https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses</guid>
+      <pubDate>Sun, 23 Jan 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/bee-colony-losses_files/figure-html5/fig3-1.png" medium="image" type="image/png" width="1728" height="1152"/>
+    </item>
     <item>
       <title>Text mining Star Trek dialogue and classifying characters using machine learning</title>
       <dc:creator>Ronan Harrington</dc:creator>

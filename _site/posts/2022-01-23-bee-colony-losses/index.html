@@ -23,6 +23,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -84,57 +85,58 @@ code span.vs { color: #20794d; } /* VerbatimString */
 code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
+
   <!--radix_placeholder_meta_tags-->
-<title>Ronan's #TidyTuesday blog: Post offices in the USA from 1772 to 2000</title>
+<title>Ronan's #TidyTuesday blog: Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}</title>
 
-<meta property="description" itemprop="description" content="Graphs and analysis using the #TidyTuesday data set for week 16 of 2021&#10;  (13/4/2021): &quot;US post offices&quot;"/>
+<meta property="description" itemprop="description" content="Graphs and analysis using the #TidyTuesday data set for week 2 of 2022&#10;  (11/1/2022): &quot;Bee Colony losses&quot;"/>
 
-<link rel="canonical" href="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/"/>
+<link rel="canonical" href="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/"/>
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
 <link rel="icon" type="image/png" href="../../images/favicon.png"/>
 
 <!--  https://schema.org/Article -->
-<meta property="article:published" itemprop="datePublished" content="2021-04-16"/>
-<meta property="article:created" itemprop="dateCreated" content="2021-04-16"/>
+<meta property="article:published" itemprop="datePublished" content="2022-01-23"/>
+<meta property="article:created" itemprop="dateCreated" content="2022-01-23"/>
 <meta name="article:author" content="Ronan Harrington"/>
 
 <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-<meta property="og:title" content="Ronan&#39;s #TidyTuesday blog: Post offices in the USA from 1772 to 2000"/>
+<meta property="og:title" content="Ronan&#39;s #TidyTuesday blog: Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"/>
 <meta property="og:type" content="article"/>
-<meta property="og:description" content="Graphs and analysis using the #TidyTuesday data set for week 16 of 2021&#10;  (13/4/2021): &quot;US post offices&quot;"/>
-<meta property="og:url" content="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/"/>
-<meta property="og:image" content="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure2-1.png"/>
-<meta property="og:image:width" content="1152"/>
-<meta property="og:image:height" content="960"/>
+<meta property="og:description" content="Graphs and analysis using the #TidyTuesday data set for week 2 of 2022&#10;  (11/1/2022): &quot;Bee Colony losses&quot;"/>
+<meta property="og:url" content="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/"/>
+<meta property="og:image" content="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/bee-colony-losses_files/figure-html5/fig3-1.png"/>
+<meta property="og:image:width" content="1728"/>
+<meta property="og:image:height" content="1152"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:site_name" content="Ronan&#39;s #TidyTuesday blog"/>
 
 <!--  https://dev.twitter.com/cards/types/summary -->
 <meta property="twitter:card" content="summary_large_image"/>
-<meta property="twitter:title" content="Ronan&#39;s #TidyTuesday blog: Post offices in the USA from 1772 to 2000"/>
-<meta property="twitter:description" content="Graphs and analysis using the #TidyTuesday data set for week 16 of 2021&#10;  (13/4/2021): &quot;US post offices&quot;"/>
-<meta property="twitter:url" content="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/"/>
-<meta property="twitter:image" content="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure2-1.png"/>
-<meta property="twitter:image:width" content="1152"/>
-<meta property="twitter:image:height" content="960"/>
+<meta property="twitter:title" content="Ronan&#39;s #TidyTuesday blog: Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"/>
+<meta property="twitter:description" content="Graphs and analysis using the #TidyTuesday data set for week 2 of 2022&#10;  (11/1/2022): &quot;Bee Colony losses&quot;"/>
+<meta property="twitter:url" content="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/"/>
+<meta property="twitter:image" content="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/bee-colony-losses_files/figure-html5/fig3-1.png"/>
+<meta property="twitter:image:width" content="1728"/>
+<meta property="twitter:image:height" content="1152"/>
 
 <!--  https://scholar.google.com/intl/en/scholar/inclusion.html#indexing -->
-<meta name="citation_title" content="Ronan&#39;s #TidyTuesday blog: Post offices in the USA from 1772 to 2000"/>
-<meta name="citation_fulltext_html_url" content="https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/"/>
+<meta name="citation_title" content="Ronan&#39;s #TidyTuesday blog: Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"/>
+<meta name="citation_fulltext_html_url" content="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/"/>
 <meta name="citation_fulltext_world_readable" content=""/>
-<meta name="citation_online_date" content="2021/04/16"/>
-<meta name="citation_publication_date" content="2021/04/16"/>
+<meta name="citation_online_date" content="2022/01/23"/>
+<meta name="citation_publication_date" content="2022/01/23"/>
 <meta name="citation_author" content="Ronan Harrington"/>
 <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
 <script type="text/json" id="radix-rmarkdown-metadata">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","repository_url","preview","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Post offices in the USA from 1772 to 2000"]},{"type":"character","attributes":{},"value":["Graphs and analysis using the #TidyTuesday data set for week 16 of 2021\n  (13/4/2021): \"US post offices\""]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["04-16-2021"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/TidyTuesday/"]},{"type":"character","attributes":{},"value":["us-post-offices_files/figure-html5/figure2-1.png"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/"]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/"]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creative_commons","title","description","author","date","repository_url","preview","output","citation_url","canonical_url"]}},"value":[{"type":"character","attributes":{},"value":["CC BY"]},{"type":"character","attributes":{},"value":["Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"]},{"type":"character","attributes":{},"value":["Graphs and analysis using the #TidyTuesday data set for week 2 of 2022\n  (11/1/2022): \"Bee Colony losses\""]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["2022-01-23"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/TidyTuesday/"]},{"type":"character","attributes":{},"value":["bee-colony-losses_files/figure-html5/fig3-1.png"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/"]},{"type":"character","attributes":{},"value":["https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/"]}]}
 </script>
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["us-post-offices_files/anchor-4.2.2/anchor.min.js","us-post-offices_files/bowser-1.9.3/bowser.min.js","us-post-offices_files/distill-2.2.21/template.v2.js","us-post-offices_files/figure-html5/figure1-1.gif","us-post-offices_files/figure-html5/figure2-1.png","us-post-offices_files/header-attrs-2.7/header-attrs.js","us-post-offices_files/jquery-1.11.3/jquery.min.js","us-post-offices_files/popper-2.6.0/popper.min.js","us-post-offices_files/tippy-6.2.7/tippy-bundle.umd.min.js","us-post-offices_files/tippy-6.2.7/tippy-light-border.css","us-post-offices_files/tippy-6.2.7/tippy.css","us-post-offices_files/tippy-6.2.7/tippy.umd.min.js","us-post-offices_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["bee-colony-losses_files/anchor-4.2.2/anchor.min.js","bee-colony-losses_files/bowser-1.9.3/bowser.min.js","bee-colony-losses_files/distill-2.2.21/template.v2.js","bee-colony-losses_files/figure-html5/fig1-1.png","bee-colony-losses_files/figure-html5/fig2-1.gif","bee-colony-losses_files/figure-html5/fig3-1.png","bee-colony-losses_files/header-attrs-2.11/header-attrs.js","bee-colony-losses_files/jquery-3.6.0/jquery-3.6.0.js","bee-colony-losses_files/jquery-3.6.0/jquery-3.6.0.min.js","bee-colony-losses_files/jquery-3.6.0/jquery-3.6.0.min.map","bee-colony-losses_files/popper-2.6.0/popper.min.js","bee-colony-losses_files/tippy-6.2.7/tippy-bundle.umd.min.js","bee-colony-losses_files/tippy-6.2.7/tippy-light-border.css","bee-colony-losses_files/tippy-6.2.7/tippy.css","bee-colony-losses_files/tippy-6.2.7/tippy.umd.min.js","bee-colony-losses_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 <meta name="distill:offset" content="../.."/>
@@ -2377,8 +2379,8 @@ d-appendix d-footnote-list a.footnote-backlink {
   color: var(--hover-color, white);
 }</style>
 <!--/radix_placeholder_distill-->
-  <script src="../../site_libs/header-attrs-2.9.1/header-attrs.js"></script>
-  <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="../../site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="../../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <script src="../../site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="../../site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="../../site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2428,7 +2430,7 @@ d-appendix d-footnote-list a.footnote-backlink {
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Post offices in the USA from 1772 to 2000","description":"Graphs and analysis using the #TidyTuesday data set for week 16 of 2021\n  (13/4/2021): \"US post offices\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-04-16T00:00:00.000+01:00","citationText":"Harrington, 2021"}
+{"title":"Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}","description":"Graphs and analysis using the #TidyTuesday data set for week 2 of 2022\n  (11/1/2022): \"Bee Colony losses\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2022-01-23T00:00:00.000+00:00","citationText":"Harrington, 2022"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2457,16 +2459,16 @@ d-appendix d-footnote-list a.footnote-backlink {
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Post offices in the USA from 1772 to 2000</h1>
+<h1>Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p><p>Graphs and analysis using the #TidyTuesday data set for week 16 of 2021 (13/4/2021): “US post offices”</p></p>
+<p><p>Graphs and analysis using the #TidyTuesday data set for week 2 of 2022 (11/1/2022): “Bee Colony losses”</p></p>
 </div>
 
 <div class="d-byline">
   Ronan Harrington <a href="https://github.com/rnnh/" class="uri">https://github.com/rnnh/</a> 
   
-<br/>04-16-2021
+<br/>2022-01-23
 </div>
 
 <div class="d-article">
@@ -2475,113 +2477,252 @@ d-appendix d-footnote-list a.footnote-backlink {
 <h3>Contents</h3>
 <ul>
 <li><a href="#setup">Setup</a></li>
-<li><a href="#plotting-us-post-offices-from-1772-to-2000">Plotting US post offices from 1772 to 2000</a></li>
+<li><a href="#data-wrangling">Data wrangling</a></li>
+<li><a href="#plotting-bee-colony-observations-using-ggbeeswarm">Plotting Bee Colony observations using {ggbeeswarm}</a></li>
+<li><a href="#animating-bee-colony-observations-over-time">Animating Bee Colony observations over time</a></li>
+<li><a href="#plotting-the-distribution-of-different-bee-colony-observation-types">Plotting the distribution of different Bee Colony observation types</a></li>
 </ul>
 </nav>
 </div>
 <h2 id="setup">Setup</h2>
-<p>Loading the <code>R</code> libraries, <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-04-13/readme.md">data set</a>, and a <a href="https://hub.arcgis.com/datasets/1b02c87f62d24508970dc1a6df80c98e_0?geometry=112.602%2C27.335%2C17.328%2C66.497">shapefile for the USA</a>.</p>
+<p>Loading the <code>R</code> libraries and <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-11/readme.md">data set</a>.</p>
 <div class="layout-chunk" data-layout="l-body">
-<details>
-<summary>Show code</summary>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading libraries</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/thebioengineer/tidytuesdayR'>tidytuesdayR</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://gganimate.com'>gganimate</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://allancameron.github.io/geomtextpath/'>geomtextpath</a></span><span class='op'>)</span> <span class='co'># For adding text to ggplot2 curves</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/thebioengineer/tidytuesdayR'>tidytuesdayR</a></span><span class='op'>)</span> <span class='co'># For loading data set</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/eclarke/ggbeeswarm'>ggbeeswarm</a></span><span class='op'>)</span> <span class='co'># For creating a beeswarm plot</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span> <span class='co'># For the ggplot2, dplyr libraries</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://gganimate.com'>gganimate</a></span><span class='op'>)</span> <span class='co'># For plot animation</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jrnold/ggthemes'>ggthemes</a></span><span class='op'>)</span> <span class='co'># For more ggplot2 themes</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://sjmgarnier.github.io/viridis/'>viridis</a></span><span class='op'>)</span> <span class='co'># For plot themes</span>
 
 <span class='co'># Loading data set</span>
-<span class='va'>tt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/tidytuesdayR/man/tt_load.html'>tt_load</a></span><span class='op'>(</span><span class='st'>"2021-04-13"</span><span class='op'>)</span>
+<span class='va'>tt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/tidytuesdayR/man/tt_load.html'>tt_load</a></span><span class='op'>(</span><span class='st'>"2022-01-11"</span><span class='op'>)</span>
 </code></pre>
 </div>
-</details>
 <pre><code>
-    Downloading file 1 of 1: `post_offices.csv`</code></pre>
-<details>
-<summary>Show code</summary>
+    Downloading file 1 of 2: `colony.csv`
+    Downloading file 2 of 2: `stressor.csv`</code></pre>
+</div>
+<h2 id="data-wrangling">Data wrangling</h2>
+<p>In this section, the Bee Colony data is wrangled into two tidy sets:</p>
+<ul>
+<li><code>tidied_colony_counts_overall</code> contains quarterly colony counts for the USA</li>
+<li><code>tidied_colony_counts_per_state</code> contains quarterly colony counts for various states within the USA</li>
+</ul>
+<p>To create these sets, the original data is filtered to select for the appropriate states, and the “tidy_colony_data()” function is applied. These sets are tidy as <a href="https://tidyr.tidyverse.org/articles/tidy-data.html#tidy-data">each column is a variable, each row is an observation, and every cell has a single value</a>. The types of observations in these data sets are:</p>
+<ul>
+<li><code>Total colonies</code>: Bee colonies counted</li>
+<li><code>Lost</code>: Bee colonies lost</li>
+<li><code>Added</code>: Bee colonies added</li>
+<li><code>Renovated</code>: Bee colonies renovated</li>
+</ul>
+<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading USA shapefile</span>
-<span class='va'>usa_shapefile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_read.html'>read_sf</a></span><span class='op'>(</span><span class='st'>"~/TidyTuesday/data/States_shapefile-shp/"</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating subsets of the original bee colony data</span>
+<span class='va'>colony_counts_overall</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>colony</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>state</span> <span class='op'>==</span> <span class='st'>"United States"</span><span class='op'>)</span>
+
+<span class='va'>colony_counts_per_state</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>colony</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>state</span> <span class='op'>!=</span> <span class='st'>"United States"</span> <span class='op'>&amp;</span> <span class='va'>state</span> <span class='op'>!=</span> <span class='st'>"Other states"</span><span class='op'>)</span>
+
+<span class='co'># Defining a function to tidy bee colony count data, which takes</span>
+<span class='co'># "messy_colony_data" as an argument</span>
+<span class='va'>tidy_colony_data</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>messy_colony_data</span><span class='op'>)</span><span class='op'>{</span>
+  <span class='co'># Writing the result of the following piped steps to "tidied_colony_data"</span>
+  <span class='va'>tidied_colony_data</span> <span class='op'>&lt;-</span> <span class='va'>messy_colony_data</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Selecting variables</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>year</span>, <span class='va'>colony_n</span>, <span class='va'>colony_lost</span>, <span class='va'>colony_added</span>, <span class='va'>colony_reno</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Dropping rows with missing values</span>
+    <span class='fu'><a href='https://tidyr.tidyverse.org/reference/drop_na.html'>drop_na</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Changing columns to rows</span>
+    <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_longer.html'>pivot_longer</a></span><span class='op'>(</span><span class='op'>!</span><span class='va'>year</span>, names_to <span class='op'>=</span> <span class='st'>"type"</span>, values_to <span class='op'>=</span> <span class='st'>"count"</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Setting "type" as a factor variable</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>type</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Recoding the levels of the "type" factor</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_recode.html'>fct_recode</a></span><span class='op'>(</span><span class='va'>type</span>,
+                             <span class='st'>"Total colonies"</span> <span class='op'>=</span> <span class='st'>"colony_n"</span>,
+                             <span class='st'>"Lost"</span> <span class='op'>=</span> <span class='st'>"colony_lost"</span>,
+                             <span class='st'>"Added"</span> <span class='op'>=</span> <span class='st'>"colony_added"</span>,
+                             <span class='st'>"Renovated"</span> <span class='op'>=</span> <span class='st'>"colony_reno"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Reordering "type" factor levels</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_relevel.html'>fct_relevel</a></span><span class='op'>(</span><span class='va'>type</span>,
+                              <span class='st'>"Total colonies"</span>, <span class='st'>"Lost"</span>, <span class='st'>"Added"</span>, <span class='st'>"Renovated"</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='co'># Returning "tidied_colony_data"</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>tidied_colony_data</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'># Using this function to tidy the subsets</span>
+<span class='va'>tidied_colony_counts_overall</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_colony_data</span><span class='op'>(</span><span class='va'>colony_counts_overall</span><span class='op'>)</span>
+
+<span class='va'>tidied_colony_counts_per_state</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_colony_data</span><span class='op'>(</span><span class='va'>colony_counts_per_state</span><span class='op'>)</span>
+
+<span class='co'># Printing a summary of the subsets before tidying...</span>
+<span class='va'>colony_counts_overall</span>
 </code></pre>
 </div>
-</details>
-</div>
-<p>Wrangling data for visualisation.</p>
-<div class="layout-chunk" data-layout="l-body">
-<details>
-<summary>Show code</summary>
+<pre><code># A tibble: 26 x 10
+    year months  state colony_n colony_max colony_lost colony_lost_pct
+   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+ 1  2015 Januar~ Unit~  2824610         NA      500020              18
+ 2  2015 April-~ Unit~  2849500         NA      352860              12
+ 3  2015 July-S~ Unit~  3132880         NA      457100              15
+ 4  2015 Octobe~ Unit~  2874760         NA      412380              14
+ 5  2016 Januar~ Unit~  2594590         NA      428800              17
+ 6  2016 April-~ Unit~  2801470         NA      329820              12
+ 7  2016 July-S~ Unit~  3181180         NA      397290              12
+ 8  2016 Octobe~ Unit~  3032060         NA      502350              17
+ 9  2017 Januar~ Unit~  2615590         NA      361850              14
+10  2017 April-~ Unit~  2886030         NA      225680               8
+# ... with 16 more rows, and 3 more variables: colony_added &lt;dbl&gt;,
+#   colony_reno &lt;dbl&gt;, colony_reno_pct &lt;dbl&gt;</code></pre>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating a filtered, tidy tibble with one row per post office with coordinates</span>
-<span class='va'>post_office_est</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>post_offices</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>coordinates</span> <span class='op'>==</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>established</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>established</span> <span class='op'>&gt;=</span> <span class='fl'>1772</span> <span class='op'>&amp;</span> <span class='va'>established</span> <span class='op'>&lt;=</span> <span class='fl'>2021</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>longitude</span> <span class='op'>&lt;=</span> <span class='fl'>100</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>stamp_index</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='va'>stamp_index</span> <span class='op'>&lt;=</span> <span class='fl'>9</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>select</span><span class='op'>(</span><span class='va'>established</span>, <span class='va'>latitude</span>, <span class='va'>longitude</span>, <span class='va'>stamp_index</span><span class='op'>)</span>
-  
-<span class='va'>post_office_est</span><span class='op'>$</span><span class='va'>established</span> <span class='op'>&lt;-</span> <span class='va'>post_office_est</span><span class='op'>$</span><span class='va'>established</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>colony_counts_per_state</span>
 </code></pre>
 </div>
-</details>
-</div>
-<h2 id="plotting-us-post-offices-from-1772-to-2000">Plotting US post offices from 1772 to 2000</h2>
-<p>In this section, post offices in the USA are plotted in the order they were established. This animation begins in the 1772 and ends in 2000. Each point represents one post office, with the colour of each point corresponding to the scarcity of postmarks from that post office. The lighter the point, the rarer the postmark. The order in which post offices are established follows the colonisation of America, with post offices first appearing on the east coast before moving west.</p>
-<div class="layout-chunk" data-layout="l-body">
-<details>
-<summary>Show code</summary>
+<pre><code># A tibble: 1,196 x 10
+    year months  state colony_n colony_max colony_lost colony_lost_pct
+   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+ 1  2015 Januar~ Alab~     7000       7000        1800              26
+ 2  2015 Januar~ Ariz~    35000      35000        4600              13
+ 3  2015 Januar~ Arka~    13000      14000        1500              11
+ 4  2015 Januar~ Cali~  1440000    1690000      255000              15
+ 5  2015 Januar~ Colo~     3500      12500        1500              12
+ 6  2015 Januar~ Conn~     3900       3900         870              22
+ 7  2015 Januar~ Flor~   305000     315000       42000              13
+ 8  2015 Januar~ Geor~   104000     105000       14500              14
+ 9  2015 Januar~ Hawa~    10500      10500         380               4
+10  2015 Januar~ Idaho    81000      88000        3700               4
+# ... with 1,186 more rows, and 3 more variables: colony_added &lt;dbl&gt;,
+#   colony_reno &lt;dbl&gt;, colony_reno_pct &lt;dbl&gt;</code></pre>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating an animation with one point per post office from 1772 to 2000</span>
-<span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>ggplot</span><span class='op'>(</span><span class='va'>usa_shapefile</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>geom_sf</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>geom_point</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span><span class='va'>longitude</span>, <span class='va'>latitude</span>, colour <span class='op'>=</span> <span class='va'>stamp_index</span><span class='op'>)</span>,
-             data <span class='op'>=</span> <span class='va'>post_office_est</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>scale_fill_continuous</span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"gradient"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://gganimate.com/reference/transition_time.html'>transition_time</a></span><span class='op'>(</span><span class='va'>established</span>, range <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1772L</span>, <span class='fl'>2000L</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://gganimate.com/reference/ease_aes.html'>ease_aes</a></span><span class='op'>(</span><span class='st'>"linear"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>theme_void</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>theme</span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>labs</span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Post offices established each year in the US"</span>,
-       subtitle <span class='op'>=</span> <span class='st'>"Lighter points indicate rarer postmarks. Year: {frame_time}"</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># ...and after tidying</span>
+<span class='va'>tidied_colony_counts_overall</span>
+</code></pre>
+</div>
+<pre><code># A tibble: 100 x 3
+    year type             count
+   &lt;dbl&gt; &lt;fct&gt;            &lt;dbl&gt;
+ 1  2015 Total colonies 2824610
+ 2  2015 Lost            500020
+ 3  2015 Added           546980
+ 4  2015 Renovated       270530
+ 5  2015 Total colonies 2849500
+ 6  2015 Lost            352860
+ 7  2015 Added           661860
+ 8  2015 Renovated       692850
+ 9  2015 Total colonies 3132880
+10  2015 Lost            457100
+# ... with 90 more rows</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>tidied_colony_counts_per_state</span>
+</code></pre>
+</div>
+<pre><code># A tibble: 4,208 x 3
+    year type           count
+   &lt;dbl&gt; &lt;fct&gt;          &lt;dbl&gt;
+ 1  2015 Total colonies  7000
+ 2  2015 Lost            1800
+ 3  2015 Added           2800
+ 4  2015 Renovated        250
+ 5  2015 Total colonies 35000
+ 6  2015 Lost            4600
+ 7  2015 Added           3400
+ 8  2015 Renovated       2100
+ 9  2015 Total colonies 13000
+10  2015 Lost            1500
+# ... with 4,198 more rows</code></pre>
+</div>
+<h2 id="plotting-bee-colony-observations-using-ggbeeswarm">Plotting Bee Colony observations using {ggbeeswarm}</h2>
+<p>The first graph plots a point for each type of observation using <a href="https://github.com/eclarke/ggbeeswarm">geom_beeswarm()</a>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting Bee Colony observations using geom_beeswarm() from {ggbeeswarm}</span>
+<span class='va'>tidied_colony_counts_per_state</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>type</span>, y <span class='op'>=</span> <span class='va'>count</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggbeeswarm/man/geom_beeswarm.html'>geom_beeswarm</a></span><span class='op'>(</span>cex <span class='op'>=</span> <span class='fl'>4</span>, colour <span class='op'>=</span> <span class='st'>"yellow"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_log10</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggthemes/man/theme_solarized.html'>theme_solarized_2</a></span><span class='op'>(</span>light <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>type</span>, scales <span class='op'>=</span> <span class='st'>"free"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position<span class='op'>=</span><span class='st'>"none"</span>, axis.text.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Bee Colonies Counted, Lost, Added, Renovated"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Created using {ggbeeswarm}"</span>,
+       x <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='st'>"Number of bee colonies (log10)"</span>,
+       fill <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+</code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig1"></span>
+<img src="bee-colony-losses_files/figure-html5/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" />
+<p class="caption">
+Figure 1: Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting.
+</p>
+</div>
+</div>
+<h2 id="animating-bee-colony-observations-over-time">Animating Bee Colony observations over time</h2>
+<p>While the previous plot is thematically appropriate, it could be better. This graph plots the same points over time in an animation, with the year plotted given in the subtitle. This graph uses standard {ggplot2} <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">jittered points</a>, as well as a box plot to illustrate the distribution of the points. These box plots have notches, showing 95% confidence intervals for the median. Distributions with notches that do not overlap differ significantly.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Defining an animation showing bee colony counts over time</span>
+<span class='va'>p</span> <span class='op'>&lt;-</span> <span class='va'>tidied_colony_counts_per_state</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>count</span>, y <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_reorder.html'>fct_reorder</a></span><span class='op'>(</span><span class='va'>type</span>, <span class='va'>count</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_jitter.html'>geom_jitter</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"yellow"</span>, alpha <span class='op'>=</span> <span class='fl'>0.8</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_boxplot.html'>geom_boxplot</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.2</span>, alpha <span class='op'>=</span> <span class='fl'>0.8</span>, notch <span class='op'>=</span> <span class='cn'>TRUE</span>, colour <span class='op'>=</span> <span class='st'>"cyan"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggthemes/man/theme_solarized.html'>theme_solarized_2</a></span><span class='op'>(</span>light <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position<span class='op'>=</span><span class='st'>"none"</span>, axis.ticks.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,
+        axis.line.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://gganimate.com/reference/transition_time.html'>transition_time</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Bee Colonies Counted, Lost, Added, Renovated, per year"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Year: {frame_time}"</span>,
+       x <span class='op'>=</span> <span class='st'>"Number of bee colonies (log10)"</span>, y <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
 <span class='co'># Rendering the animation as a .gif</span>
-<span class='fu'><a href='https://gganimate.com/reference/animate.html'>animate</a></span><span class='op'>(</span><span class='va'>p</span>, nframes <span class='op'>=</span> <span class='fl'>400</span>, fps <span class='op'>=</span> <span class='fl'>5</span>, renderer <span class='op'>=</span> <span class='fu'><a href='https://gganimate.com/reference/renderers.html'>magick_renderer</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://gganimate.com/reference/animate.html'>animate</a></span><span class='op'>(</span><span class='va'>p</span>, nframes <span class='op'>=</span> <span class='fl'>180</span>, start_pause <span class='op'>=</span> <span class='fl'>20</span>,  end_pause <span class='op'>=</span> <span class='fl'>20</span>,
+        renderer <span class='op'>=</span> <span class='fu'><a href='https://gganimate.com/reference/renderers.html'>magick_renderer</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
-</details>
-<p><img src="us-post-offices_files/figure-html5/figure1-1.gif" /><!-- --></p>
+<div class="figure"><span style="display:block;" id="fig:fig2"></span>
+<img src="bee-colony-losses_files/figure-html5/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  />
+<p class="caption">
+Figure 2: Animation showing bee colony counts from 2015 to 2021.
+</p>
 </div>
-<p>Here are all these post offices in one static plot.</p>
+</div>
+<h2 id="plotting-the-distribution-of-different-bee-colony-observation-types">Plotting the distribution of different Bee Colony observation types</h2>
+<p>From the previous plot, we can see that the <code>Added</code> and <code>Renovated</code> variables have similar distributions based on their box plots. Distributions can also be visualised using density plots. In this graph, the distribution of different types of observation in the data set are plotted.</p>
 <div class="layout-chunk" data-layout="l-body">
-<details>
-<summary>Show code</summary>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># All the post offices on the USA shapefile in a static plot</span>
-<span class='fu'>ggplot</span><span class='op'>(</span><span class='va'>usa_shapefile</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>geom_sf</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>geom_point</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span><span class='va'>longitude</span>, <span class='va'>latitude</span>, colour <span class='op'>=</span> <span class='va'>stamp_index</span><span class='op'>)</span>,
-             data <span class='op'>=</span> <span class='va'>post_office_est</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>scale_fill_continuous</span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"gradient"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>theme_void</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>theme</span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'>labs</span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Post offices in the US"</span>,
-       subtitle <span class='op'>=</span> <span class='st'>"Lighter points indicate rarer postmarks"</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating a density plot for different observation types</span>
+<span class='va'>tidied_colony_counts_overall</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>type</span> <span class='op'>!=</span> <span class='st'>"Total colonies"</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>count</span>, colour <span class='op'>=</span> <span class='va'>type</span>, label <span class='op'>=</span> <span class='va'>type</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://allancameron.github.io/geomtextpath/reference/geom_textdensity.html'>geom_textdensity</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>7</span>, fontface <span class='op'>=</span> <span class='fl'>2</span>, hjust <span class='op'>=</span> <span class='fl'>0.89</span>, vjust <span class='op'>=</span> <span class='fl'>0.3</span>,
+                   linewidth <span class='op'>=</span> <span class='fl'>1.2</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggthemes/man/theme_solarized.html'>theme_solarized_2</a></span><span class='op'>(</span>light <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Distribution of Bee Colony Counts"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Distributions of Bee Colonies Addded, Renovated, Lost"</span>,
+       x <span class='op'>=</span> <span class='st'>"Number of bee colonies"</span><span class='op'>)</span>
 </code></pre>
 </div>
-</details>
-<p><img src="us-post-offices_files/figure-html5/figure2-1.png" width="576" /></p>
+<div class="figure"><span style="display:block;" id="fig:fig3"></span>
+<img src="bee-colony-losses_files/figure-html5/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" />
+<p class="caption">
+Figure 3: A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar.
+</p>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <div class="article-footer">
   <p class="social_footer">
     <span class="article-sharing">
       Share: &nbsp;
-      <a href="https://twitter.com/share?text=Post%20offices%20in%20the%20USA%20from%201772%20to%202000&amp;url=https%3A%2F%2Ftidytuesday.netlify.app%2Fposts%2F2021-04-16-us-post-offices%2F">
+      <a href="https://twitter.com/share?text=Plotting%20Bee%20Colony%20Observations%20and%20Distributions%20using%20%7Bggbeeswarm%7D%20and%20%7Bgeomtextpath%7D&amp;url=https%3A%2F%2Ftidytuesday.netlify.app%2Fposts%2F2022-01-23-bee-colony-losses%2F">
         <i class="fab fa-twitter"></i>
       </a>
-      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftidytuesday.netlify.app%2Fposts%2F2021-04-16-us-post-offices%2F&amp;title=Post%20offices%20in%20the%20USA%20from%201772%20to%202000">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftidytuesday.netlify.app%2Fposts%2F2022-01-23-bee-colony-losses%2F&amp;title=Plotting%20Bee%20Colony%20Observations%20and%20Distributions%20using%20%7Bggbeeswarm%7D%20and%20%7Bgeomtextpath%7D">
         <i class="fab fa-linkedin"></i>
       </a>
     </span>
@@ -2604,13 +2745,13 @@ d-appendix d-footnote-list a.footnote-backlink {
   <p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/rnnh/TidyTuesday/">https://github.com/rnnh/TidyTuesday/</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
   <h3 id="citation">Citation</h3>
   <p>For attribution, please cite this work as</p>
-  <pre class="citation-appendix short">Harrington (2021, April 16). Ronan's #TidyTuesday blog: Post offices in the USA from 1772 to 2000. Retrieved from https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/</pre>
+  <pre class="citation-appendix short">Harrington (2022, Jan. 23). Ronan's #TidyTuesday blog: Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}. Retrieved from https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/</pre>
   <p>BibTeX citation</p>
-  <pre class="citation-appendix long">@misc{harrington2021post,
+  <pre class="citation-appendix long">@misc{harrington2022plotting,
   author = {Harrington, Ronan},
-  title = {Ronan's #TidyTuesday blog: Post offices in the USA from 1772 to 2000},
-  url = {https://tidytuesday.netlify.app/posts/2021-04-16-us-post-offices/},
-  year = {2021}
+  title = {Ronan's #TidyTuesday blog: Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}},
+  url = {https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/},
+  year = {2022}
 }</pre>
 </div>
 <!--/radix_placeholder_appendices-->

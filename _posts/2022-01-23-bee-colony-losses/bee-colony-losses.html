@@ -87,637 +87,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>Ronan's #TidyTuesday blog: About this blog</title>
+  <title>Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}</title>
+
+  <meta property="description" itemprop="description" content="Graphs and analysis using the #TidyTuesday data set for week 2 of 2022&#10;  (11/1/2022): &quot;Bee Colony losses&quot;"/>
 
 
-  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
-  <link rel="icon" type="image/png" href="images/favicon.png"/>
-
+  <!--  https://schema.org/Article -->
+  <meta property="article:published" itemprop="datePublished" content="2022-01-23"/>
+  <meta property="article:created" itemprop="dateCreated" content="2022-01-23"/>
+  <meta name="article:author" content="Ronan Harrington"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Ronan&#39;s #TidyTuesday blog: About this blog"/>
+  <meta property="og:title" content="Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"/>
   <meta property="og:type" content="article"/>
+  <meta property="og:description" content="Graphs and analysis using the #TidyTuesday data set for week 2 of 2022&#10;  (11/1/2022): &quot;Bee Colony losses&quot;"/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="Ronan&#39;s #TidyTuesday blog"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Ronan&#39;s #TidyTuesday blog: About this blog"/>
+  <meta property="twitter:title" content="Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"/>
+  <meta property="twitter:description" content="Graphs and analysis using the #TidyTuesday data set for week 2 of 2022&#10;  (11/1/2022): &quot;Bee Colony losses&quot;"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title"]}},"value":[{"type":"character","attributes":{},"value":["About this blog"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","repository_url","preview","output"]}},"value":[{"type":"character","attributes":{},"value":["Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"]},{"type":"character","attributes":{},"value":["Graphs and analysis using the #TidyTuesday data set for week 2 of 2022\n  (11/1/2022): \"Bee Colony losses\"\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","url"]}},"value":[{"type":"character","attributes":{},"value":["Ronan Harrington"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/"]}]}]},{"type":"character","attributes":{},"value":["2022-01-23"]},{"type":"character","attributes":{},"value":["https://github.com/rnnh/TidyTuesday/"]},{"type":"character","attributes":{},"value":["bee-colony-losses_files/figure-html5/fig3-1.png"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
+  
+  <script type="text/json" id="radix-resource-manifest">
+  {"type":"character","attributes":{},"value":["bee-colony-losses_files/anchor-4.2.2/anchor.min.js","bee-colony-losses_files/bowser-1.9.3/bowser.min.js","bee-colony-losses_files/distill-2.2.21/template.v2.js","bee-colony-losses_files/figure-html5/fig1-1.png","bee-colony-losses_files/figure-html5/fig2-1.gif","bee-colony-losses_files/figure-html5/fig3-1.png","bee-colony-losses_files/header-attrs-2.11/header-attrs.js","bee-colony-losses_files/jquery-3.6.0/jquery-3.6.0.js","bee-colony-losses_files/jquery-3.6.0/jquery-3.6.0.min.js","bee-colony-losses_files/jquery-3.6.0/jquery-3.6.0.min.map","bee-colony-losses_files/popper-2.6.0/popper.min.js","bee-colony-losses_files/tippy-6.2.7/tippy-bundle.umd.min.js","bee-colony-losses_files/tippy-6.2.7/tippy-light-border.css","bee-colony-losses_files/tippy-6.2.7/tippy.css","bee-colony-losses_files/tippy-6.2.7/tippy.umd.min.js","bee-colony-losses_files/webcomponents-2.0.0/webcomponents.js"]}
+  </script>
   <!--radix_placeholder_navigation_in_header-->
-  <meta name="distill:offset" content=""/>
-
-  <script type="application/javascript">
-
-    window.headroom_prevent_pin = false;
-
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-
-      // initialize headroom for banner
-      var header = $('header').get(0);
-      var headerHeight = header.offsetHeight;
-      var headroom = new Headroom(header, {
-        tolerance: 5,
-        onPin : function() {
-          if (window.headroom_prevent_pin) {
-            window.headroom_prevent_pin = false;
-            headroom.unpin();
-          }
-        }
-      });
-      headroom.init();
-      if(window.location.hash)
-        headroom.unpin();
-      $(header).addClass('headroom--transition');
-
-      // offset scroll location for banner on hash change
-      // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
-      window.addEventListener("hashchange", function(event) {
-        window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
-      });
-
-      // responsive menu
-      $('.distill-site-header').each(function(i, val) {
-        var topnav = $(this);
-        var toggle = topnav.find('.nav-toggle');
-        toggle.on('click', function() {
-          topnav.toggleClass('responsive');
-        });
-      });
-
-      // nav dropdowns
-      $('.nav-dropbtn').click(function(e) {
-        $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
-        $(this).parent().siblings('.nav-dropdown')
-           .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $("body").click(function(e){
-        $('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $(".nav-dropdown").click(function(e){
-        e.stopPropagation();
-      });
-    });
-  </script>
-
-  <style type="text/css">
-
-  /* Theme (user-documented overrideables for nav appearance) */
-
-  .distill-site-nav {
-    color: rgba(255, 255, 255, 0.8);
-    background-color: #0F2E3D;
-    font-size: 15px;
-    font-weight: 300;
-  }
-
-  .distill-site-nav a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .distill-site-nav a:hover {
-    color: white;
-  }
-
-  @media print {
-    .distill-site-nav {
-      display: none;
-    }
-  }
-
-  .distill-site-header {
-
-  }
-
-  .distill-site-footer {
-
-  }
-
-
-  /* Site Header */
-
-  .distill-site-header {
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 3;
-  }
-
-  .distill-site-header .nav-left {
-    display: inline-block;
-    margin-left: 8px;
-  }
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header .nav-left {
-      margin-left: 0;
-    }
-  }
-
-
-  .distill-site-header .nav-right {
-    float: right;
-    margin-right: 8px;
-  }
-
-  .distill-site-header a,
-  .distill-site-header .title {
-    display: inline-block;
-    text-align: center;
-    padding: 14px 10px 14px 10px;
-  }
-
-  .distill-site-header .title {
-    font-size: 18px;
-    min-width: 150px;
-  }
-
-  .distill-site-header .logo {
-    padding: 0;
-  }
-
-  .distill-site-header .logo img {
-    display: none;
-    max-height: 20px;
-    width: auto;
-    margin-bottom: -4px;
-  }
-
-  .distill-site-header .nav-image img {
-    max-height: 18px;
-    width: auto;
-    display: inline-block;
-    margin-bottom: -3px;
-  }
-
-
-
-  @media screen and (min-width: 1000px) {
-    .distill-site-header .logo img {
-      display: inline-block;
-    }
-    .distill-site-header .nav-left {
-      margin-left: 20px;
-    }
-    .distill-site-header .nav-right {
-      margin-right: 20px;
-    }
-    .distill-site-header .title {
-      padding-left: 12px;
-    }
-  }
-
-
-  .distill-site-header .nav-toggle {
-    display: none;
-  }
-
-  .nav-dropdown {
-    display: inline-block;
-    position: relative;
-  }
-
-  .nav-dropdown .nav-dropbtn {
-    border: none;
-    outline: none;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 16px 10px;
-    background-color: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    margin: 0;
-    margin-top: 1px;
-    z-index: 2;
-  }
-
-  .nav-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    min-width: 200px;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 4px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-    z-index: 1;
-    margin-top: 2px;
-    white-space: nowrap;
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-
-  .nav-dropdown-content hr {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .nav-dropdown-active {
-    display: block;
-  }
-
-  .nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
-    color: black;
-    padding: 6px 24px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-
-  .nav-dropdown-content .nav-dropdown-header {
-    display: block;
-    padding: 5px 24px;
-    padding-bottom: 0;
-    text-transform: uppercase;
-    font-size: 14px;
-    color: #999999;
-    white-space: nowrap;
-  }
-
-  .nav-dropdown:hover .nav-dropbtn {
-    color: white;
-  }
-
-  .nav-dropdown-content a:hover {
-    background-color: #ddd;
-    color: black;
-  }
-
-  .nav-right .nav-dropdown-content {
-    margin-left: -45%;
-    right: 0;
-  }
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header a, .distill-site-header .nav-dropdown  {display: none;}
-    .distill-site-header a.nav-toggle {
-      float: right;
-      display: block;
-    }
-    .distill-site-header .title {
-      margin-left: 0;
-    }
-    .distill-site-header .nav-right {
-      margin-right: 0;
-    }
-    .distill-site-header {
-      overflow: hidden;
-    }
-    .nav-right .nav-dropdown-content {
-      margin-left: 0;
-    }
-  }
-
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header.responsive {position: relative; min-height: 500px; }
-    .distill-site-header.responsive a.nav-toggle {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .distill-site-header.responsive a,
-    .distill-site-header.responsive .nav-dropdown {
-      display: block;
-      text-align: left;
-    }
-    .distill-site-header.responsive .nav-left,
-    .distill-site-header.responsive .nav-right {
-      width: 100%;
-    }
-    .distill-site-header.responsive .nav-dropdown {float: none;}
-    .distill-site-header.responsive .nav-dropdown-content {position: relative;}
-    .distill-site-header.responsive .nav-dropdown .nav-dropbtn {
-      display: block;
-      width: 100%;
-      text-align: left;
-    }
-  }
-
-  /* Site Footer */
-
-  .distill-site-footer {
-    width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 3;
-    margin-top: 30px;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    text-align: center;
-  }
-
-  /* Headroom */
-
-  d-title {
-    padding-top: 6rem;
-  }
-
-  @media print {
-    d-title {
-      padding-top: 4rem;
-    }
-  }
-
-  .headroom {
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-
-  .headroom--transition {
-    transition: all .4s ease-in-out;
-  }
-
-  .headroom--unpinned {
-    top: -100px;
-  }
-
-  .headroom--pinned {
-    top: 0;
-  }
-
-  /* adjust viewport for navbar height */
-  /* helps vertically center bootstrap (non-distill) content */
-  .min-vh-100 {
-    min-height: calc(100vh - 100px) !important;
-  }
-
-  </style>
-
-  <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
-  <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
-  <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
-  <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
-
-  <script type="application/javascript">
-
-  function getMeta(metaName) {
-    var metas = document.getElementsByTagName('meta');
-    for (let i = 0; i < metas.length; i++) {
-      if (metas[i].getAttribute('name') === metaName) {
-        return metas[i].getAttribute('content');
-      }
-    }
-    return '';
-  }
-
-  function offsetURL(url) {
-    var offset = getMeta('distill:offset');
-    return offset ? offset + '/' + url : url;
-  }
-
-  function createFuseIndex() {
-
-    // create fuse index
-    var options = {
-      keys: [
-        { name: 'title', weight: 20 },
-        { name: 'categories', weight: 15 },
-        { name: 'description', weight: 10 },
-        { name: 'contents', weight: 5 },
-      ],
-      ignoreLocation: true,
-      threshold: 0
-    };
-    var fuse = new window.Fuse([], options);
-
-    // fetch the main search.json
-    return fetch(offsetURL('search.json'))
-      .then(function(response) {
-        if (response.status == 200) {
-          return response.json().then(function(json) {
-            // index main articles
-            json.articles.forEach(function(article) {
-              fuse.add(article);
-            });
-            // download collections and index their articles
-            return Promise.all(json.collections.map(function(collection) {
-              return fetch(offsetURL(collection)).then(function(response) {
-                if (response.status === 200) {
-                  return response.json().then(function(articles) {
-                    articles.forEach(function(article) {
-                      fuse.add(article);
-                    });
-                  })
-                } else {
-                  return Promise.reject(
-                    new Error('Unexpected status from search index request: ' +
-                              response.status)
-                  );
-                }
-              });
-            })).then(function() {
-              return fuse;
-            });
-          });
-
-        } else {
-          return Promise.reject(
-            new Error('Unexpected status from search index request: ' +
-                        response.status)
-          );
-        }
-      });
-  }
-
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-
-    // get search element (bail if we don't have one)
-    var searchEl = window.document.getElementById('distill-search');
-    if (!searchEl)
-      return;
-
-    createFuseIndex()
-      .then(function(fuse) {
-
-        // make search box visible
-        searchEl.classList.remove('hidden');
-
-        // initialize autocomplete
-        var options = {
-          autoselect: true,
-          hint: false,
-          minLength: 2,
-        };
-        window.autocomplete(searchEl, options, [{
-          source: function(query, callback) {
-            const searchOptions = {
-              isCaseSensitive: false,
-              shouldSort: true,
-              minMatchCharLength: 2,
-              limit: 10,
-            };
-            var results = fuse.search(query, searchOptions);
-            callback(results
-              .map(function(result) { return result.item; })
-            );
-          },
-          templates: {
-            suggestion: function(suggestion) {
-              var img = suggestion.preview && Object.keys(suggestion.preview).length > 0
-                ? `<img src="${offsetURL(suggestion.preview)}"</img>`
-                : '';
-              var html = `
-                <div class="search-item">
-                  <h3>${suggestion.title}</h3>
-                  <div class="search-item-description">
-                    ${suggestion.description || ''}
-                  </div>
-                  <div class="search-item-preview">
-                    ${img}
-                  </div>
-                </div>
-              `;
-              return html;
-            }
-          }
-        }]).on('autocomplete:selected', function(event, suggestion) {
-          window.location.href = offsetURL(suggestion.path);
-        });
-        // remove inline display style on autocompleter (we want to
-        // manage responsive display via css)
-        $('.algolia-autocomplete').css("display", "");
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-
-  });
-
-  </script>
-
-  <style type="text/css">
-
-  .nav-search {
-    font-size: x-small;
-  }
-
-  /* Algolioa Autocomplete */
-
-  .algolia-autocomplete {
-    display: inline-block;
-    margin-left: 10px;
-    vertical-align: sub;
-    background-color: white;
-    color: black;
-    padding: 6px;
-    padding-top: 8px;
-    padding-bottom: 0;
-    border-radius: 6px;
-    border: 1px #0F2E3D solid;
-    width: 180px;
-  }
-
-
-  @media screen and (max-width: 768px) {
-    .distill-site-nav .algolia-autocomplete {
-      display: none;
-      visibility: hidden;
-    }
-    .distill-site-nav.responsive .algolia-autocomplete {
-      display: inline-block;
-      visibility: visible;
-    }
-    .distill-site-nav.responsive .algolia-autocomplete .aa-dropdown-menu {
-      margin-left: 0;
-      width: 400px;
-      max-height: 400px;
-    }
-  }
-
-  .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
-    width: 90%;
-    outline: none;
-    border: none;
-  }
-
-  .algolia-autocomplete .aa-hint {
-    color: #999;
-  }
-  .algolia-autocomplete .aa-dropdown-menu {
-    width: 550px;
-    max-height: 70vh;
-    overflow-x: visible;
-    overflow-y: scroll;
-    padding: 5px;
-    margin-top: 3px;
-    margin-left: -150px;
-    background-color: #fff;
-    border-radius: 5px;
-    border: 1px solid #999;
-    border-top: none;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
-    cursor: pointer;
-    padding: 5px 4px;
-    border-bottom: 1px solid #eee;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
-    border-bottom: none;
-    margin-bottom: 2px;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
-    overflow: hidden;
-    font-size: 0.8em;
-    line-height: 1.4em;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
-    font-size: 1rem;
-    margin-block-start: 0;
-    margin-block-end: 5px;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
-    display: inline-block;
-    overflow: hidden;
-    height: 2.8em;
-    width: 80%;
-    margin-right: 4%;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
-    display: inline-block;
-    width: 15%;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
-    height: 3em;
-    width: auto;
-    display: none;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
-    display: initial;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
-    background-color: #eee;
-  }
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
-    font-weight: bold;
-    font-style: normal;
-  }
-
-  </style>
-
-
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
 
@@ -2035,363 +1437,18 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   </script>
 
-  <style type="text/css">
-  /* base variables */
-
-  /* Edit the CSS properties in this file to create a custom
-     Distill theme. Only edit values in the right column
-     for each row; values shown are the CSS defaults.
-     To return any property to the default,
-     you may set its value to: unset
-     All rows must end with a semi-colon.                      */
-
-  /* Optional: embed custom fonts here with `@import`          */
-  /* This must remain at the top of this file.                 */
-
-
-
-  html {
-    /*-- Main font sizes --*/
-    --title-size:      50px;
-    --body-size:       1.06rem;
-    --code-size:       14px;
-    --aside-size:      12px;
-    --fig-cap-size:    13px;
-    /*-- Main font colors --*/
-    --title-color:     #000000;
-    --header-color:    rgba(0, 0, 0, 0.8);
-    --body-color:      rgba(0, 0, 0, 0.8);
-    --aside-color:     rgba(0, 0, 0, 0.6);
-    --fig-cap-color:   rgba(0, 0, 0, 0.6);
-    /*-- Specify custom fonts ~~~ must be imported above   --*/
-    --heading-font:    sans-serif;
-    --mono-font:       monospace;
-    --body-font:       sans-serif;
-    --navbar-font:     sans-serif;  /* websites + blogs only */
-  }
-
-  /*-- ARTICLE METADATA --*/
-  d-byline {
-    --heading-size:    0.6rem;
-    --heading-color:   rgba(0, 0, 0, 0.5);
-    --body-size:       0.8rem;
-    --body-color:      rgba(0, 0, 0, 0.8);
-  }
-
-  /*-- ARTICLE TABLE OF CONTENTS --*/
-  .d-contents {
-    --heading-size:    18px;
-    --contents-size:   13px;
-  }
-
-  /*-- ARTICLE APPENDIX --*/
-  d-appendix {
-    --heading-size:    15px;
-    --heading-color:   rgba(0, 0, 0, 0.65);
-    --text-size:       0.8em;
-    --text-color:      rgba(0, 0, 0, 0.5);
-  }
-
-  /*-- WEBSITE HEADER + FOOTER --*/
-  /* These properties only apply to Distill sites and blogs  */
-
-  .distill-site-header {
-    --title-size:       18px;
-    --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
-  }
-
-  .distill-site-footer {
-    --text-color:       rgba(255, 255, 255, 0.8);
-    --text-size:        15px;
-    --hover-color:      white;
-    --bkgd-color:       #0F2E3D;
-  }
-
-  /*-- Additional custom styles --*/
-  /* Add any additional CSS rules below                      */
-  </style>
-  <style type="text/css">
-  /* base variables */
-
-  /* Edit the CSS properties in this file to create a custom
-     Distill theme. Only edit values in the right column
-     for each row; values shown are the CSS defaults.
-     To return any property to the default,
-     you may set its value to: unset
-     All rows must end with a semi-colon.                      */
-
-  /* Optional: embed custom fonts here with `@import`          */
-  /* This must remain at the top of this file.                 */
-
-  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono');
-
-  @import url('https://fonts.googleapis.com/css2?family=Newsreader');
-
-  @import url('https://fonts.googleapis.com/css2?family=Lato');
-
-  html {
-    /*-- Main font sizes --*/
-    --title-size:      50px;
-    --body-size:       1.06rem;
-    --code-size:       14px;
-    --aside-size:      12px;
-    --fig-cap-size:    13px;
-    /*-- Main font colors --*/
-    --title-color:     #000000;
-    --header-color:    rgba(0, 0, 0, 0.8);
-    --body-color:      rgba(0, 0, 0, 0.8);
-    --aside-color:     rgba(0, 0, 0, 0.6);
-    --fig-cap-color:   rgba(0, 0, 0, 0.6);
-    /*-- Specify custom fonts ~~~ must be imported above   --*/
-    --heading-font:    'Newsreader', serif;
-    --mono-font:       'Roboto Mono', monospace;
-    --body-font:       'Lato', sans-serif;
-    --navbar-font:     'Newsreader', serif;  /* websites + blogs only */
-  }
-
-  /*-- ARTICLE METADATA --*/
-  d-byline {
-    --heading-size:    0.6rem;
-    --heading-color:   rgba(0, 0, 0, 0.5);
-    --body-size:       0.8rem;
-    --body-color:      rgba(0, 0, 0, 0.8);
-    --hover-color:      red;
-  }
-
-  /*-- ARTICLE TABLE OF CONTENTS --*/
-  .d-contents {
-    --heading-size:    18px;
-    --contents-size:   13px;
-    --hover-color:      red;
-  }
-
-  /*-- ARTICLE APPENDIX --*/
-  d-appendix {
-    --heading-size:    15px;
-    --heading-color:   rgba(0, 0, 0, 0.65);
-    --text-size:       0.8em;
-    --text-color:      black;
-  }
-
-  /*-- WEBSITE HEADER + FOOTER --*/
-  /* These properties only apply to Distill sites and blogs  */
-
-  .distill-site-header {
-    --title-size:       18px;
-    --text-color:       black;
-    --text-size:        15px;
-    --hover-color:      red;
-    --bkgd-color:       white;
-  }
-
-  .distill-site-footer {
-    --text-color:       black;
-    --text-size:        15px;
-    --hover-color:      red;
-    --bkgd-color:       white;
-  }
-
-  /*-- Additional custom styles --*/
-  /* Add any additional CSS rules below                      */
-  </style>
-  <style type="text/css">
-  /* base style */
-
-  /* FONT FAMILIES */
-
-  :root {
-    --heading-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-    --mono-default: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    --body-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-  }
-
-  body,
-  .posts-list .post-preview p,
-  .posts-list .description p {
-    font-family: var(--body-font), var(--body-default);
-  }
-
-  h1, h2, h3, h4, h5, h6,
-  .posts-list .post-preview h2,
-  .posts-list .description h2 {
-    font-family: var(--heading-font), var(--heading-default);
-  }
-
-  d-article div.sourceCode code,
-  d-article pre code {
-    font-family: var(--mono-font), var(--mono-default);
-  }
-
-
-  /*-- TITLE --*/
-  d-title h1,
-  .posts-list > h1 {
-    color: var(--title-color, black);
-  }
-
-  d-title h1 {
-    font-size: var(--title-size, 50px);
-  }
-
-  /*-- HEADERS --*/
-  d-article h1,
-  d-article h2,
-  d-article h3,
-  d-article h4,
-  d-article h5,
-  d-article h6 {
-    color: var(--header-color, rgba(0, 0, 0, 0.8));
-  }
-
-  /*-- BODY --*/
-  d-article > p,  /* only text inside of <p> tags */
-  d-article > ul, /* lists */
-  d-article > ol {
-    color: var(--body-color, rgba(0, 0, 0, 0.8));
-    font-size: var(--body-size, 1.06rem);
-  }
-
-
-  /*-- CODE --*/
-  d-article div.sourceCode code,
-  d-article pre code {
-    font-size: var(--code-size, 14px);
-  }
-
-  /*-- ASIDE --*/
-  d-article aside {
-    font-size: var(--aside-size, 12px);
-    color: var(--aside-color, rgba(0, 0, 0, 0.6));
-  }
-
-  /*-- FIGURE CAPTIONS --*/
-  figure .caption,
-  figure figcaption,
-  .figure .caption {
-    font-size: var(--fig-cap-size, 13px);
-    color: var(--fig-cap-color, rgba(0, 0, 0, 0.6));
-  }
-
-  /*-- METADATA --*/
-  d-byline h3 {
-    font-size: var(--heading-size, 0.6rem);
-    color: var(--heading-color, rgba(0, 0, 0, 0.5));
-  }
-
-  d-byline {
-    font-size: var(--body-size, 0.8rem);
-    color: var(--body-color, rgba(0, 0, 0, 0.8));
-  }
-
-  d-byline a,
-  d-article d-byline a {
-    color: var(--body-color, rgba(0, 0, 0, 0.8));
-  }
-
-  /*-- TABLE OF CONTENTS --*/
-  .d-contents nav h3 {
-    font-size: var(--heading-size, 18px);
-  }
-
-  .d-contents nav a {
-    font-size: var(--contents-size, 13px);
-  }
-
-  /*-- APPENDIX --*/
-  d-appendix h3 {
-    font-size: var(--heading-size, 15px);
-    color: var(--heading-color, rgba(0, 0, 0, 0.65));
-  }
-
-  d-appendix {
-    font-size: var(--text-size, 0.8em);
-    color: var(--text-color, rgba(0, 0, 0, 0.5));
-  }
-
-  d-appendix d-footnote-list a.footnote-backlink {
-    color: var(--text-color, rgba(0, 0, 0, 0.5));
-  }
-
-  /*-- WEBSITE HEADER + FOOTER --*/
-  .distill-site-header .title {
-    font-size: var(--title-size, 18px);
-    font-family: var(--navbar-font), var(--heading-default);
-  }
-
-  .distill-site-header a,
-  .nav-dropdown .nav-dropbtn {
-    font-family: var(--navbar-font), var(--heading-default);
-  }
-
-  .nav-dropdown .nav-dropbtn {
-    color: var(--text-color, rgba(255, 255, 255, 0.8));
-    font-size: var(--text-size, 15px);
-  }
-
-  .distill-site-header a:hover,
-  .nav-dropdown:hover .nav-dropbtn {
-    color: var(--hover-color, white);
-  }
-
-  .distill-site-header {
-    font-size: var(--text-size, 15px);
-    color: var(--text-color, rgba(255, 255, 255, 0.8));
-    background-color: var(--bkgd-color, #0F2E3D);
-  }
-
-  .distill-site-footer {
-    font-size: var(--text-size, 15px);
-    color: var(--text-color, rgba(255, 255, 255, 0.8));
-    background-color: var(--bkgd-color, #0F2E3D);
-  }
-
-  .distill-site-footer a:hover {
-    color: var(--hover-color, white);
-  }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-  <script src="site_libs/popper-2.6.0/popper.min.js"></script>
-  <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
-  <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
-  <script src="site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
-  <script src="site_libs/anchor-4.2.2/anchor.min.js"></script>
-  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
-  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
-  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
+  <script src="bee-colony-losses_files/header-attrs-2.11/header-attrs.js"></script>
+  <script src="bee-colony-losses_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+  <script src="bee-colony-losses_files/popper-2.6.0/popper.min.js"></script>
+  <link href="bee-colony-losses_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="bee-colony-losses_files/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="bee-colony-losses_files/tippy-6.2.7/tippy.umd.min.js"></script>
+  <script src="bee-colony-losses_files/anchor-4.2.2/anchor.min.js"></script>
+  <script src="bee-colony-losses_files/bowser-1.9.3/bowser.min.js"></script>
+  <script src="bee-colony-losses_files/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="bee-colony-losses_files/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
-  ```
-   <script>
-     document.addEventListener("DOMContentLoaded", function () {
-       if (!/posts/.test(location.pathname)) {
-         return;
-       }
-
-       var script = document.createElement("script");
-       script.src = "https://utteranc.es/client.js";
-       script.setAttribute("repo", "rnnh/TidyTuesday");
-       script.setAttribute("issue-term", "title");
-       script.setAttribute("crossorigin", "anonymous");
-       script.setAttribute("label", "comments ðŸ’¬");
-       script.setAttribute("theme", "github-light");
-
-       /* wait for article to load, append script to article element */
-       var observer = new MutationObserver(function (mutations, observer) {
-         var article = document.querySelector("d-article");
-         if (article) {
-           observer.disconnect();
-           /* HACK: article scroll */
-           article.setAttribute("style", "overflow-y: hidden");
-           article.appendChild(script);
-         }
-       });
-
-       observer.observe(document.body, { childList: true });
-     });
-   </script>
-   ```
   <!--/radix_placeholder_site_in_header-->
 
 
@@ -2402,45 +1459,271 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"About this blog","authors":[]}
+{"title":"Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}","description":"Graphs and analysis using the #TidyTuesday data set for week 2 of 2022\n  (11/1/2022): \"Bee Colony losses\"","authors":[{"author":"Ronan Harrington","authorURL":"https://github.com/rnnh/","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2022-01-23T00:00:00.000+00:00","citationText":"Harrington, 2022"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
 <!--radix_placeholder_navigation_before_body-->
-<header class="header header--fixed" role="banner">
-<nav class="distill-site-nav distill-site-header">
-<div class="nav-left">
-<a href="index.html" class="title">Ronan's #TidyTuesday blog</a>
-<input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
-</div>
-<div class="nav-right">
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="https://github.com/rnnh/TidyTuesday/">
-<i class="fa fa-github" aria-hidden="true"></i>
-</a>
-<a href="index.xml">
-<i class="fa fa-rss" aria-hidden="true"></i>
-</a>
-<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
-</div>
-</nav>
-</header>
 <!--/radix_placeholder_navigation_before_body-->
 <!--radix_placeholder_site_before_body-->
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>About this blog</h1>
+<h1>Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-
+<p><p>Graphs and analysis using the #TidyTuesday data set for week 2 of 2022 (11/1/2022): “Bee Colony losses”</p></p>
 </div>
 
+<div class="d-byline">
+  Ronan Harrington <a href="https://github.com/rnnh/" class="uri">https://github.com/rnnh/</a> 
+  
+<br/>2022-01-23
+</div>
 
 <div class="d-article">
-<p>Reproducible visualisation and analysis of <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday data sets</a>, created using <a href="https://github.com/rstudio/distill">distill for R Markdown</a>. These data sets are provided by the <a href="https://github.com/rfordatascience">R for Data Science (R4DS)</a> community. This blog can be viewed locally by downloading the GitHub repository and opening <a href="https://github.com/rnnh/TidyTuesday/blob/main/_site/index.html">the index page</a> in a web browser. It is also available at <strong><a href="https://tidytuesday.netlify.app/" class="uri">https://tidytuesday.netlify.app/</a></strong>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#setup">Setup</a></li>
+<li><a href="#data-wrangling">Data wrangling</a></li>
+<li><a href="#plotting-bee-colony-observations-using-ggbeeswarm">Plotting Bee Colony observations using {ggbeeswarm}</a></li>
+<li><a href="#animating-bee-colony-observations-over-time">Animating Bee Colony observations over time</a></li>
+<li><a href="#plotting-the-distribution-of-different-bee-colony-observation-types">Plotting the distribution of different Bee Colony observation types</a></li>
+</ul>
+</nav>
+</div>
+<h2 id="setup">Setup</h2>
+<p>Loading the <code>R</code> libraries and <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-11/readme.md">data set</a>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Loading libraries</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://allancameron.github.io/geomtextpath/'>geomtextpath</a></span><span class='op'>)</span> <span class='co'># For adding text to ggplot2 curves</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/thebioengineer/tidytuesdayR'>tidytuesdayR</a></span><span class='op'>)</span> <span class='co'># For loading data set</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/eclarke/ggbeeswarm'>ggbeeswarm</a></span><span class='op'>)</span> <span class='co'># For creating a beeswarm plot</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span> <span class='co'># For the ggplot2, dplyr libraries</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://gganimate.com'>gganimate</a></span><span class='op'>)</span> <span class='co'># For plot animation</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/jrnold/ggthemes'>ggthemes</a></span><span class='op'>)</span> <span class='co'># For more ggplot2 themes</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://sjmgarnier.github.io/viridis/'>viridis</a></span><span class='op'>)</span> <span class='co'># For plot themes</span>
+
+<span class='co'># Loading data set</span>
+<span class='va'>tt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/tidytuesdayR/man/tt_load.html'>tt_load</a></span><span class='op'>(</span><span class='st'>"2022-01-11"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>
+    Downloading file 1 of 2: `colony.csv`
+    Downloading file 2 of 2: `stressor.csv`</code></pre>
+</div>
+<h2 id="data-wrangling">Data wrangling</h2>
+<p>In this section, the Bee Colony data is wrangled into two tidy sets:</p>
+<ul>
+<li><code>tidied_colony_counts_overall</code> contains quarterly colony counts for the USA</li>
+<li><code>tidied_colony_counts_per_state</code> contains quarterly colony counts for various states within the USA</li>
+</ul>
+<p>To create these sets, the original data is filtered to select for the appropriate states, and the “tidy_colony_data()” function is applied. These sets are tidy as <a href="https://tidyr.tidyverse.org/articles/tidy-data.html#tidy-data">each column is a variable, each row is an observation, and every cell has a single value</a>. The types of observations in these data sets are:</p>
+<ul>
+<li><code>Total colonies</code>: Bee colonies counted</li>
+<li><code>Lost</code>: Bee colonies lost</li>
+<li><code>Added</code>: Bee colonies added</li>
+<li><code>Renovated</code>: Bee colonies renovated</li>
+</ul>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating subsets of the original bee colony data</span>
+<span class='va'>colony_counts_overall</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>colony</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>state</span> <span class='op'>==</span> <span class='st'>"United States"</span><span class='op'>)</span>
+
+<span class='va'>colony_counts_per_state</span> <span class='op'>&lt;-</span> <span class='va'>tt</span><span class='op'>$</span><span class='va'>colony</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>state</span> <span class='op'>!=</span> <span class='st'>"United States"</span> <span class='op'>&amp;</span> <span class='va'>state</span> <span class='op'>!=</span> <span class='st'>"Other states"</span><span class='op'>)</span>
+
+<span class='co'># Defining a function to tidy bee colony count data, which takes</span>
+<span class='co'># "messy_colony_data" as an argument</span>
+<span class='va'>tidy_colony_data</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>messy_colony_data</span><span class='op'>)</span><span class='op'>{</span>
+  <span class='co'># Writing the result of the following piped steps to "tidied_colony_data"</span>
+  <span class='va'>tidied_colony_data</span> <span class='op'>&lt;-</span> <span class='va'>messy_colony_data</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Selecting variables</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>year</span>, <span class='va'>colony_n</span>, <span class='va'>colony_lost</span>, <span class='va'>colony_added</span>, <span class='va'>colony_reno</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Dropping rows with missing values</span>
+    <span class='fu'><a href='https://tidyr.tidyverse.org/reference/drop_na.html'>drop_na</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Changing columns to rows</span>
+    <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_longer.html'>pivot_longer</a></span><span class='op'>(</span><span class='op'>!</span><span class='va'>year</span>, names_to <span class='op'>=</span> <span class='st'>"type"</span>, values_to <span class='op'>=</span> <span class='st'>"count"</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Setting "type" as a factor variable</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>type</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Recoding the levels of the "type" factor</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_recode.html'>fct_recode</a></span><span class='op'>(</span><span class='va'>type</span>,
+                             <span class='st'>"Total colonies"</span> <span class='op'>=</span> <span class='st'>"colony_n"</span>,
+                             <span class='st'>"Lost"</span> <span class='op'>=</span> <span class='st'>"colony_lost"</span>,
+                             <span class='st'>"Added"</span> <span class='op'>=</span> <span class='st'>"colony_added"</span>,
+                             <span class='st'>"Renovated"</span> <span class='op'>=</span> <span class='st'>"colony_reno"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+    <span class='co'># Reordering "type" factor levels</span>
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_relevel.html'>fct_relevel</a></span><span class='op'>(</span><span class='va'>type</span>,
+                              <span class='st'>"Total colonies"</span>, <span class='st'>"Lost"</span>, <span class='st'>"Added"</span>, <span class='st'>"Renovated"</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='co'># Returning "tidied_colony_data"</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>tidied_colony_data</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'># Using this function to tidy the subsets</span>
+<span class='va'>tidied_colony_counts_overall</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_colony_data</span><span class='op'>(</span><span class='va'>colony_counts_overall</span><span class='op'>)</span>
+
+<span class='va'>tidied_colony_counts_per_state</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_colony_data</span><span class='op'>(</span><span class='va'>colony_counts_per_state</span><span class='op'>)</span>
+
+<span class='co'># Printing a summary of the subsets before tidying...</span>
+<span class='va'>colony_counts_overall</span>
+</code></pre>
+</div>
+<pre><code># A tibble: 26 x 10
+    year months  state colony_n colony_max colony_lost colony_lost_pct
+   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+ 1  2015 Januar~ Unit~  2824610         NA      500020              18
+ 2  2015 April-~ Unit~  2849500         NA      352860              12
+ 3  2015 July-S~ Unit~  3132880         NA      457100              15
+ 4  2015 Octobe~ Unit~  2874760         NA      412380              14
+ 5  2016 Januar~ Unit~  2594590         NA      428800              17
+ 6  2016 April-~ Unit~  2801470         NA      329820              12
+ 7  2016 July-S~ Unit~  3181180         NA      397290              12
+ 8  2016 Octobe~ Unit~  3032060         NA      502350              17
+ 9  2017 Januar~ Unit~  2615590         NA      361850              14
+10  2017 April-~ Unit~  2886030         NA      225680               8
+# ... with 16 more rows, and 3 more variables: colony_added &lt;dbl&gt;,
+#   colony_reno &lt;dbl&gt;, colony_reno_pct &lt;dbl&gt;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>colony_counts_per_state</span>
+</code></pre>
+</div>
+<pre><code># A tibble: 1,196 x 10
+    year months  state colony_n colony_max colony_lost colony_lost_pct
+   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+ 1  2015 Januar~ Alab~     7000       7000        1800              26
+ 2  2015 Januar~ Ariz~    35000      35000        4600              13
+ 3  2015 Januar~ Arka~    13000      14000        1500              11
+ 4  2015 Januar~ Cali~  1440000    1690000      255000              15
+ 5  2015 Januar~ Colo~     3500      12500        1500              12
+ 6  2015 Januar~ Conn~     3900       3900         870              22
+ 7  2015 Januar~ Flor~   305000     315000       42000              13
+ 8  2015 Januar~ Geor~   104000     105000       14500              14
+ 9  2015 Januar~ Hawa~    10500      10500         380               4
+10  2015 Januar~ Idaho    81000      88000        3700               4
+# ... with 1,186 more rows, and 3 more variables: colony_added &lt;dbl&gt;,
+#   colony_reno &lt;dbl&gt;, colony_reno_pct &lt;dbl&gt;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># ...and after tidying</span>
+<span class='va'>tidied_colony_counts_overall</span>
+</code></pre>
+</div>
+<pre><code># A tibble: 100 x 3
+    year type             count
+   &lt;dbl&gt; &lt;fct&gt;            &lt;dbl&gt;
+ 1  2015 Total colonies 2824610
+ 2  2015 Lost            500020
+ 3  2015 Added           546980
+ 4  2015 Renovated       270530
+ 5  2015 Total colonies 2849500
+ 6  2015 Lost            352860
+ 7  2015 Added           661860
+ 8  2015 Renovated       692850
+ 9  2015 Total colonies 3132880
+10  2015 Lost            457100
+# ... with 90 more rows</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>tidied_colony_counts_per_state</span>
+</code></pre>
+</div>
+<pre><code># A tibble: 4,208 x 3
+    year type           count
+   &lt;dbl&gt; &lt;fct&gt;          &lt;dbl&gt;
+ 1  2015 Total colonies  7000
+ 2  2015 Lost            1800
+ 3  2015 Added           2800
+ 4  2015 Renovated        250
+ 5  2015 Total colonies 35000
+ 6  2015 Lost            4600
+ 7  2015 Added           3400
+ 8  2015 Renovated       2100
+ 9  2015 Total colonies 13000
+10  2015 Lost            1500
+# ... with 4,198 more rows</code></pre>
+</div>
+<h2 id="plotting-bee-colony-observations-using-ggbeeswarm">Plotting Bee Colony observations using {ggbeeswarm}</h2>
+<p>The first graph plots a point for each type of observation using <a href="https://github.com/eclarke/ggbeeswarm">geom_beeswarm()</a>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Plotting Bee Colony observations using geom_beeswarm() from {ggbeeswarm}</span>
+<span class='va'>tidied_colony_counts_per_state</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>type</span>, y <span class='op'>=</span> <span class='va'>count</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggbeeswarm/man/geom_beeswarm.html'>geom_beeswarm</a></span><span class='op'>(</span>cex <span class='op'>=</span> <span class='fl'>4</span>, colour <span class='op'>=</span> <span class='st'>"yellow"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_log10</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggthemes/man/theme_solarized.html'>theme_solarized_2</a></span><span class='op'>(</span>light <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>type</span>, scales <span class='op'>=</span> <span class='st'>"free"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position<span class='op'>=</span><span class='st'>"none"</span>, axis.text.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Bee Colonies Counted, Lost, Added, Renovated"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Created using {ggbeeswarm}"</span>,
+       x <span class='op'>=</span> <span class='cn'>NULL</span>, y <span class='op'>=</span> <span class='st'>"Number of bee colonies (log10)"</span>,
+       fill <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+</code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig1"></span>
+<img src="bee-colony-losses_files/figure-html5/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" />
+<p class="caption">
+Figure 1: Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting.
+</p>
+</div>
+</div>
+<h2 id="animating-bee-colony-observations-over-time">Animating Bee Colony observations over time</h2>
+<p>While the previous plot is thematically appropriate, it could be better. This graph plots the same points over time in an animation, with the year plotted given in the subtitle. This graph uses standard {ggplot2} <a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">jittered points</a>, as well as a box plot to illustrate the distribution of the points. These box plots have notches, showing 95% confidence intervals for the median. Distributions with notches that do not overlap differ significantly.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Defining an animation showing bee colony counts over time</span>
+<span class='va'>p</span> <span class='op'>&lt;-</span> <span class='va'>tidied_colony_counts_per_state</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>count</span>, y <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_reorder.html'>fct_reorder</a></span><span class='op'>(</span><span class='va'>type</span>, <span class='va'>count</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_jitter.html'>geom_jitter</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"yellow"</span>, alpha <span class='op'>=</span> <span class='fl'>0.8</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_boxplot.html'>geom_boxplot</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.2</span>, alpha <span class='op'>=</span> <span class='fl'>0.8</span>, notch <span class='op'>=</span> <span class='cn'>TRUE</span>, colour <span class='op'>=</span> <span class='st'>"cyan"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggthemes/man/theme_solarized.html'>theme_solarized_2</a></span><span class='op'>(</span>light <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position<span class='op'>=</span><span class='st'>"none"</span>, axis.ticks.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,
+        axis.line.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://gganimate.com/reference/transition_time.html'>transition_time</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Bee Colonies Counted, Lost, Added, Renovated, per year"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Year: {frame_time}"</span>,
+       x <span class='op'>=</span> <span class='st'>"Number of bee colonies (log10)"</span>, y <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+
+<span class='co'># Rendering the animation as a .gif</span>
+<span class='fu'><a href='https://gganimate.com/reference/animate.html'>animate</a></span><span class='op'>(</span><span class='va'>p</span>, nframes <span class='op'>=</span> <span class='fl'>180</span>, start_pause <span class='op'>=</span> <span class='fl'>20</span>,  end_pause <span class='op'>=</span> <span class='fl'>20</span>,
+        renderer <span class='op'>=</span> <span class='fu'><a href='https://gganimate.com/reference/renderers.html'>magick_renderer</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig2"></span>
+<img src="bee-colony-losses_files/figure-html5/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  />
+<p class="caption">
+Figure 2: Animation showing bee colony counts from 2015 to 2021.
+</p>
+</div>
+</div>
+<h2 id="plotting-the-distribution-of-different-bee-colony-observation-types">Plotting the distribution of different Bee Colony observation types</h2>
+<p>From the previous plot, we can see that the <code>Added</code> and <code>Renovated</code> variables have similar distributions based on their box plots. Distributions can also be visualised using density plots. In this graph, the distribution of different types of observation in the data set are plotted.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Creating a density plot for different observation types</span>
+<span class='va'>tidied_colony_counts_overall</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>type</span> <span class='op'>!=</span> <span class='st'>"Total colonies"</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/tidytuesdayR/man/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>count</span>, colour <span class='op'>=</span> <span class='va'>type</span>, label <span class='op'>=</span> <span class='va'>type</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://allancameron.github.io/geomtextpath/reference/geom_textdensity.html'>geom_textdensity</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>7</span>, fontface <span class='op'>=</span> <span class='fl'>2</span>, hjust <span class='op'>=</span> <span class='fl'>0.89</span>, vjust <span class='op'>=</span> <span class='fl'>0.3</span>,
+                   linewidth <span class='op'>=</span> <span class='fl'>1.2</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/ggthemes/man/theme_solarized.html'>theme_solarized_2</a></span><span class='op'>(</span>light <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Distribution of Bee Colony Counts"</span>,
+       subtitle <span class='op'>=</span> <span class='st'>"Distributions of Bee Colonies Addded, Renovated, Lost"</span>,
+       x <span class='op'>=</span> <span class='st'>"Number of bee colonies"</span><span class='op'>)</span>
+</code></pre>
+</div>
+<div class="figure"><span style="display:block;" id="fig:fig3"></span>
+<img src="bee-colony-losses_files/figure-html5/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" />
+<p class="caption">
+Figure 3: A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar.
+</p>
+</div>
+</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -2455,8 +1738,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="appendix-bottom">
 <h3 id="updates-and-corrections">Corrections</h3>
 <p>If you see mistakes or want to suggest changes, please <a href="https://github.com/rnnh/TidyTuesday/issues/new">create an issue</a> on the source repository.</p>
-<h3 id="reuse">Reuse</h3>
-<p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/rnnh/TidyTuesday/">https://github.com/rnnh/TidyTuesday/</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
 </div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->

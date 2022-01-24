@@ -1,0 +1,172 @@
+---
+title: "Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}"
+description: |
+  Graphs and analysis using the #TidyTuesday data set for week 2 of 2022
+    (11/1/2022): "Bee Colony losses"
+author:
+  - name: Ronan Harrington
+    url: https://github.com/rnnh/
+date: 2022-01-23
+repository_url: https://github.com/rnnh/TidyTuesday/
+preview: bee-colony-losses_files/figure-html5/fig3-1.png
+output:
+  distill::distill_article:
+    self_contained: false
+    toc: true
+---
+
+```{r knitr, include=FALSE}
+knitr::opts_chunk$set(include = TRUE)
+knitr::opts_chunk$set(fig.height = 6)
+knitr::opts_chunk$set(fig.width = 9)
+```
+
+## Setup
+
+Loading the `R` libraries and
+[data set](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-11/readme.md).
+
+```{r setup}
+# Loading libraries
+library(geomtextpath) # For adding text to ggplot2 curves
+library(tidytuesdayR) # For loading data set
+library(ggbeeswarm) # For creating a beeswarm plot
+library(tidyverse) # For the ggplot2, dplyr libraries
+library(gganimate) # For plot animation
+library(ggthemes) # For more ggplot2 themes
+library(viridis) # For plot themes
+
+# Loading data set
+tt <- tt_load("2022-01-11")
+```
+
+## Data wrangling
+
+In this section, the Bee Colony data is wrangled into two tidy sets:
+
+- `tidied_colony_counts_overall` contains quarterly colony counts for the USA
+- `tidied_colony_counts_per_state` contains quarterly colony counts for various states within the USA
+
+To create these sets, the original data is filtered to select for the appropriate states, and the "tidy_colony_data()" function is applied.
+These sets are tidy as [each column is a variable, each row is an observation, and every cell has a single value](https://tidyr.tidyverse.org/articles/tidy-data.html#tidy-data).
+The types of observations in these data sets are:
+
+- `Total colonies`: Bee colonies counted
+- `Lost`: Bee colonies lost
+- `Added`: Bee colonies added
+- `Renovated`: Bee colonies renovated
+
+```{r wrangling}
+# Creating subsets of the original bee colony data
+colony_counts_overall <- tt$colony %>%
+  filter(state == "United States")
+
+colony_counts_per_state <- tt$colony %>%
+  filter(state != "United States" & state != "Other states")
+
+# Defining a function to tidy bee colony count data, which takes
+# "messy_colony_data" as an argument
+tidy_colony_data <- function(messy_colony_data){
+  # Writing the result of the following piped steps to "tidied_colony_data"
+  tidied_colony_data <- messy_colony_data %>%
+    # Selecting variables
+    select(year, colony_n, colony_lost, colony_added, colony_reno) %>%
+    # Dropping rows with missing values
+    drop_na() %>%
+    # Changing columns to rows
+    pivot_longer(!year, names_to = "type", values_to = "count") %>%
+    # Setting "type" as a factor variable
+    mutate(type = factor(type)) %>%
+    # Recoding the levels of the "type" factor
+    mutate(type = fct_recode(type,
+                             "Total colonies" = "colony_n",
+                             "Lost" = "colony_lost",
+                             "Added" = "colony_added",
+                             "Renovated" = "colony_reno")) %>%
+    # Reordering "type" factor levels
+    mutate(type = fct_relevel(type,
+                              "Total colonies", "Lost", "Added", "Renovated"))
+  # Returning "tidied_colony_data"
+  return(tidied_colony_data)
+}
+
+# Using this function to tidy the subsets
+tidied_colony_counts_overall <- tidy_colony_data(colony_counts_overall)
+
+tidied_colony_counts_per_state <- tidy_colony_data(colony_counts_per_state)
+
+# Printing a summary of the subsets before tidying...
+colony_counts_overall
+colony_counts_per_state
+
+# ...and after tidying
+tidied_colony_counts_overall
+tidied_colony_counts_per_state
+```
+
+## Plotting Bee Colony observations using {ggbeeswarm}
+
+The first graph plots a point for each type of observation using [geom_beeswarm()](https://github.com/eclarke/ggbeeswarm).
+
+```{r fig1, fig.cap = "Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting."}
+# Plotting Bee Colony observations using geom_beeswarm() from {ggbeeswarm}
+tidied_colony_counts_per_state %>%
+  ggplot(aes(x = type, y = count)) +
+  geom_beeswarm(cex = 4, colour = "yellow") +
+  scale_y_log10() +
+  theme_solarized_2(light = FALSE) +
+  facet_wrap(~type, scales = "free") +
+  theme(legend.position="none", axis.text.x = element_blank()) +
+  labs(title = "Bee Colonies Counted, Lost, Added, Renovated",
+       subtitle = "Created using {ggbeeswarm}",
+       x = NULL, y = "Number of bee colonies (log10)",
+       fill = NULL)
+```
+
+## Animating Bee Colony observations over time
+
+While the previous plot is thematically appropriate, it could be better.
+This graph plots the same points over time in an animation, with the year plotted given in the subtitle.
+This graph uses standard {ggplot2} [jittered points](https://ggplot2.tidyverse.org/reference/geom_jitter.html), as well as a box plot to illustrate the distribution of the points.
+These box plots have notches, showing 95% confidence intervals for the median.
+Distributions with notches that do not overlap differ significantly.
+
+```{r fig2, fig.cap = "Animation showing bee colony counts from 2015 to 2021."}
+# Defining an animation showing bee colony counts over time
+p <- tidied_colony_counts_per_state %>%
+  ggplot(aes(x = count, y = fct_reorder(type, count))) +
+  geom_jitter(color = "yellow", alpha = 0.8) +
+  geom_boxplot(width = 0.2, alpha = 0.8, notch = TRUE, colour = "cyan") +
+  scale_x_log10() +
+  theme_solarized_2(light = FALSE) +
+  theme(legend.position="none", axis.ticks.y = element_blank(),
+        axis.line.y = element_blank()) +
+  transition_time(as.integer(year)) +
+  labs(title = "Bee Colonies Counted, Lost, Added, Renovated, per year",
+       subtitle = "Year: {frame_time}",
+       x = "Number of bee colonies (log10)", y = NULL)
+
+# Rendering the animation as a .gif
+animate(p, nframes = 180, start_pause = 20,  end_pause = 20,
+        renderer = magick_renderer())
+```
+
+## Plotting the distribution of different Bee Colony observation types
+
+From the previous plot, we can see that the `Added` and `Renovated` variables have similar distributions based on their box plots.
+Distributions can also be visualised using density plots.
+In this graph, the distribution of different types of observation in the data set are plotted.
+
+```{r fig3, fig.cap = "A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar."}
+# Creating a density plot for different observation types
+tidied_colony_counts_overall %>%
+  filter(type != "Total colonies") %>%
+  ggplot(aes(x = count, colour = type, label = type)) +
+  geom_textdensity(size = 7, fontface = 2, hjust = 0.89, vjust = 0.3,
+                   linewidth = 1.2) +
+  theme_solarized_2(light = FALSE) +
+  theme(legend.position = "none") +
+  labs(title = "Distribution of Bee Colony Counts",
+       subtitle = "Distributions of Bee Colonies Addded, Renovated, Lost",
+       x = "Number of bee colonies")
+```

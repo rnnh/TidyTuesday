@@ -24,6 +24,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -84,6 +85,7 @@ code span.va { color: #111111; } /* Variable */
 code span.vs { color: #20794d; } /* VerbatimString */
 code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
+
 
   <!--radix_placeholder_meta_tags-->
   <title>Ronan's #TidyTuesday blog: Posts</title>
@@ -454,7 +456,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   </style>
 
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
   <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
@@ -2351,7 +2353,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.9.1/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2373,7 +2375,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
        script.setAttribute("repo", "rnnh/TidyTuesday");
        script.setAttribute("issue-term", "title");
        script.setAttribute("crossorigin", "anonymous");
-       script.setAttribute("label", "comments 💬");
+       script.setAttribute("label", "comments ðŸ’¬");
        script.setAttribute("theme", "github-light");
 
        /* wait for article to load, append script to article element */
@@ -2439,7 +2441,7 @@ function init_posts_list() {
     var src = $(img).attr('data-src');
     if (src) {
       $(img).attr('src', src);
-      $(img).load(function() {
+      $(img).on("load", function() {
         img.removeAttribute('data-src');
       });
     }
@@ -2564,6 +2566,24 @@ function init_posts_list() {
 <div class="posts-container posts-with-sidebar posts-apply-limit l-screen-inset">
 <div class="posts-list">
 <h1 class="posts-list-caption" data-caption="Posts">Posts</h1>
+<a href="posts/2022-01-23-bee-colony-losses/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Jan. 23, 2022</div>
+<div class="dt-authors">
+<div class="dt-author">Ronan Harrington</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/2022-01-23-bee-colony-losses/bee-colony-losses_files/figure-html5/fig3-1.png"/>
+</div>
+<div class="description">
+<h2>Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}</h2>
+<div class="dt-tags"></div>
+<p>Graphs and analysis using the #TidyTuesday data set for week 2 of 2022
+  (11/1/2022): "Bee Colony losses"</p>
+</div>
+</a>
 <a href="posts/2021-08-18-star-trek-voice-commands/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":[]}</script>
 <div class="metadata">
@@ -2645,7 +2665,7 @@ function init_posts_list() {
 </div>
 </div>
 <div class="thumbnail">
-<img src="posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure2-1.png"/>
+<img data-src="posts/2021-04-16-us-post-offices/us-post-offices_files/figure-html5/figure2-1.png"/>
 </div>
 <div class="description">
 <h2>Post offices in the USA from 1772 to 2000</h2>
@@ -2764,23 +2784,23 @@ of various data sets from the R for Data Science (R4DS) #TidyTuesday project.</p
 </a>
 </div>
 <div class="posts-sidebar">
-<div><div class="sidebar-section custom">
-  <h3>About</h3>
-  This blog features reproducible visualisation and analysis of #TidyTuesday
-  data sets, created using distill for R Markdown.
-  <a href="https://tidytuesday.netlify.app/about.html">Further details.</a>
-</div>
-
-<div class="sidebar-section custom">
-  <h3>Resources</h3>
-  <a href="https://www.r-bloggers.com/">R-bloggers</a>
+<div><div class="sidebar-section custom">
+  <h3>About</h3>
+  This blog features reproducible visualisation and analysis of #TidyTuesday
+  data sets, created using distill for R Markdown.
+  <a href="https://tidytuesday.netlify.app/about.html">Further details.</a>
+</div>
+
+<div class="sidebar-section custom">
+  <h3>Resources</h3>
+  <a href="https://www.r-bloggers.com/">R-bloggers</a>
 </div></div>
 </div>
 <div class="posts-more">
 <a href="#">More articles &raquo;</a>
 </div>
 </div>
-<!--/radix_placeholder_article_listing-->
+<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
 <h1>Posts</h1>
@@ -2815,4 +2835,4 @@ of various data sets from the R for Data Science (R4DS) #TidyTuesday project.</p
 
 </body>
 
-</html>
+</ht
