@@ -167,7 +167,7 @@ tidied_colony_counts_per_state %&amp;gt;%
        x = NULL, y = &amp;quot;Number of bee colonies (log10)&amp;quot;,
        fill = NULL)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file96c1612b98_files/figure-html/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/bee-colony-losses_files/figure-html5/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig1)Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting.
 &lt;/p&gt;
@@ -192,7 +192,7 @@ p &amp;lt;- tidied_colony_counts_per_state %&amp;gt;%
 animate(p, nframes = 180, start_pause = 20,  end_pause = 20,
         renderer = magick_renderer())&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file96c1612b98_files/figure-html/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/bee-colony-losses_files/figure-html5/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig2)Animation showing bee colony counts from 2015 to 2021.
 &lt;/p&gt;
@@ -211,7 +211,7 @@ tidied_colony_counts_overall %&amp;gt;%
        subtitle = &amp;quot;Distributions of Bee Colonies Addded, Renovated, Lost&amp;quot;,
        x = &amp;quot;Number of bee colonies&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file96c1612b98_files/figure-html/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" /&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-01-23-bee-colony-losses/bee-colony-losses_files/figure-html5/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig3)A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar.
 &lt;/p&gt;
