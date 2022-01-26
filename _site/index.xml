@@ -13,7 +13,138 @@ created by the R for Data Science (R4DS) community
       <link>https://tidytuesday.netlify.app/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 23 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 26 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Text Mining Chocolate Bar Characteristics with {tidytext}</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2022-01-26-chocolate-bar-ratings</link>
+      <description>
+
+
+&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In this post, memorable characteristics of chocolate bars are plotted. These characteristics relate to anything about the bars, e.g. &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md"&gt;texture, flavour, overall opinion&lt;/a&gt;. This data set includes the country of cocoa bean origin for each chocolate bar, including “blend” for bars with multiple beans. To create these plots, the data set is filtered to select the six countries of origin with the most chocolate bar characteristics.&lt;/p&gt;
+&lt;p&gt;The first plot lists the top fifteen most used characteristics for bars from each country. The countries of origin cannot be distinguished based on this plot, most of the characteristics listed can be applied to all the chocolate bars in the data set. “Sweet” is listed in every plot, for example. To find characteristics that are unique or important to chocolate from each country, &lt;a href="https://www.tidytextmining.com/tfidf.html"&gt;term frequency–inverse document frequency (tf-idf)&lt;/a&gt; can be used to select characteristics, instead of number of occurrences alone. In this case, the characteristics associated with each country are treated as separate documents. The second plot lists the top fifteen most characteristics for the same chocolate bars using tf-idf. From this plot, we can see characteristics that are often associated with one group of chocolate bars, but not the other groups. For example, chocolate bars made using a blend of beans are the most likely to list “poor after taste” as a characteristics, whereas “grape” is a characteristic most likely associated with Peruvian chocolate bars.&lt;/p&gt;
+&lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Loading the &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
+library(tidytuesdayR)
+library(tidyverse)
+library(ggthemes)
+library(tidytext)
+
+# Loading data
+tt &amp;lt;- tt_load(&amp;quot;2022-01-18&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+    Downloading file 1 of 1: `chocolate.csv`&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="data-wrangling"&gt;Data wrangling&lt;/h2&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Counting how many times each characteristic is used
+country_characteristics &amp;lt;- tt$chocolate %&amp;gt;%
+  unnest_tokens(memorable_characteristic,
+                most_memorable_characteristics, token = &amp;quot;regex&amp;quot;,
+                pattern = &amp;quot;,&amp;quot;, to_lower = TRUE) %&amp;gt;%
+  mutate(memorable_characteristic = str_squish(memorable_characteristic)) %&amp;gt;%
+  count(country_of_bean_origin, memorable_characteristic, sort = TRUE)
+
+# Counting the total number of characteristics used for each country of origin
+total_country_characteristics &amp;lt;- country_characteristics %&amp;gt;%
+  group_by(country_of_bean_origin) %&amp;gt;%
+  summarise(total = sum(n))
+
+# Joining these data frames
+country_characteristics &amp;lt;- left_join(country_characteristics,
+                                     total_country_characteristics,
+                                     by = &amp;quot;country_of_bean_origin&amp;quot;)
+
+# Finding the six countries of origin with the most characteristics
+top_countries &amp;lt;- total_country_characteristics %&amp;gt;%
+  slice_max(n = 6, order_by = total) %&amp;gt;%
+  select(country_of_bean_origin)
+
+# Filtering the data
+country_characteristics &amp;lt;- country_characteristics %&amp;gt;%
+  filter(country_of_bean_origin %in% top_countries$country_of_bean_origin) %&amp;gt;%
+  select(country_of_bean_origin, memorable_characteristic, n, total)
+
+# Adding tf-idf
+country_characteristics &amp;lt;- country_characteristics %&amp;gt;%
+  bind_tf_idf(memorable_characteristic,
+              country_of_bean_origin, n)
+
+# Printing a summary of the data frame
+country_characteristics&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 1,233 x 7
+   country_of_bean_~ memorable_charac~     n total     tf   idf tf_idf
+   &amp;lt;chr&amp;gt;             &amp;lt;chr&amp;gt;             &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt;
+ 1 Venezuela         nutty                84   722 0.116      0      0
+ 2 Ecuador           floral               72   600 0.12       0      0
+ 3 Dominican Republ~ earthy               35   641 0.0546     0      0
+ 4 Venezuela         roasty               34   722 0.0471     0      0
+ 5 Venezuela         creamy               33   722 0.0457     0      0
+ 6 Peru              cocoa                28   678 0.0413     0      0
+ 7 Blend             sweet                27   443 0.0609     0      0
+ 8 Madagascar        sour                 27   485 0.0557     0      0
+ 9 Blend             cocoa                26   443 0.0587     0      0
+10 Dominican Republ~ cocoa                26   641 0.0406     0      0
+# ... with 1,223 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="plotting-the-most-used-characteristics-in-the-chocolate-bar-summaries"&gt;Plotting the most used characteristics in the chocolate bar summaries&lt;/h2&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting the most used characteristics in the chocolate bar summaries
+country_characteristics %&amp;gt;%
+  group_by(country_of_bean_origin) %&amp;gt;%
+  slice_max(n, n = 15, with_ties = FALSE) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  mutate(country_of_bean_origin = as.factor(country_of_bean_origin),
+         memorable_characteristic = reorder_within(memorable_characteristic,
+                                                   n,
+                                                   country_of_bean_origin)) %&amp;gt;%
+  ggplot(aes(n, memorable_characteristic, fill = country_of_bean_origin)) +
+  geom_col(show.legend = FALSE) +
+  scale_y_reordered() +
+  theme_solarized_2() +
+  facet_wrap(~country_of_bean_origin, ncol = 2, scales = &amp;quot;free&amp;quot;) +
+  labs(title = &amp;quot;Most used Characteristics in Chocolate Bar Summaries&amp;quot;,
+       subtitle = &amp;quot;Summaries grouped by cocoa country of origin&amp;quot;,
+       x = &amp;quot;Characteristic count&amp;quot;, y = NULL)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-01-26-chocolate-bar-ratings/chocolate-bar-ratings_files/figure-html5/fig1-1.png" alt="Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig1)Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="plotting-the-most-important-characteristics-in-the-chocolate-bar-summaries"&gt;Plotting the most important characteristics in the chocolate bar summaries&lt;/h2&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting the most important characteristics in the chocolate bar summaries
+country_characteristics %&amp;gt;%
+  group_by(country_of_bean_origin) %&amp;gt;%
+  slice_max(tf_idf, n = 15, with_ties = FALSE) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  mutate(country_of_bean_origin = as.factor(country_of_bean_origin),
+         memorable_characteristic = reorder_within(memorable_characteristic,
+                                                   tf_idf,
+                                                   country_of_bean_origin)) %&amp;gt;%
+  ggplot(aes(tf_idf, memorable_characteristic, fill = country_of_bean_origin)) +
+  geom_col(show.legend = FALSE) +
+  scale_y_reordered() +
+  theme_solarized_2() +
+  facet_wrap(~country_of_bean_origin, ncol = 2, scales = &amp;quot;free&amp;quot;) +
+  labs(title = &amp;quot;Important Characteristics in Chocolate Bar Summaries&amp;quot;,
+       subtitle = &amp;quot;Reviews grouped by cocoa country of origin&amp;quot;,
+       x = &amp;quot;Term frequency–inverse document frequency (tf-idf)&amp;quot;, y = NULL)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-01-26-chocolate-bar-ratings/chocolate-bar-ratings_files/figure-html5/fig2-1.png" alt="Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig2)Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="references"&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.tidytextmining.com/tfidf.html"&gt;Analyzing word and document frequency: tf-idf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cmdlinetips.com/2020/02/faceting-and-reordering-with-ggplot2/"&gt;Faceting and Reordering with ggplot2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
+      <distill:md5>1a32f67962926c98a487d526d70d6960</distill:md5>
+      <guid>https://tidytuesday.netlify.app/posts/2022-01-26-chocolate-bar-ratings</guid>
+      <pubDate>Wed, 26 Jan 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2022-01-26-chocolate-bar-ratings/chocolate-bar-ratings_files/figure-html5/fig2-1.png" medium="image" type="image/png" width="1728" height="2304"/>
+    </item>
     <item>
       <title>Plotting Bee Colony Observations and Distributions using {ggbeeswarm} and {geomtextpath}</title>
       <dc:creator>Ronan Harrington</dc:creator>

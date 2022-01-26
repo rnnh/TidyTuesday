@@ -1,5 +1,5 @@
 ---
-title: "Text Mining Chocolate Bar Reviews with {tidytext}"
+title: "Text Mining Chocolate Bar Characteristics with {tidytext}"
 description: |
   Graphs and analysis using the #TidyTuesday data set for week 3 of 2022
     (18/1/2022): "Chocolate Bar ratings"
@@ -21,6 +21,28 @@ knitr::opts_chunk$set(fig.height = 12)
 knitr::opts_chunk$set(fig.width = 9)
 ```
 
+## Introduction
+
+In this post, memorable characteristics of chocolate bars are plotted.
+These characteristics relate to anything about the bars, e.g. [texture, flavour, overall
+opinion](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md).
+This data set includes the country of cocoa bean origin for each chocolate bar, including "blend" for bars with multiple beans.
+To create these plots, the data set is filtered to select the six countries of origin with the most chocolate bar characteristics.
+
+The first plot lists the top fifteen most used characteristics for bars from each country.
+The countries of origin cannot be distinguished based on this plot, most of the characteristics listed can be applied to all the chocolate bars in the data set.
+"Sweet" is listed in every plot, for example.
+To find characteristics that are unique or important to chocolate from each country, [term frequency–inverse document frequency (tf-idf)](https://www.tidytextmining.com/tfidf.html) can be used to select characteristics, instead of number of occurrences alone.
+In this case, the characteristics associated with each country are treated as separate documents.
+The second plot lists the top fifteen most characteristics for the same chocolate bars using tf-idf.
+From this plot, we can see characteristics that are often associated with one group of chocolate bars, but not the other groups.
+For example, chocolate bars made using a blend of beans are the most likely to list "poor after taste" as a characteristics, whereas "grape" is a characteristic most likely associated with Peruvian chocolate bars.
+
+## Setup
+
+Loading the [R](https://www.r-project.org/) libraries and
+[data set](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md).
+
 ```{r setup}
 # Loading libraries
 library(tidytuesdayR)
@@ -31,6 +53,8 @@ library(tidytext)
 # Loading data
 tt <- tt_load("2022-01-18")
 ```
+
+## Data wrangling
 
 ```{r wrangling}
 # Counting how many times each characteristic is used
@@ -70,8 +94,10 @@ country_characteristics <- country_characteristics %>%
 country_characteristics
 ```
 
-```{r fig1}
-# Plotting the most used characteristics in the chocolate bar reviews
+## Plotting the most used characteristics in the chocolate bar summaries
+
+```{r fig1, fig.cap = "Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted."}
+# Plotting the most used characteristics in the chocolate bar summaries
 country_characteristics %>%
   group_by(country_of_bean_origin) %>%
   slice_max(n, n = 15, with_ties = FALSE) %>%
@@ -85,13 +111,15 @@ country_characteristics %>%
   scale_y_reordered() +
   theme_solarized_2() +
   facet_wrap(~country_of_bean_origin, ncol = 2, scales = "free") +
-  labs(title = "Most used Characteristics in Chocolate Bar Reviews",
-       subtitle = "Reviews grouped by cocoa country of origin",
+  labs(title = "Most used Characteristics in Chocolate Bar Summaries",
+       subtitle = "Summaries grouped by cocoa country of origin",
        x = "Characteristic count", y = NULL)
 ```
 
-```{r fig2}
-# Plotting the most significant characteristics in the chocolate bar reviews
+## Plotting the most important characteristics in the chocolate bar summaries
+
+```{r fig2, fig.cap = "Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted."}
+# Plotting the most important characteristics in the chocolate bar summaries
 country_characteristics %>%
   group_by(country_of_bean_origin) %>%
   slice_max(tf_idf, n = 15, with_ties = FALSE) %>%
@@ -105,7 +133,7 @@ country_characteristics %>%
   scale_y_reordered() +
   theme_solarized_2() +
   facet_wrap(~country_of_bean_origin, ncol = 2, scales = "free") +
-  labs(title = "Significant Characteristics in Chocolate Bar Reviews",
+  labs(title = "Important Characteristics in Chocolate Bar Summaries",
        subtitle = "Reviews grouped by cocoa country of origin",
        x = "Term frequency–inverse document frequency (tf-idf)", y = NULL)
 ```
