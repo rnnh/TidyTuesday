@@ -81,7 +81,7 @@ tidy_flights_list <- map(flight_types, tidy_flights_per_airport)
 
 ## Binding the tidied flight type rows into a data frame with purr::map_df
 
-Using the map function in the previous section returned a list of tidied flight types: the "tidy_flights_per_airport()" was applied to each item in "flight_types" individually, and the resulting tidied flight type was added to "tidy_flights_list".
+Using the map function in the previous section returned a list of tidied flight types: the "tidy_flights_per_airport()" function was applied to each item in "flight_types" individually, and the resulting tidied flight type was added to "tidy_flights_list".
 In this section, the "rbind()" function is applied to "tidy_flights_list" to create a single data frame with all of the tidied flight types.
 
 ```{r map_df}
