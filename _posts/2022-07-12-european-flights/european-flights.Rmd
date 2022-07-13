@@ -119,6 +119,7 @@ tidy_flights %>%
   ggplot(aes(x = APT_NAME, y = number_of_flights, colour = flight_type)) +
   geom_boxplot() +
   theme_solarized() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_colour_discrete() +
   labs(title = "Distribution of daily arrivals and depatures across six airports",
     x = "Airport", y = "Flights", colour = "Flight type")
