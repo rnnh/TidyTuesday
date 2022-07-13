@@ -13,7 +13,140 @@ created by the R for Data Science (R4DS) community
       <link>https://tidytuesday.netlify.app/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>How to write a function in R and apply it to a data frame using map functions from {purr}</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2022-07-12-european-flights</link>
+      <description>
+
+
+&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In this post, the &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-12/readme.md"&gt;European Flights&lt;/a&gt; data set is used to illustrate defining a function in &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; and applying it to a data frame using map functions from &lt;a href="https://www.r-project.org/"&gt;{purr}&lt;/a&gt;. The full source for this blog post is &lt;a href="https://github.com/rnnh/TidyTuesday"&gt;available on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Loading the &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-12/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
+library(tidytuesdayR)
+library(tidyverse)
+library(tidytext)
+library(ggthemes)
+
+# Loading data
+tt &amp;lt;- tt_load(&amp;quot;2022-07-12&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+    Downloading file 1 of 1: `flights.csv`&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="defining-a-function-to-tidy-flight-types-and-applying-it-with-purrmap"&gt;Defining a function to tidy flight types and applying it with purr::map&lt;/h2&gt;
+&lt;p&gt;In this section, we want to tidy the different types of flight in the data set by increasing the number of rows and decreasing the number of columns. For a given airport on a given day, instead of having multiple columns/variables for arrivals, departures and total number of flights, we want to have one column describing the flight type (e.g. arrival or departure) and one column with the value of that flight type/number of flights. This will give the data set a &lt;a href="https://tidyr.tidyverse.org/articles/tidy-data.html"&gt;tidy structure&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the flights data frame
+tt$flights&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 688,099 × 14
+    YEAR MONTH_NUM MONTH_MON FLT_DATE            APT_ICAO APT_NAME    
+   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;     &amp;lt;dttm&amp;gt;              &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;       
+ 1  2016 01        JAN       2016-01-01 00:00:00 EBAW     Antwerp     
+ 2  2016 01        JAN       2016-01-01 00:00:00 EBBR     Brussels    
+ 3  2016 01        JAN       2016-01-01 00:00:00 EBCI     Charleroi   
+ 4  2016 01        JAN       2016-01-01 00:00:00 EBLG     Liège       
+ 5  2016 01        JAN       2016-01-01 00:00:00 EBOS     Ostend-Brug…
+ 6  2016 01        JAN       2016-01-01 00:00:00 EDDB     Berlin - Br…
+ 7  2016 01        JAN       2016-01-01 00:00:00 EDDC     Dresden     
+ 8  2016 01        JAN       2016-01-01 00:00:00 EDDE     Erfurt      
+ 9  2016 01        JAN       2016-01-01 00:00:00 EDDF     Frankfurt   
+10  2016 01        JAN       2016-01-01 00:00:00 EDDG     Muenster-Os…
+# … with 688,089 more rows, and 8 more variables: STATE_NAME &amp;lt;chr&amp;gt;,
+#   FLT_DEP_1 &amp;lt;dbl&amp;gt;, FLT_ARR_1 &amp;lt;dbl&amp;gt;, FLT_TOT_1 &amp;lt;dbl&amp;gt;,
+#   FLT_DEP_IFR_2 &amp;lt;dbl&amp;gt;, FLT_ARR_IFR_2 &amp;lt;dbl&amp;gt;, FLT_TOT_IFR_2 &amp;lt;dbl&amp;gt;,
+#   `Pivot Label` &amp;lt;chr&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
+paste(&amp;quot;tt$flights has&amp;quot;, nrow(tt$flights), &amp;quot;rows and&amp;quot;, ncol(tt$flights),
+  &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;[1] &amp;quot;tt$flights has 688099 rows and 14 columns.&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Defining a function to tidy the flights data set
+tidy_flights_per_airport &amp;lt;- function(input_flight_type){
+  tt$flights %&amp;gt;% 
+    # Selecting columns, including the column with the name &amp;quot;input_flight_type&amp;quot;
+    ## &amp;quot;all_of()&amp;quot; is used for error handling: if a column with the name matching
+    ## &amp;quot;input_flight_type&amp;quot; is not available in tt$flights, the function will return an error
+    select(FLT_DATE, APT_NAME, all_of(input_flight_type)) %&amp;gt;% 
+    # Adding a &amp;quot;flight_type&amp;quot; column, with &amp;quot;input_flight_type&amp;quot; as a string for each row
+    mutate(flight_type = as.character(input_flight_type)) %&amp;gt;% 
+    # Renaming the input &amp;quot;input_flight_type&amp;quot; column to &amp;quot;number_of_flights&amp;quot;
+    rename(&amp;quot;number_of_flights&amp;quot; = input_flight_type)
+}
+
+# Selecting column names with flight types (arrivals, departures, total flights)
+flight_types &amp;lt;- colnames(tt$flights)[8:13]
+# Printing the flight types
+flight_types&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;[1] &amp;quot;FLT_DEP_1&amp;quot;     &amp;quot;FLT_ARR_1&amp;quot;     &amp;quot;FLT_TOT_1&amp;quot;     &amp;quot;FLT_DEP_IFR_2&amp;quot;
+[5] &amp;quot;FLT_ARR_IFR_2&amp;quot; &amp;quot;FLT_TOT_IFR_2&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Applying the tidying function to the flight types vector using purr::map()
+tidy_flights_list &amp;lt;- map(flight_types, tidy_flights_per_airport)&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="binding-the-tidied-flight-type-rows-into-a-data-frame-with-purrmap_df"&gt;Binding the tidied flight type rows into a data frame with purr::map_df&lt;/h2&gt;
+&lt;p&gt;Using the map function in the previous section returned a list of tidied flight types: the “tidy_flights_per_airport()” function was applied to each item in “flight_types” individually, and the resulting tidied flight type was added to “tidy_flights_list”. In this section, the “rbind()” function is applied to “tidy_flights_list” to create a single data frame with all of the tidied flight types.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Binding the tidy version of each flight type by row using purr::map_df
+tidy_flights &amp;lt;- map_df(tidy_flights_list, rbind)
+
+# Printing a summary of the tidy flights data frame
+tidy_flights&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 4,128,594 × 4
+   FLT_DATE            APT_NAME           number_of_fligh… flight_type
+   &amp;lt;dttm&amp;gt;              &amp;lt;chr&amp;gt;                         &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;      
+ 1 2016-01-01 00:00:00 Antwerp                           4 FLT_DEP_1  
+ 2 2016-01-01 00:00:00 Brussels                        174 FLT_DEP_1  
+ 3 2016-01-01 00:00:00 Charleroi                        45 FLT_DEP_1  
+ 4 2016-01-01 00:00:00 Liège                             6 FLT_DEP_1  
+ 5 2016-01-01 00:00:00 Ostend-Bruges                     7 FLT_DEP_1  
+ 6 2016-01-01 00:00:00 Berlin - Brandenb…               98 FLT_DEP_1  
+ 7 2016-01-01 00:00:00 Dresden                          18 FLT_DEP_1  
+ 8 2016-01-01 00:00:00 Erfurt                            1 FLT_DEP_1  
+ 9 2016-01-01 00:00:00 Frankfurt                       401 FLT_DEP_1  
+10 2016-01-01 00:00:00 Muenster-Osnabrue…                3 FLT_DEP_1  
+# … with 4,128,584 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
+paste(&amp;quot;tidy_flights has&amp;quot;, nrow(tidy_flights), &amp;quot;rows and&amp;quot;, ncol(tidy_flights),
+  &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;[1] &amp;quot;tidy_flights has 4128594 rows and 4 columns.&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;tidy_flights&lt;/code&gt; data frame is now in a &lt;a href="https://tidyr.tidyverse.org/articles/tidy-data.html"&gt;tidy format&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="plotting-the-distribution-of-arrivals-and-departures-across-the-top-six-airports"&gt;Plotting the distribution of arrivals and departures across the top six airports&lt;/h2&gt;
+&lt;pre class="r"&gt;&lt;code&gt;## Selecting the top 6 airports by total number of flights on the latest flight
+## date
+top_airports &amp;lt;- tidy_flights %&amp;gt;%
+  filter(flight_type == &amp;quot;FLT_TOT_1&amp;quot;) %&amp;gt;%
+  filter(FLT_DATE == max(FLT_DATE)) %&amp;gt;%
+  slice_max(order_by = number_of_flights, n = 6)
+
+# Changing &amp;quot;flight_type&amp;quot; to a factor with descriptive levels
+tidy_flights$flight_type &amp;lt;- as.factor(tidy_flights$flight_type)
+levels(tidy_flights$flight_type) &amp;lt;- c(&amp;quot;Arrivals&amp;quot;, &amp;quot;Arrivals (Airport Operator)&amp;quot;,
+  &amp;quot;Departures&amp;quot;, &amp;quot;Departures (Airport Operator)&amp;quot;, &amp;quot;Total&amp;quot;, &amp;quot;Total (Airport Operator&amp;quot;)
+
+# Plotting the distribution of arrivals and departures for the top airports
+tidy_flights %&amp;gt;%
+  filter(APT_NAME %in% top_airports$APT_NAME) %&amp;gt;%
+  filter(flight_type %in% c(&amp;quot;Arrivals&amp;quot;, &amp;quot;Departures&amp;quot;)) %&amp;gt;%
+  ggplot(aes(x = APT_NAME, y = number_of_flights, colour = flight_type)) +
+  geom_boxplot() +
+  theme_solarized() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_colour_discrete() +
+  labs(title = &amp;quot;Distribution of daily arrivals and depatures across six airports&amp;quot;,
+    x = &amp;quot;Airport&amp;quot;, y = &amp;quot;Flights&amp;quot;, colour = &amp;quot;Flight type&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-12-european-flights/european-flights_files/figure-html5/fig1-1.png" alt="Box plots of daily arrival and depature distribution across top six airports." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig1)Box plots of daily arrival and depature distribution across top six airports.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id="see-also"&gt;See also&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://tidytuesday.netlify.app/posts/2022-07-05-sf-rents/"&gt;Reshaping data using pivot functions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
+      <distill:md5>bb2e4d079263ea30024962f2f421bcf4</distill:md5>
+      <guid>https://tidytuesday.netlify.app/posts/2022-07-12-european-flights</guid>
+      <pubDate>Wed, 13 Jul 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2022-07-12-european-flights/european-flights_files/figure-html5/fig1-1.png" medium="image" type="image/png" width="1728" height="1152"/>
+    </item>
     <item>
       <title>Reshaping data frames using pivot functions from {tidyr} and tally from {dplyr}</title>
       <dc:creator>Ronan Harrington</dc:creator>
@@ -22,39 +155,19 @@ created by the R for Data Science (R4DS) community
 
 
 &lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;In this post, the &lt;a
-href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-07-05"&gt;San
-Francisco Rentals&lt;/a&gt; data set is used to demonstrate data reshaping in
-R. This involves changing the number of columns and rows in a data frame
-to fit a given use case. A data frame is made more tall or narrow by
-decreasing the number of columns, and wider by increasing the number of
-columns. The three reshaping methods covered in this article are:&lt;/p&gt;
+&lt;p&gt;In this post, the &lt;a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-07-05"&gt;San Francisco Rentals&lt;/a&gt; data set is used to demonstrate data reshaping in R. This involves changing the number of columns and rows in a data frame to fit a given use case. A data frame is made more tall or narrow by decreasing the number of columns, and wider by increasing the number of columns. The three reshaping methods covered in this article are:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="#reshaping-a-data-frame-by-summarising-variables"&gt;Making a
-data frame more narrow by summarising variables using group_by() and
-tally()&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-href="#reshaping-a-data-frame-to-make-it-wider-with-the-%7Btidyr%7D-function-pivot-wider"&gt;Making
-a data frame wider with pivot_wider()&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-href="#reshaping-a-data-frame-to-make-it-more-narrow-with-the-%7Btidyr%7D-function-pivot-longer"&gt;“Lengthening”
-a data frame with pivot_longer()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#reshaping-a-data-frame-by-summarising-variables"&gt;Making a data frame more narrow by summarising variables using group_by() and tally()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#reshaping-a-data-frame-to-make-it-wider-with-the-%7Btidyr%7D-function-pivot-wider"&gt;Making a data frame wider with pivot_wider()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#reshaping-a-data-frame-to-make-it-more-narrow-with-the-%7Btidyr%7D-function-pivot-longer"&gt;“Lengthening” a data frame with pivot_longer()&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Data frames created with these methods were used to make two
-plots:&lt;/p&gt;
+&lt;p&gt;Data frames created with these methods were used to make two plots:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a
-href="#plotting-permit-type-counts-per-street-using-a-tidy-data-frame-of-value-counts"&gt;Count
-of construction permits by type per street&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-href="#plotting-annual-construction-per-san-francisco-county-using-a-data-frame-created-with-pivot-longer"&gt;Annual
-construction by type per San Francisco county&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#plotting-permit-type-counts-per-street-using-a-tidy-data-frame-of-value-counts"&gt;Count of construction permits by type per street&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#plotting-annual-construction-per-san-francisco-county-using-a-data-frame-created-with-pivot-longer"&gt;Annual construction by type per San Francisco county&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
-&lt;p&gt;Loading the &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; libraries and
-&lt;a
-href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-05/readme.md"&gt;data
-set&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Loading the &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-05/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
 library(tidytuesdayR)
 library(tidyverse)
@@ -67,8 +180,7 @@ tt &amp;lt;- tt_load(&amp;quot;2022-07-05&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
     Downloading file 1 of 3: `rent.csv`
     Downloading file 2 of 3: `sf_permits.csv`
     Downloading file 3 of 3: `new_construction.csv`&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="reshaping-a-data-frame-by-summarising-variables"&gt;Reshaping a
-data frame by summarising variables&lt;/h2&gt;
+&lt;h2 id="reshaping-a-data-frame-by-summarising-variables"&gt;Reshaping a data frame by summarising variables&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the San Francisco (SF) permits data frame
 tt$sf_permits&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 86,103 × 44
@@ -125,9 +237,7 @@ permits_per_street&lt;/code&gt;&lt;/pre&gt;
 paste(&amp;quot;permits_per_street has&amp;quot;, nrow(permits_per_street), &amp;quot;rows and&amp;quot;,
   ncol(permits_per_street), &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;[1] &amp;quot;permits_per_street has 3053 rows and 3 columns.&amp;quot;&lt;/code&gt;&lt;/pre&gt;
-&lt;h2
-id="reshaping-a-data-frame-to-make-it-wider-with-the-tidyr-function-pivot-wider"&gt;Reshaping
-a data frame to make it wider with the {tidyr} function pivot wider&lt;/h2&gt;
+&lt;h2 id="reshaping-a-data-frame-to-make-it-wider-with-the-tidyr-function-pivot-wider"&gt;Reshaping a data frame to make it wider with the {tidyr} function pivot wider&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Creating a wider copy of the permits per street data frame
 permits_per_street_wider &amp;lt;- permits_per_street %&amp;gt;%
   # Pivoting the street names wider (creating a column for each street) and
@@ -155,10 +265,7 @@ permits_per_street_wider&lt;/code&gt;&lt;/pre&gt;
 paste(&amp;quot;permits_per_street_wider has&amp;quot;, nrow(permits_per_street_wider), &amp;quot;rows and&amp;quot;,
   ncol(permits_per_street_wider), &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;[1] &amp;quot;permits_per_street_wider has 4 rows and 1588 columns.&amp;quot;&lt;/code&gt;&lt;/pre&gt;
-&lt;h2
-id="reshaping-a-data-frame-to-make-it-more-narrow-with-the-tidyr-function-pivot-longer"&gt;Reshaping
-a data frame to make it more narrow with the {tidyr} function pivot
-longer&lt;/h2&gt;
+&lt;h2 id="reshaping-a-data-frame-to-make-it-more-narrow-with-the-tidyr-function-pivot-longer"&gt;Reshaping a data frame to make it more narrow with the {tidyr} function pivot longer&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the new construction data frame
 tt$new_construction&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 261 × 10
@@ -216,10 +323,7 @@ production_per_county&lt;/code&gt;&lt;/pre&gt;
 paste(&amp;quot;production_per_county has&amp;quot;, nrow(production_per_county), &amp;quot;rows and&amp;quot;,
   ncol(production_per_county), &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;[1] &amp;quot;production_per_county has 1044 rows and 4 columns.&amp;quot;&lt;/code&gt;&lt;/pre&gt;
-&lt;h2
-id="plotting-permit-type-counts-per-street-using-a-tidy-data-frame-of-value-counts"&gt;Plotting
-permit type counts per street using a tidy data frame of value
-counts&lt;/h2&gt;
+&lt;h2 id="plotting-permit-type-counts-per-street-using-a-tidy-data-frame-of-value-counts"&gt;Plotting permit type counts per street using a tidy data frame of value counts&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting the top 20 streets with the total number of each permit category
 permits_per_street %&amp;gt;%
   slice_max(order_by = n, n = 20) %&amp;gt;%
@@ -231,11 +335,8 @@ permits_per_street %&amp;gt;%
   facet_wrap(~permit_type_definition, ncol = 2, scales = &amp;quot;free&amp;quot;) +
   labs(title = &amp;quot;Count of construction permits by type per street&amp;quot;,
     x = &amp;quot;Tally&amp;quot;, y = &amp;quot;Street name&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-05-sf-rents/sf-rents_files/figure-html5/fig1-1.png" width="864" /&gt;&lt;/p&gt;
-&lt;h2
-id="plotting-annual-construction-per-san-francisco-county-using-a-data-frame-created-with-pivot-longer"&gt;Plotting
-annual construction per San Francisco county using a data frame created
-with pivot longer&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-12-european-flights/european-flights_files/figure-html5/fig1-1.png" width="864" /&gt;&lt;/p&gt;
+&lt;h2 id="plotting-annual-construction-per-san-francisco-county-using-a-data-frame-created-with-pivot-longer"&gt;Plotting annual construction per San Francisco county using a data frame created with pivot longer&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting the annual construction by type per San Francisco county
 production_per_county %&amp;gt;%
   ggplot(aes(x = year, y = value,
@@ -253,14 +354,13 @@ production_per_county %&amp;gt;%
 &lt;div class="figure"&gt;
 &lt;img src="https://tidytuesday.netlify.app/posts/2022-07-05-sf-rents/sf-rents_files/figure-html5/fig2-1.png" alt="In San Francisco county, new construction plateaued in 2008 before plummeting." width="864" /&gt;
 &lt;p class="caption"&gt;
-(#fig:fig2)In San Francisco county, new construction plateaued in 2008
-before plummeting.
+(#fig:fig2)In San Francisco county, new construction plateaued in 2008 before plummeting.
 &lt;/p&gt;
 &lt;/div&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>d660e6adcec97c7684c9cb7c454d8abd</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2022-07-05-sf-rents</guid>
-      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 05 Jul 2022 00:00:00 +0000</pubDate>
       <media:content url="https://tidytuesday.netlify.app/posts/2022-07-05-sf-rents/sf-rents_files/figure-html5/fig2-1.png" medium="image" type="image/png" width="1728" height="1152"/>
     </item>
     <item>
@@ -271,37 +371,10 @@ before plummeting.
 
 
 &lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;In this post, memorable characteristics of chocolate bars are
-plotted. These characteristics relate to anything about the bars,
-e.g. &lt;a
-href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md"&gt;texture,
-flavour, overall opinion&lt;/a&gt;. This data set includes the country of
-cocoa bean origin for each chocolate bar, including “blend” for bars
-with multiple beans. To create these plots, the data set is filtered to
-select the six countries of origin with the most chocolate bar
-characteristics.&lt;/p&gt;
-&lt;p&gt;The first plot lists the top fifteen most used characteristics for
-bars from each country. The countries of origin cannot be distinguished
-based on this plot, most of the characteristics listed can be applied to
-all the chocolate bars in the data set. “Sweet” is listed in every plot,
-for example. To find characteristics that are unique or important to
-chocolate from each country, &lt;a
-href="https://www.tidytextmining.com/tfidf.html"&gt;term frequency–inverse
-document frequency (tf-idf)&lt;/a&gt; can be used to select characteristics,
-instead of number of occurrences alone. In this case, the
-characteristics associated with each country are treated as separate
-documents. The second plot lists the top fifteen most characteristics
-for the same chocolate bars using tf-idf. From this plot, we can see
-characteristics that are often associated with one group of chocolate
-bars, but not the other groups. For example, chocolate bars made using a
-blend of beans are the most likely to list “poor after taste” as a
-characteristics, whereas “grape” is a characteristic most likely
-associated with Peruvian chocolate bars.&lt;/p&gt;
+&lt;p&gt;In this post, memorable characteristics of chocolate bars are plotted. These characteristics relate to anything about the bars, e.g. &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md"&gt;texture, flavour, overall opinion&lt;/a&gt;. This data set includes the country of cocoa bean origin for each chocolate bar, including “blend” for bars with multiple beans. To create these plots, the data set is filtered to select the six countries of origin with the most chocolate bar characteristics.&lt;/p&gt;
+&lt;p&gt;The first plot lists the top fifteen most used characteristics for bars from each country. The countries of origin cannot be distinguished based on this plot, most of the characteristics listed can be applied to all the chocolate bars in the data set. “Sweet” is listed in every plot, for example. To find characteristics that are unique or important to chocolate from each country, &lt;a href="https://www.tidytextmining.com/tfidf.html"&gt;term frequency–inverse document frequency (tf-idf)&lt;/a&gt; can be used to select characteristics, instead of number of occurrences alone. In this case, the characteristics associated with each country are treated as separate documents. The second plot lists the top fifteen most characteristics for the same chocolate bars using tf-idf. From this plot, we can see characteristics that are often associated with one group of chocolate bars, but not the other groups. For example, chocolate bars made using a blend of beans are the most likely to list “poor after taste” as a characteristics, whereas “grape” is a characteristic most likely associated with Peruvian chocolate bars.&lt;/p&gt;
 &lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
-&lt;p&gt;Loading the &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; libraries and
-&lt;a
-href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md"&gt;data
-set&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Loading the &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-18/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
 library(tidytuesdayR)
 library(tidyverse)
@@ -362,9 +435,7 @@ country_characteristics&lt;/code&gt;&lt;/pre&gt;
  9 Blend              cocoa               26   443 0.0587     0      0
 10 Dominican Republic cocoa               26   641 0.0406     0      0
 # … with 1,223 more rows&lt;/code&gt;&lt;/pre&gt;
-&lt;h2
-id="plotting-the-most-used-characteristics-in-the-chocolate-bar-summaries"&gt;Plotting
-the most used characteristics in the chocolate bar summaries&lt;/h2&gt;
+&lt;h2 id="plotting-the-most-used-characteristics-in-the-chocolate-bar-summaries"&gt;Plotting the most used characteristics in the chocolate bar summaries&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting the most used characteristics in the chocolate bar summaries
 country_characteristics %&amp;gt;%
   group_by(country_of_bean_origin) %&amp;gt;%
@@ -383,15 +454,12 @@ country_characteristics %&amp;gt;%
        subtitle = &amp;quot;Summaries grouped by cocoa country of origin&amp;quot;,
        x = &amp;quot;Characteristic count&amp;quot;, y = NULL)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file30fc781d796b_files/figure-html/fig1-1.png" alt="Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted." width="864" /&gt;
+&lt;img src="file1597b582ae0ef_files/figure-html/fig1-1.png" alt="Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted." width="864" /&gt;
 &lt;p class="caption"&gt;
-(#fig:fig1)Characteristics that are most used to describe chocolate bars
-made using different cocoa beans are plotted.
+(#fig:fig1)Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted.
 &lt;/p&gt;
 &lt;/div&gt;
-&lt;h2
-id="plotting-the-most-important-characteristics-in-the-chocolate-bar-summaries"&gt;Plotting
-the most important characteristics in the chocolate bar summaries&lt;/h2&gt;
+&lt;h2 id="plotting-the-most-important-characteristics-in-the-chocolate-bar-summaries"&gt;Plotting the most important characteristics in the chocolate bar summaries&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting the most important characteristics in the chocolate bar summaries
 country_characteristics %&amp;gt;%
   group_by(country_of_bean_origin) %&amp;gt;%
@@ -410,20 +478,15 @@ country_characteristics %&amp;gt;%
        subtitle = &amp;quot;Reviews grouped by cocoa country of origin&amp;quot;,
        x = &amp;quot;Term frequency–inverse document frequency (tf-idf)&amp;quot;, y = NULL)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file30fc781d796b_files/figure-html/fig2-1.png" alt="Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted." width="864" /&gt;
+&lt;img src="file1597b582ae0ef_files/figure-html/fig2-1.png" alt="Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted." width="864" /&gt;
 &lt;p class="caption"&gt;
-(#fig:fig2)Characteristics that are often used to describe chocolate
-bars made using cocoa from a given country, but not for other chocolate
-bars, are plotted.
+(#fig:fig2)Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted.
 &lt;/p&gt;
 &lt;/div&gt;
 &lt;h2 id="references"&gt;References&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://www.tidytextmining.com/tfidf.html"&gt;Analyzing word
-and document frequency: tf-idf&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-href="https://cmdlinetips.com/2020/02/faceting-and-reordering-with-ggplot2/"&gt;Faceting
-and Reordering with ggplot2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.tidytextmining.com/tfidf.html"&gt;Analyzing word and document frequency: tf-idf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cmdlinetips.com/2020/02/faceting-and-reordering-with-ggplot2/"&gt;Faceting and Reordering with ggplot2&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>7e305018853e3fada4dc26f99b9fb872</distill:md5>
@@ -439,9 +502,7 @@ and Reordering with ggplot2&lt;/a&gt;&lt;/li&gt;
 
 
 &lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
-&lt;p&gt;Loading the &lt;code&gt;R&lt;/code&gt; libraries and &lt;a
-href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-11/readme.md"&gt;data
-set&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Loading the &lt;code&gt;R&lt;/code&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-11/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
 library(geomtextpath) # For adding text to ggplot2 curves
 library(tidytuesdayR) # For loading data set
@@ -457,20 +518,12 @@ tt &amp;lt;- tt_load(&amp;quot;2022-01-11&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
     Downloading file 1 of 2: `colony.csv`
     Downloading file 2 of 2: `stressor.csv`&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="data-wrangling"&gt;Data wrangling&lt;/h2&gt;
-&lt;p&gt;In this section, the Bee Colony data is wrangled into two tidy
-sets:&lt;/p&gt;
+&lt;p&gt;In this section, the Bee Colony data is wrangled into two tidy sets:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;tidied_colony_counts_overall&lt;/code&gt; contains quarterly colony
-counts for the USA&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;tidied_colony_counts_per_state&lt;/code&gt; contains quarterly
-colony counts for various states within the USA&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tidied_colony_counts_overall&lt;/code&gt; contains quarterly colony counts for the USA&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tidied_colony_counts_per_state&lt;/code&gt; contains quarterly colony counts for various states within the USA&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;To create these sets, the original data is filtered to select for the
-appropriate states, and the “tidy_colony_data()” function is applied.
-These sets are tidy as &lt;a
-href="https://tidyr.tidyverse.org/articles/tidy-data.html#tidy-data"&gt;each
-column is a variable, each row is an observation, and every cell has a
-single value&lt;/a&gt;. The types of observations in these data sets are:&lt;/p&gt;
+&lt;p&gt;To create these sets, the original data is filtered to select for the appropriate states, and the “tidy_colony_data()” function is applied. These sets are tidy as &lt;a href="https://tidyr.tidyverse.org/articles/tidy-data.html#tidy-data"&gt;each column is a variable, each row is an observation, and every cell has a single value&lt;/a&gt;. The types of observations in these data sets are:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;Total colonies&lt;/code&gt;: Bee colonies counted&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Lost&lt;/code&gt;: Bee colonies lost&lt;/li&gt;
@@ -579,10 +632,8 @@ tidied_colony_counts_overall&lt;/code&gt;&lt;/pre&gt;
  9  2015 Total colonies 13000
 10  2015 Lost            1500
 # … with 4,198 more rows&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="plotting-bee-colony-observations-using-ggbeeswarm"&gt;Plotting Bee
-Colony observations using {ggbeeswarm}&lt;/h2&gt;
-&lt;p&gt;The first graph plots a point for each type of observation using &lt;a
-href="https://github.com/eclarke/ggbeeswarm"&gt;geom_beeswarm()&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="plotting-bee-colony-observations-using-ggbeeswarm"&gt;Plotting Bee Colony observations using {ggbeeswarm}&lt;/h2&gt;
+&lt;p&gt;The first graph plots a point for each type of observation using &lt;a href="https://github.com/eclarke/ggbeeswarm"&gt;geom_beeswarm()&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting Bee Colony observations using geom_beeswarm() from {ggbeeswarm}
 tidied_colony_counts_per_state %&amp;gt;%
   ggplot(aes(x = type, y = count)) +
@@ -596,23 +647,13 @@ tidied_colony_counts_per_state %&amp;gt;%
        x = NULL, y = &amp;quot;Number of bee colonies (log10)&amp;quot;,
        fill = NULL)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file30fc4a015718_files/figure-html/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" /&gt;
+&lt;img src="file1597b629b1139_files/figure-html/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" /&gt;
 &lt;p class="caption"&gt;
-(#fig:fig1)Scatter plots of bee colony observations. This plot has a
-point for each observation. Points are jittered to reduce overplotting.
+(#fig:fig1)Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting.
 &lt;/p&gt;
 &lt;/div&gt;
-&lt;h2 id="animating-bee-colony-observations-over-time"&gt;Animating Bee
-Colony observations over time&lt;/h2&gt;
-&lt;p&gt;While the previous plot is thematically appropriate, it could be
-better. This graph plots the same points over time in an animation, with
-the year plotted given in the subtitle. This graph uses standard
-{ggplot2} &lt;a
-href="https://ggplot2.tidyverse.org/reference/geom_jitter.html"&gt;jittered
-points&lt;/a&gt;, as well as a box plot to illustrate the distribution of the
-points. These box plots have notches, showing 95% confidence intervals
-for the median. Distributions with notches that do not overlap differ
-significantly.&lt;/p&gt;
+&lt;h2 id="animating-bee-colony-observations-over-time"&gt;Animating Bee Colony observations over time&lt;/h2&gt;
+&lt;p&gt;While the previous plot is thematically appropriate, it could be better. This graph plots the same points over time in an animation, with the year plotted given in the subtitle. This graph uses standard {ggplot2} &lt;a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html"&gt;jittered points&lt;/a&gt;, as well as a box plot to illustrate the distribution of the points. These box plots have notches, showing 95% confidence intervals for the median. Distributions with notches that do not overlap differ significantly.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Defining an animation showing bee colony counts over time
 p &amp;lt;- tidied_colony_counts_per_state %&amp;gt;%
   ggplot(aes(x = count, y = fct_reorder(type, count))) +
@@ -631,19 +672,13 @@ p &amp;lt;- tidied_colony_counts_per_state %&amp;gt;%
 animate(p, nframes = 180, start_pause = 20,  end_pause = 20,
         renderer = magick_renderer())&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="../file30fc4a015718_files/figure-html/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  /&gt;
+&lt;img src="../file1597b629b1139_files/figure-html/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig2)Animation showing bee colony counts from 2015 to 2021.
 &lt;/p&gt;
 &lt;/div&gt;
-&lt;h2
-id="plotting-the-distribution-of-different-bee-colony-observation-types"&gt;Plotting
-the distribution of different Bee Colony observation types&lt;/h2&gt;
-&lt;p&gt;From the previous plot, we can see that the &lt;code&gt;Added&lt;/code&gt; and
-&lt;code&gt;Renovated&lt;/code&gt; variables have similar distributions based on
-their box plots. Distributions can also be visualised using density
-plots. In this graph, the distribution of different types of observation
-in the data set are plotted.&lt;/p&gt;
+&lt;h2 id="plotting-the-distribution-of-different-bee-colony-observation-types"&gt;Plotting the distribution of different Bee Colony observation types&lt;/h2&gt;
+&lt;p&gt;From the previous plot, we can see that the &lt;code&gt;Added&lt;/code&gt; and &lt;code&gt;Renovated&lt;/code&gt; variables have similar distributions based on their box plots. Distributions can also be visualised using density plots. In this graph, the distribution of different types of observation in the data set are plotted.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Creating a density plot for different observation types
 tidied_colony_counts_overall %&amp;gt;%
   filter(type != &amp;quot;Total colonies&amp;quot;) %&amp;gt;%
@@ -656,11 +691,9 @@ tidied_colony_counts_overall %&amp;gt;%
        subtitle = &amp;quot;Distributions of Bee Colonies Addded, Renovated, Lost&amp;quot;,
        x = &amp;quot;Number of bee colonies&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file30fc4a015718_files/figure-html/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" /&gt;
+&lt;img src="file1597b629b1139_files/figure-html/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" /&gt;
 &lt;p class="caption"&gt;
-(#fig:fig3)A density plot, giving the distribution of various
-observations. Of the three types of observation plotted, Added and
-Renovated are the most similar.
+(#fig:fig3)A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar.
 &lt;/p&gt;
 &lt;/div&gt;
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
