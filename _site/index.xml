@@ -13,7 +13,229 @@ created by the R for Data Science (R4DS) community
       <link>https://tidytuesday.netlify.app/</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 13 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 21 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Adding continent and country names with {countrycode}, and subsetting a data frame using sample()</title>
+      <dc:creator>Ronan Harrington</dc:creator>
+      <link>https://tidytuesday.netlify.app/posts/2022-07-21-technology-adoption</link>
+      <description>
+
+
+&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In this post, the &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-19/readme.md"&gt;Technology Adoption&lt;/a&gt; data set is used to illustrate data exploration &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; and adding information using the &lt;a href="https://cran.rstudio.com/web/packages/countrycode/"&gt;{countrycode}&lt;/a&gt; package. During data exploration, the &lt;code&gt;tt$technology&lt;/code&gt; data set is filtered to select for the “Energy” category, and the distinct values for “variable” and “label” are printed. A subset is then created to test adding full country names and corresponding continents based on 3 letter ISO codes in the data set using the &lt;code&gt;countrycode()&lt;/code&gt; function. The full data set is then wrangled into two tibbles for fossil fuel and low-carbon electricity production: the distribution for each energy source is plotted according to the corresponding continent. The full source for this blog post is &lt;a href="https://github.com/rnnh/TidyTuesday"&gt;available on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Loading the &lt;a href="https://www.r-project.org/"&gt;R&lt;/a&gt; libraries and &lt;a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-19/readme.md"&gt;data set&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Loading libraries
+library(tidytuesdayR)
+library(countrycode)
+library(tidyverse)
+library(ggthemes)
+
+# Loading data
+tt &amp;lt;- tt_load(&amp;quot;2022-07-19&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;
+    Downloading file 1 of 1: `technology.csv`&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="exploring-tttechnology-selecting-distinct-values-after-filtering-and-testing-adding-a-continent-variable"&gt;Exploring tt$technology: selecting distinct values after filtering, and testing adding a “continent” variable&lt;/h2&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of tt$technology
+tt$technology&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 491,636 × 7
+   variable label                      iso3c  year group categ…¹ value
+   &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;                      &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt;
+ 1 BCG      % children who received a… AFG    1982 Cons… Vaccin…    10
+ 2 BCG      % children who received a… AFG    1983 Cons… Vaccin…    10
+ 3 BCG      % children who received a… AFG    1984 Cons… Vaccin…    11
+ 4 BCG      % children who received a… AFG    1985 Cons… Vaccin…    17
+ 5 BCG      % children who received a… AFG    1986 Cons… Vaccin…    18
+ 6 BCG      % children who received a… AFG    1987 Cons… Vaccin…    27
+ 7 BCG      % children who received a… AFG    1988 Cons… Vaccin…    40
+ 8 BCG      % children who received a… AFG    1989 Cons… Vaccin…    38
+ 9 BCG      % children who received a… AFG    1990 Cons… Vaccin…    30
+10 BCG      % children who received a… AFG    1991 Cons… Vaccin…    21
+# … with 491,626 more rows, and abbreviated variable name ¹​category
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Printing the distinct &amp;quot;variable&amp;quot; and &amp;quot;label&amp;quot; pairs for the &amp;quot;Energy&amp;quot; category
+## This will be used as a reference to create the &amp;quot;energy_type&amp;quot; column/variable
+tt$technology %&amp;gt;% filter(category == &amp;quot;Energy&amp;quot;) %&amp;gt;% select(variable, label) %&amp;gt;%
+  distinct()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 11 × 2
+   variable              label                                        
+   &amp;lt;chr&amp;gt;                 &amp;lt;chr&amp;gt;                                        
+ 1 elec_coal             Electricity from coal (TWH)                  
+ 2 elec_cons             Electric power consumption (KWH)             
+ 3 elec_gas              Electricity from gas (TWH)                   
+ 4 elec_hydro            Electricity from hydro (TWH)                 
+ 5 elec_nuc              Electricity from nuclear (TWH)               
+ 6 elec_oil              Electricity from oil (TWH)                   
+ 7 elec_renew_other      Electricity from other renewables (TWH)      
+ 8 elec_solar            Electricity from solar (TWH)                 
+ 9 elec_wind             Electricity from wind (TWH)                  
+10 elecprod              Gross output of electric energy (TWH)        
+11 electric_gen_capacity Electricity Generating Capacity, 1000 kilowa…&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Setting a seed to make results reproducible
+set.seed(&amp;quot;20220719&amp;quot;)
+# Using sample() to select six rows of tt$technology at random
+sample_rows &amp;lt;- sample(x = rownames(tt$technology), size = 6)
+# Creating a subset using the random rows
+technology_sample &amp;lt;- tt$technology[sample_rows, ]
+# Printing a summary of the randomly sampled subset
+technology_sample&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 6 × 7
+  variable        label               iso3c  year group categ…¹  value
+  &amp;lt;chr&amp;gt;           &amp;lt;chr&amp;gt;               &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt;    &amp;lt;dbl&amp;gt;
+1 Pol3            % children who rec… PRY    1993 Cons… Vaccin… 6.6 e1
+2 pct_ag_ara_land % Arable land shar… LBR    1991 Non-… Agricu… 3.08e1
+3 fert_total      Aggregate kg of fe… CHE    1988 Prod… Agricu… 1.78e8
+4 railp           Thousands of passe… TUR    1948 Cons… Transp… 4.9 e1
+5 ag_land         Land agricultural … TUN    2013 Non-… Agricu… 9.94e3
+6 tv              Television sets     NIC    1981 Cons… Commun… 1.14e5
+# … with abbreviated variable name ¹​category&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Adding continent and country name columns/variables to the sample subset,
+# using the countrycode::countrycode() function
+technology_sample &amp;lt;- technology_sample %&amp;gt;%
+  mutate(continent = countrycode(iso3c, origin = &amp;quot;iso3c&amp;quot;,
+    destination = &amp;quot;continent&amp;quot;),
+    country = countrycode(iso3c, origin = &amp;quot;iso3c&amp;quot;, destination = &amp;quot;country.name&amp;quot;))
+# Selecting the country ISO code, continent and country name of the sample
+# subset, to confirm that countrycode() worked as intended
+technology_sample %&amp;gt;% select(iso3c, continent, country)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 6 × 3
+  iso3c continent country    
+  &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;      
+1 PRY   Americas  Paraguay   
+2 LBR   Africa    Liberia    
+3 CHE   Europe    Switzerland
+4 TUR   Asia      Turkey     
+5 TUN   Africa    Tunisia    
+6 NIC   Americas  Nicaragua  &lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="wrangling-tttechnology-into-two-electricity-production-tibbles-fossil-fuels-and-low-carbon-sources"&gt;Wrangling tt$technology into two electricity production tibbles: fossil fuels and low-carbon sources&lt;/h2&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Adding the corresponding continent for each country in tt$technology;
+# filtering to select for the &amp;quot;Energy&amp;quot; category; adding a more succinct
+# &amp;quot;energy_type&amp;quot; variable; and dropping rows with missing values
+energy_tbl &amp;lt;- tt$technology %&amp;gt;%
+  mutate(continent = countrycode(iso3c, origin = &amp;quot;iso3c&amp;quot;,
+    destination = &amp;quot;continent&amp;quot;)) %&amp;gt;%
+  filter(category == &amp;quot;Energy&amp;quot;) %&amp;gt;%
+  mutate(energy_type = fct_recode(variable,
+    &amp;quot;Consumption&amp;quot; = &amp;quot;elec_cons&amp;quot;, &amp;quot;Coal&amp;quot; = &amp;quot;elec_coal&amp;quot;, &amp;quot;Gas&amp;quot; = &amp;quot;elec_gas&amp;quot;,
+    &amp;quot;Hydro&amp;quot; = &amp;quot;elec_hydro&amp;quot;, &amp;quot;Nuclear&amp;quot; = &amp;quot;elec_nuc&amp;quot;, &amp;quot;Oil&amp;quot; = &amp;quot;elec_oil&amp;quot;,
+    &amp;quot;Other renewables&amp;quot; = &amp;quot;elec_renew_other&amp;quot;, &amp;quot;Solar&amp;quot; = &amp;quot;elec_solar&amp;quot;,
+    &amp;quot;Wind&amp;quot; = &amp;quot;elec_wind&amp;quot;, &amp;quot;Output&amp;quot; = &amp;quot;elecprod&amp;quot;,
+    &amp;quot;Capacity&amp;quot; = &amp;quot;electric_gen_capacity&amp;quot;)) %&amp;gt;%
+  drop_na()
+
+# Printing a summary of energy_tbl
+energy_tbl&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 66,300 × 9
+   variable  label     iso3c  year group categ…¹ value conti…² energ…³
+   &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;fct&amp;gt;  
+ 1 elec_coal Electric… ABW    2000 Prod… Energy      0 Americ… Coal   
+ 2 elec_coal Electric… ABW    2001 Prod… Energy      0 Americ… Coal   
+ 3 elec_coal Electric… ABW    2002 Prod… Energy      0 Americ… Coal   
+ 4 elec_coal Electric… ABW    2003 Prod… Energy      0 Americ… Coal   
+ 5 elec_coal Electric… ABW    2004 Prod… Energy      0 Americ… Coal   
+ 6 elec_coal Electric… ABW    2005 Prod… Energy      0 Americ… Coal   
+ 7 elec_coal Electric… ABW    2006 Prod… Energy      0 Americ… Coal   
+ 8 elec_coal Electric… ABW    2007 Prod… Energy      0 Americ… Coal   
+ 9 elec_coal Electric… ABW    2008 Prod… Energy      0 Americ… Coal   
+10 elec_coal Electric… ABW    2009 Prod… Energy      0 Americ… Coal   
+# … with 66,290 more rows, and abbreviated variable names ¹​category,
+#   ²​continent, ³​energy_type
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Filtering energy_table for fossil fuel rows
+fossil_fuel_tbl &amp;lt;- energy_tbl %&amp;gt;%
+  filter(energy_type != &amp;quot;Consumption&amp;quot; &amp;amp; energy_type != &amp;quot;Output&amp;quot; 
+    &amp;amp; energy_type != &amp;quot;Capacity&amp;quot;) %&amp;gt;% 
+  filter(energy_type == &amp;quot;Coal&amp;quot; | energy_type == &amp;quot;Gas&amp;quot; | energy_type == &amp;quot;Oil&amp;quot;)
+
+# Printing a summary of the tibble
+fossil_fuel_tbl&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 13,914 × 9
+   variable  label     iso3c  year group categ…¹ value conti…² energ…³
+   &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;fct&amp;gt;  
+ 1 elec_coal Electric… ABW    2000 Prod… Energy      0 Americ… Coal   
+ 2 elec_coal Electric… ABW    2001 Prod… Energy      0 Americ… Coal   
+ 3 elec_coal Electric… ABW    2002 Prod… Energy      0 Americ… Coal   
+ 4 elec_coal Electric… ABW    2003 Prod… Energy      0 Americ… Coal   
+ 5 elec_coal Electric… ABW    2004 Prod… Energy      0 Americ… Coal   
+ 6 elec_coal Electric… ABW    2005 Prod… Energy      0 Americ… Coal   
+ 7 elec_coal Electric… ABW    2006 Prod… Energy      0 Americ… Coal   
+ 8 elec_coal Electric… ABW    2007 Prod… Energy      0 Americ… Coal   
+ 9 elec_coal Electric… ABW    2008 Prod… Energy      0 Americ… Coal   
+10 elec_coal Electric… ABW    2009 Prod… Energy      0 Americ… Coal   
+# … with 13,904 more rows, and abbreviated variable names ¹​category,
+#   ²​continent, ³​energy_type
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Filtering energy_table for low-carbon energy source rows
+low_carbon_tbl &amp;lt;- energy_tbl %&amp;gt;%
+  filter(energy_type != &amp;quot;Consumption&amp;quot; &amp;amp; energy_type != &amp;quot;Output&amp;quot; 
+    &amp;amp; energy_type != &amp;quot;Capacity&amp;quot;) %&amp;gt;% 
+  filter(energy_type != &amp;quot;Coal&amp;quot; &amp;amp; energy_type != &amp;quot;Gas&amp;quot; &amp;amp; energy_type != &amp;quot;Oil&amp;quot;)
+
+# Printing a summary of the tibble
+low_carbon_tbl&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# A tibble: 26,890 × 9
+   variable   label    iso3c  year group categ…¹ value conti…² energ…³
+   &amp;lt;chr&amp;gt;      &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;fct&amp;gt;  
+ 1 elec_hydro Electri… ABW    2000 Prod… Energy      0 Americ… Hydro  
+ 2 elec_hydro Electri… ABW    2001 Prod… Energy      0 Americ… Hydro  
+ 3 elec_hydro Electri… ABW    2002 Prod… Energy      0 Americ… Hydro  
+ 4 elec_hydro Electri… ABW    2003 Prod… Energy      0 Americ… Hydro  
+ 5 elec_hydro Electri… ABW    2004 Prod… Energy      0 Americ… Hydro  
+ 6 elec_hydro Electri… ABW    2005 Prod… Energy      0 Americ… Hydro  
+ 7 elec_hydro Electri… ABW    2006 Prod… Energy      0 Americ… Hydro  
+ 8 elec_hydro Electri… ABW    2007 Prod… Energy      0 Americ… Hydro  
+ 9 elec_hydro Electri… ABW    2008 Prod… Energy      0 Americ… Hydro  
+10 elec_hydro Electri… ABW    2009 Prod… Energy      0 Americ… Hydro  
+# … with 26,880 more rows, and abbreviated variable names ¹​category,
+#   ²​continent, ³​energy_type
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="plotting-distributions-of-electricity-produced-from-fossil-fuels-and-low-carbon-sources"&gt;Plotting distributions of electricity produced from fossil fuels and low-carbon sources&lt;/h2&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting distributions of electricity produced from fossil fuels
+fossil_fuel_tbl %&amp;gt;%
+  ggplot(aes(x = fct_reorder(energy_type, value), y = value, fill = energy_type)) +
+  geom_boxplot() +
+  theme_solarized() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = &amp;quot;none&amp;quot;) +
+  scale_colour_discrete() +
+  scale_y_log10() +
+  facet_wrap(~continent, scales = &amp;quot;free&amp;quot;) +
+  labs(
+    title = &amp;quot;Electricity generated from fossil fuels by continent&amp;quot;,
+    y = &amp;quot;Output in log terawatt-hours: log10(TWh)&amp;quot;,
+    x = &amp;quot;Source&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-21-technology-adoption/technology-adoption_files/figure-html5/fig1-1.png" alt="Box plots of electricity produced from fossil fuels, faceted by continent." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig1)Box plots of electricity produced from fossil fuels, faceted by continent.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;pre class="r"&gt;&lt;code&gt;# Plotting distributions of electricity produced from low-carbon sources
+low_carbon_tbl %&amp;gt;%
+  ggplot(aes(x = fct_reorder(energy_type, value), y = value, fill = energy_type)) +
+  geom_boxplot() +
+  theme_solarized() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = &amp;quot;none&amp;quot;) +
+  scale_colour_discrete() +
+  scale_y_log10() +
+  facet_wrap(~continent, scales = &amp;quot;free&amp;quot;) +
+  labs(
+    title = &amp;quot;Electricity generated from low-carbon sources by continent&amp;quot;,
+    y = &amp;quot;Output in log terawatt-hours: log10(TWh)&amp;quot;,
+    x = &amp;quot;Source&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class="figure"&gt;
+&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-21-technology-adoption/technology-adoption_files/figure-html5/fig2-1.png" alt="Box plots of electricity produced from low-carbon energy sources, faceted by continent." width="864" /&gt;
+&lt;p class="caption"&gt;
+(#fig:fig2)Box plots of electricity produced from low-carbon energy sources, faceted by continent.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
+      <distill:md5>9c70eb9668aacd6fda7e0ab4aadcda3b</distill:md5>
+      <guid>https://tidytuesday.netlify.app/posts/2022-07-21-technology-adoption</guid>
+      <pubDate>Thu, 21 Jul 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://tidytuesday.netlify.app/posts/2022-07-21-technology-adoption/technology-adoption_files/figure-html5/fig1-1.png" medium="image" type="image/png" width="1728" height="1152"/>
+    </item>
     <item>
       <title>How to write a function in R and apply it to a data frame using map functions from {purr}</title>
       <dc:creator>Ronan Harrington</dc:creator>
@@ -40,22 +262,24 @@ tt &amp;lt;- tt_load(&amp;quot;2022-07-12&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the flights data frame
 tt$flights&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 688,099 × 14
-    YEAR MONTH_NUM MONTH_MON FLT_DATE            APT_ICAO APT_NAME    
-   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;     &amp;lt;dttm&amp;gt;              &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;       
- 1  2016 01        JAN       2016-01-01 00:00:00 EBAW     Antwerp     
- 2  2016 01        JAN       2016-01-01 00:00:00 EBBR     Brussels    
- 3  2016 01        JAN       2016-01-01 00:00:00 EBCI     Charleroi   
- 4  2016 01        JAN       2016-01-01 00:00:00 EBLG     Liège       
- 5  2016 01        JAN       2016-01-01 00:00:00 EBOS     Ostend-Brug…
- 6  2016 01        JAN       2016-01-01 00:00:00 EDDB     Berlin - Br…
- 7  2016 01        JAN       2016-01-01 00:00:00 EDDC     Dresden     
- 8  2016 01        JAN       2016-01-01 00:00:00 EDDE     Erfurt      
- 9  2016 01        JAN       2016-01-01 00:00:00 EDDF     Frankfurt   
-10  2016 01        JAN       2016-01-01 00:00:00 EDDG     Muenster-Os…
-# … with 688,089 more rows, and 8 more variables: STATE_NAME &amp;lt;chr&amp;gt;,
-#   FLT_DEP_1 &amp;lt;dbl&amp;gt;, FLT_ARR_1 &amp;lt;dbl&amp;gt;, FLT_TOT_1 &amp;lt;dbl&amp;gt;,
-#   FLT_DEP_IFR_2 &amp;lt;dbl&amp;gt;, FLT_ARR_IFR_2 &amp;lt;dbl&amp;gt;, FLT_TOT_IFR_2 &amp;lt;dbl&amp;gt;,
-#   `Pivot Label` &amp;lt;chr&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+    YEAR MONTH_NUM MONTH…¹ FLT_DATE            APT_I…² APT_N…³ STATE…⁴
+   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;     &amp;lt;chr&amp;gt;   &amp;lt;dttm&amp;gt;              &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;  
+ 1  2016 01        JAN     2016-01-01 00:00:00 EBAW    Antwerp Belgium
+ 2  2016 01        JAN     2016-01-01 00:00:00 EBBR    Brusse… Belgium
+ 3  2016 01        JAN     2016-01-01 00:00:00 EBCI    Charle… Belgium
+ 4  2016 01        JAN     2016-01-01 00:00:00 EBLG    Liège   Belgium
+ 5  2016 01        JAN     2016-01-01 00:00:00 EBOS    Ostend… Belgium
+ 6  2016 01        JAN     2016-01-01 00:00:00 EDDB    Berlin… Germany
+ 7  2016 01        JAN     2016-01-01 00:00:00 EDDC    Dresden Germany
+ 8  2016 01        JAN     2016-01-01 00:00:00 EDDE    Erfurt  Germany
+ 9  2016 01        JAN     2016-01-01 00:00:00 EDDF    Frankf… Germany
+10  2016 01        JAN     2016-01-01 00:00:00 EDDG    Muenst… Germany
+# … with 688,089 more rows, 7 more variables: FLT_DEP_1 &amp;lt;dbl&amp;gt;,
+#   FLT_ARR_1 &amp;lt;dbl&amp;gt;, FLT_TOT_1 &amp;lt;dbl&amp;gt;, FLT_DEP_IFR_2 &amp;lt;dbl&amp;gt;,
+#   FLT_ARR_IFR_2 &amp;lt;dbl&amp;gt;, FLT_TOT_IFR_2 &amp;lt;dbl&amp;gt;, `Pivot Label` &amp;lt;chr&amp;gt;,
+#   and abbreviated variable names ¹​MONTH_MON, ²​APT_ICAO, ³​APT_NAME,
+#   ⁴​STATE_NAME
+# ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
 paste(&amp;quot;tt$flights has&amp;quot;, nrow(tt$flights), &amp;quot;rows and&amp;quot;, ncol(tt$flights),
   &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -89,19 +313,21 @@ tidy_flights &amp;lt;- map_df(tidy_flights_list, rbind)
 # Printing a summary of the tidy flights data frame
 tidy_flights&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 4,128,594 × 4
-   FLT_DATE            APT_NAME           number_of_fligh… flight_type
-   &amp;lt;dttm&amp;gt;              &amp;lt;chr&amp;gt;                         &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;      
- 1 2016-01-01 00:00:00 Antwerp                           4 FLT_DEP_1  
- 2 2016-01-01 00:00:00 Brussels                        174 FLT_DEP_1  
- 3 2016-01-01 00:00:00 Charleroi                        45 FLT_DEP_1  
- 4 2016-01-01 00:00:00 Liège                             6 FLT_DEP_1  
- 5 2016-01-01 00:00:00 Ostend-Bruges                     7 FLT_DEP_1  
- 6 2016-01-01 00:00:00 Berlin - Brandenb…               98 FLT_DEP_1  
- 7 2016-01-01 00:00:00 Dresden                          18 FLT_DEP_1  
- 8 2016-01-01 00:00:00 Erfurt                            1 FLT_DEP_1  
- 9 2016-01-01 00:00:00 Frankfurt                       401 FLT_DEP_1  
-10 2016-01-01 00:00:00 Muenster-Osnabrue…                3 FLT_DEP_1  
-# … with 4,128,584 more rows&lt;/code&gt;&lt;/pre&gt;
+   FLT_DATE            APT_NAME             number_of_flights flight…¹
+   &amp;lt;dttm&amp;gt;              &amp;lt;chr&amp;gt;                            &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   
+ 1 2016-01-01 00:00:00 Antwerp                              4 FLT_DEP…
+ 2 2016-01-01 00:00:00 Brussels                           174 FLT_DEP…
+ 3 2016-01-01 00:00:00 Charleroi                           45 FLT_DEP…
+ 4 2016-01-01 00:00:00 Liège                                6 FLT_DEP…
+ 5 2016-01-01 00:00:00 Ostend-Bruges                        7 FLT_DEP…
+ 6 2016-01-01 00:00:00 Berlin - Brandenburg                98 FLT_DEP…
+ 7 2016-01-01 00:00:00 Dresden                             18 FLT_DEP…
+ 8 2016-01-01 00:00:00 Erfurt                               1 FLT_DEP…
+ 9 2016-01-01 00:00:00 Frankfurt                          401 FLT_DEP…
+10 2016-01-01 00:00:00 Muenster-Osnabrueck                  3 FLT_DEP…
+# … with 4,128,584 more rows, and abbreviated variable name
+#   ¹​flight_type
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
 paste(&amp;quot;tidy_flights has&amp;quot;, nrow(tidy_flights), &amp;quot;rows and&amp;quot;, ncol(tidy_flights),
   &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -132,7 +358,7 @@ tidy_flights %&amp;gt;%
   labs(title = &amp;quot;Distribution of daily arrivals and depatures across six airports&amp;quot;,
     x = &amp;quot;Airport&amp;quot;, y = &amp;quot;Flights&amp;quot;, colour = &amp;quot;Flight type&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-12-european-flights/european-flights_files/figure-html5/fig1-1.png" alt="Box plots of daily arrival and depature distribution across top six airports." width="864" /&gt;
+&lt;img src="file125c52ebf5ea_files/figure-html/fig1-1.png" alt="Box plots of daily arrival and depature distribution across top six airports." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig1)Box plots of daily arrival and depature distribution across top six airports.
 &lt;/p&gt;
@@ -144,7 +370,7 @@ tidy_flights %&amp;gt;%
 &lt;pre class="r distill-force-highlighting-css"&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;</description>
       <distill:md5>bb2e4d079263ea30024962f2f421bcf4</distill:md5>
       <guid>https://tidytuesday.netlify.app/posts/2022-07-12-european-flights</guid>
-      <pubDate>Wed, 13 Jul 2022 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
       <media:content url="https://tidytuesday.netlify.app/posts/2022-07-12-european-flights/european-flights_files/figure-html5/fig1-1.png" medium="image" type="image/png" width="1728" height="1152"/>
     </item>
     <item>
@@ -184,25 +410,26 @@ tt &amp;lt;- tt_load(&amp;quot;2022-07-05&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the San Francisco (SF) permits data frame
 tt$sf_permits&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 86,103 × 44
-   permit_number permit_type permit_type_definiti… permit_creation_da…
-           &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;                 &amp;lt;dttm&amp;gt;             
- 1    2000010368           3 additions alteration… 2000-01-03 00:00:00
- 2    2000010353           6 demolitions           2000-01-03 00:00:00
- 3    2000010498           3 additions alteration… 2000-01-04 00:00:00
- 4    2000010484           3 additions alteration… 2000-01-04 00:00:00
- 5    2000010480           3 additions alteration… 2000-01-04 00:00:00
- 6    2000010475           3 additions alteration… 2000-01-04 00:00:00
- 7    2000010476           3 additions alteration… 2000-01-04 00:00:00
- 8    2000010474           3 additions alteration… 2000-01-04 00:00:00
- 9    2000010479           3 additions alteration… 2000-01-04 00:00:00
-10   20000104173           3 additions alteration… 2000-01-04 00:00:00
-# … with 86,093 more rows, and 40 more variables: block &amp;lt;chr&amp;gt;,
-#   lot &amp;lt;chr&amp;gt;, street_number &amp;lt;dbl&amp;gt;, street_number_suffix &amp;lt;chr&amp;gt;,
-#   street_name &amp;lt;chr&amp;gt;, street_suffix &amp;lt;chr&amp;gt;, unit &amp;lt;dbl&amp;gt;,
-#   unit_suffix &amp;lt;chr&amp;gt;, description &amp;lt;chr&amp;gt;, status &amp;lt;chr&amp;gt;,
-#   status_date &amp;lt;dttm&amp;gt;, filed_date &amp;lt;dttm&amp;gt;, issued_date &amp;lt;dttm&amp;gt;,
-#   completed_date &amp;lt;dttm&amp;gt;, first_construction_document_date &amp;lt;dttm&amp;gt;,
-#   structural_notification &amp;lt;chr&amp;gt;, …&lt;/code&gt;&lt;/pre&gt;
+   permit_nu…¹ permi…² permi…³ permit_creation_d…⁴ block lot   stree…⁵
+         &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;dttm&amp;gt;              &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt;
+ 1  2000010368       3 additi… 2000-01-03 00:00:00 0113  025         9
+ 2  2000010353       6 demoli… 2000-01-03 00:00:00 1785  001A     2921
+ 3  2000010498       3 additi… 2000-01-04 00:00:00 3705  042       865
+ 4  2000010484       3 additi… 2000-01-04 00:00:00 6540  040       525
+ 5  2000010480       3 additi… 2000-01-04 00:00:00 0013  013       145
+ 6  2000010475       3 additi… 2000-01-04 00:00:00 0241  003       600
+ 7  2000010476       3 additi… 2000-01-04 00:00:00 0230  028         1
+ 8  2000010474       3 additi… 2000-01-04 00:00:00 0241  026       600
+ 9  2000010479       3 additi… 2000-01-04 00:00:00 3707  051       685
+10 20000104173       3 additi… 2000-01-04 00:00:00 0471  003      3400
+# … with 86,093 more rows, 37 more variables:
+#   street_number_suffix &amp;lt;chr&amp;gt;, street_name &amp;lt;chr&amp;gt;,
+#   street_suffix &amp;lt;chr&amp;gt;, unit &amp;lt;dbl&amp;gt;, unit_suffix &amp;lt;chr&amp;gt;,
+#   description &amp;lt;chr&amp;gt;, status &amp;lt;chr&amp;gt;, status_date &amp;lt;dttm&amp;gt;,
+#   filed_date &amp;lt;dttm&amp;gt;, issued_date &amp;lt;dttm&amp;gt;, completed_date &amp;lt;dttm&amp;gt;,
+#   first_construction_document_date &amp;lt;dttm&amp;gt;,
+#   structural_notification &amp;lt;chr&amp;gt;, …
+# ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
 paste(&amp;quot;tt$sf_permits has&amp;quot;, nrow(tt$sf_permits), &amp;quot;rows and&amp;quot;, ncol(tt$sf_permits),
   &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -232,7 +459,8 @@ permits_per_street&lt;/code&gt;&lt;/pre&gt;
  8 additions alterations or repairs 08th          252
  9 additions alterations or repairs 08th Ti         1
 10 additions alterations or repairs 09th          301
-# … with 3,043 more rows&lt;/code&gt;&lt;/pre&gt;
+# … with 3,043 more rows
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
 paste(&amp;quot;permits_per_street has&amp;quot;, nrow(permits_per_street), &amp;quot;rows and&amp;quot;,
   ncol(permits_per_street), &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -248,19 +476,20 @@ permits_per_street_wider &amp;lt;- permits_per_street %&amp;gt;%
 permits_per_street_wider&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 4 × 1,588
 # Groups:   permit_type_definition [4]
-  permit_type_defini… `01st` `02nd` `03rd` `04th` `05th` `06th` `07th`
-  &amp;lt;chr&amp;gt;                &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;
-1 additions alterati…    196    763    778    338    223    347    199
-2 demolitions             16     17     72      8      7     17     24
-3 new construction         9      9     26      8      3      4     13
-4 new construction w…     NA      3     48      3      4      8      7
-# … with 1,580 more variables: `08th` &amp;lt;int&amp;gt;, `08th Ti` &amp;lt;int&amp;gt;,
-#   `09th` &amp;lt;int&amp;gt;, `10th` &amp;lt;int&amp;gt;, `11th` &amp;lt;int&amp;gt;, `12th` &amp;lt;int&amp;gt;,
-#   `13th` &amp;lt;int&amp;gt;, `13th Ti` &amp;lt;int&amp;gt;, `14th` &amp;lt;int&amp;gt;, `15th` &amp;lt;int&amp;gt;,
-#   `16th` &amp;lt;int&amp;gt;, `17th` &amp;lt;int&amp;gt;, `18th` &amp;lt;int&amp;gt;, `19th` &amp;lt;int&amp;gt;,
-#   `20th` &amp;lt;int&amp;gt;, `21st` &amp;lt;int&amp;gt;, `22nd` &amp;lt;int&amp;gt;, `23rd` &amp;lt;int&amp;gt;,
-#   `24th` &amp;lt;int&amp;gt;, `25th` &amp;lt;int&amp;gt;, `25th North` &amp;lt;int&amp;gt;, `26th` &amp;lt;int&amp;gt;,
-#   `27th` &amp;lt;int&amp;gt;, `28th` &amp;lt;int&amp;gt;, `29th` &amp;lt;int&amp;gt;, `2nd` &amp;lt;int&amp;gt;, …&lt;/code&gt;&lt;/pre&gt;
+  permit_typ…¹ `01st` `02nd` `03rd` `04th` `05th` `06th` `07th` `08th`
+  &amp;lt;chr&amp;gt;         &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;  &amp;lt;int&amp;gt;
+1 additions a…    196    763    778    338    223    347    199    252
+2 demolitions      16     17     72      8      7     17     24     20
+3 new constru…      9      9     26      8      3      4     13      2
+4 new constru…     NA      3     48      3      4      8      7     13
+# … with 1,579 more variables: `08th Ti` &amp;lt;int&amp;gt;, `09th` &amp;lt;int&amp;gt;,
+#   `10th` &amp;lt;int&amp;gt;, `11th` &amp;lt;int&amp;gt;, `12th` &amp;lt;int&amp;gt;, `13th` &amp;lt;int&amp;gt;,
+#   `13th Ti` &amp;lt;int&amp;gt;, `14th` &amp;lt;int&amp;gt;, `15th` &amp;lt;int&amp;gt;, `16th` &amp;lt;int&amp;gt;,
+#   `17th` &amp;lt;int&amp;gt;, `18th` &amp;lt;int&amp;gt;, `19th` &amp;lt;int&amp;gt;, `20th` &amp;lt;int&amp;gt;,
+#   `21st` &amp;lt;int&amp;gt;, `22nd` &amp;lt;int&amp;gt;, `23rd` &amp;lt;int&amp;gt;, `24th` &amp;lt;int&amp;gt;,
+#   `25th` &amp;lt;int&amp;gt;, `25th North` &amp;lt;int&amp;gt;, `26th` &amp;lt;int&amp;gt;, `27th` &amp;lt;int&amp;gt;,
+#   `28th` &amp;lt;int&amp;gt;, `29th` &amp;lt;int&amp;gt;, `2nd` &amp;lt;int&amp;gt;, `30th` &amp;lt;int&amp;gt;, …
+# ℹ Use `colnames()` to see all variable names&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
 paste(&amp;quot;permits_per_street_wider has&amp;quot;, nrow(permits_per_street_wider), &amp;quot;rows and&amp;quot;,
   ncol(permits_per_street_wider), &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -269,20 +498,23 @@ paste(&amp;quot;permits_per_street_wider has&amp;quot;, nrow(permits_per_street_
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the new construction data frame
 tt$new_construction&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 261 × 10
-   cartodb_id the_geom the_geom_webmerca… county  year totalproduction
-        &amp;lt;dbl&amp;gt; &amp;lt;lgl&amp;gt;    &amp;lt;lgl&amp;gt;              &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt;           &amp;lt;dbl&amp;gt;
- 1          1 NA       NA                 Alame…  1990            3601
- 2          2 NA       NA                 Alame…  1991             226
- 3          3 NA       NA                 Alame…  1992            2652
- 4          4 NA       NA                 Alame…  1993            3049
- 5          5 NA       NA                 Alame…  1994            2617
- 6          6 NA       NA                 Alame…  1995            3515
- 7          7 NA       NA                 Alame…  1996            3179
- 8          8 NA       NA                 Alame…  1997            4591
- 9          9 NA       NA                 Alame…  1998            6022
-10         10 NA       NA                 Alame…  1999            5601
-# … with 251 more rows, and 4 more variables: sfproduction &amp;lt;dbl&amp;gt;,
-#   mfproduction &amp;lt;dbl&amp;gt;, mhproduction &amp;lt;dbl&amp;gt;, source &amp;lt;chr&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+   cartodb_id the_geom the_geom…¹ county  year total…² sfpro…³ mfpro…⁴
+        &amp;lt;dbl&amp;gt; &amp;lt;lgl&amp;gt;    &amp;lt;lgl&amp;gt;      &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;
+ 1          1 NA       NA         Alame…  1990    3601    2166    1378
+ 2          2 NA       NA         Alame…  1991     226    -236     395
+ 3          3 NA       NA         Alame…  1992    2652    2018     563
+ 4          4 NA       NA         Alame…  1993    3049    2693     282
+ 5          5 NA       NA         Alame…  1994    2617    2753    -233
+ 6          6 NA       NA         Alame…  1995    3515    3001     445
+ 7          7 NA       NA         Alame…  1996    3179    3336    -229
+ 8          8 NA       NA         Alame…  1997    4591    4414     108
+ 9          9 NA       NA         Alame…  1998    6022    4484    1465
+10         10 NA       NA         Alame…  1999    5601    4131    1392
+# … with 251 more rows, 2 more variables: mhproduction &amp;lt;dbl&amp;gt;,
+#   source &amp;lt;chr&amp;gt;, and abbreviated variable names
+#   ¹​the_geom_webmercator, ²​totalproduction, ³​sfproduction,
+#   ⁴​mfproduction
+# ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
 paste(&amp;quot;tt$new_construction has&amp;quot;, nrow(tt$new_construction), &amp;quot;rows and&amp;quot;,
   ncol(tt$new_construction), &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -318,7 +550,8 @@ production_per_county&lt;/code&gt;&lt;/pre&gt;
  8 Alameda County  1991    67 Mobile home    
  9 Alameda County  1992  2652 Total          
 10 Alameda County  1992  2018 Single family  
-# … with 1,034 more rows&lt;/code&gt;&lt;/pre&gt;
+# … with 1,034 more rows
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Printing a summary of the shape of the data frame
 paste(&amp;quot;production_per_county has&amp;quot;, nrow(production_per_county), &amp;quot;rows and&amp;quot;,
   ncol(production_per_county), &amp;quot;columns.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -335,7 +568,7 @@ permits_per_street %&amp;gt;%
   facet_wrap(~permit_type_definition, ncol = 2, scales = &amp;quot;free&amp;quot;) +
   labs(title = &amp;quot;Count of construction permits by type per street&amp;quot;,
     x = &amp;quot;Tally&amp;quot;, y = &amp;quot;Street name&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-12-european-flights/european-flights_files/figure-html5/fig1-1.png" width="864" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="file125c1089cf82_files/figure-html/fig1-1.png" width="864" /&gt;&lt;/p&gt;
 &lt;h2 id="plotting-annual-construction-per-san-francisco-county-using-a-data-frame-created-with-pivot-longer"&gt;Plotting annual construction per San Francisco county using a data frame created with pivot longer&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting the annual construction by type per San Francisco county
 production_per_county %&amp;gt;%
@@ -352,7 +585,7 @@ production_per_county %&amp;gt;%
     title = &amp;quot;Annual construction by type per San Francisco county&amp;quot;,
     subtitle = &amp;quot;Red vertical line marks 2008&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="https://tidytuesday.netlify.app/posts/2022-07-05-sf-rents/sf-rents_files/figure-html5/fig2-1.png" alt="In San Francisco county, new construction plateaued in 2008 before plummeting." width="864" /&gt;
+&lt;img src="file125c1089cf82_files/figure-html/fig2-1.png" alt="In San Francisco county, new construction plateaued in 2008 before plummeting." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig2)In San Francisco county, new construction plateaued in 2008 before plummeting.
 &lt;/p&gt;
@@ -422,19 +655,21 @@ country_characteristics &amp;lt;- country_characteristics %&amp;gt;%
 # Printing a summary of the data frame
 country_characteristics&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 1,233 × 7
-   country_of_bean_o… memorable_chara…     n total     tf   idf tf_idf
-   &amp;lt;chr&amp;gt;              &amp;lt;chr&amp;gt;            &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt;
- 1 Venezuela          nutty               84   722 0.116      0      0
- 2 Ecuador            floral              72   600 0.12       0      0
- 3 Dominican Republic earthy              35   641 0.0546     0      0
- 4 Venezuela          roasty              34   722 0.0471     0      0
- 5 Venezuela          creamy              33   722 0.0457     0      0
- 6 Peru               cocoa               28   678 0.0413     0      0
- 7 Blend              sweet               27   443 0.0609     0      0
- 8 Madagascar         sour                27   485 0.0557     0      0
- 9 Blend              cocoa               26   443 0.0587     0      0
-10 Dominican Republic cocoa               26   641 0.0406     0      0
-# … with 1,223 more rows&lt;/code&gt;&lt;/pre&gt;
+   country_of_bean_origin memorable_…¹     n total     tf   idf tf_idf
+   &amp;lt;chr&amp;gt;                  &amp;lt;chr&amp;gt;        &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt;
+ 1 Venezuela              nutty           84   722 0.116      0      0
+ 2 Ecuador                floral          72   600 0.12       0      0
+ 3 Dominican Republic     earthy          35   641 0.0546     0      0
+ 4 Venezuela              roasty          34   722 0.0471     0      0
+ 5 Venezuela              creamy          33   722 0.0457     0      0
+ 6 Peru                   cocoa           28   678 0.0413     0      0
+ 7 Blend                  sweet           27   443 0.0609     0      0
+ 8 Madagascar             sour            27   485 0.0557     0      0
+ 9 Blend                  cocoa           26   443 0.0587     0      0
+10 Dominican Republic     cocoa           26   641 0.0406     0      0
+# … with 1,223 more rows, and abbreviated variable name
+#   ¹​memorable_characteristic
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="plotting-the-most-used-characteristics-in-the-chocolate-bar-summaries"&gt;Plotting the most used characteristics in the chocolate bar summaries&lt;/h2&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting the most used characteristics in the chocolate bar summaries
 country_characteristics %&amp;gt;%
@@ -454,7 +689,7 @@ country_characteristics %&amp;gt;%
        subtitle = &amp;quot;Summaries grouped by cocoa country of origin&amp;quot;,
        x = &amp;quot;Characteristic count&amp;quot;, y = NULL)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file1597b582ae0ef_files/figure-html/fig1-1.png" alt="Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted." width="864" /&gt;
+&lt;img src="file125c424aa6b0_files/figure-html/fig1-1.png" alt="Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig1)Characteristics that are most used to describe chocolate bars made using different cocoa beans are plotted.
 &lt;/p&gt;
@@ -478,7 +713,7 @@ country_characteristics %&amp;gt;%
        subtitle = &amp;quot;Reviews grouped by cocoa country of origin&amp;quot;,
        x = &amp;quot;Term frequency–inverse document frequency (tf-idf)&amp;quot;, y = NULL)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file1597b582ae0ef_files/figure-html/fig2-1.png" alt="Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted." width="864" /&gt;
+&lt;img src="file125c424aa6b0_files/figure-html/fig2-1.png" alt="Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig2)Characteristics that are often used to describe chocolate bars made using cocoa from a given country, but not for other chocolate bars, are plotted.
 &lt;/p&gt;
@@ -571,36 +806,40 @@ tidied_colony_counts_per_state &amp;lt;- tidy_colony_data(colony_counts_per_stat
 # Printing a summary of the subsets before tidying...
 colony_counts_overall&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 26 × 10
-    year months  state colony_n colony_max colony_lost colony_lost_pct
-   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;    &amp;lt;dbl&amp;gt;      &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;           &amp;lt;dbl&amp;gt;
- 1  2015 Januar… Unit…  2824610         NA      500020              18
- 2  2015 April-… Unit…  2849500         NA      352860              12
- 3  2015 July-S… Unit…  3132880         NA      457100              15
- 4  2015 Octobe… Unit…  2874760         NA      412380              14
- 5  2016 Januar… Unit…  2594590         NA      428800              17
- 6  2016 April-… Unit…  2801470         NA      329820              12
- 7  2016 July-S… Unit…  3181180         NA      397290              12
- 8  2016 Octobe… Unit…  3032060         NA      502350              17
- 9  2017 Januar… Unit…  2615590         NA      361850              14
-10  2017 April-… Unit…  2886030         NA      225680               8
-# … with 16 more rows, and 3 more variables: colony_added &amp;lt;dbl&amp;gt;,
-#   colony_reno &amp;lt;dbl&amp;gt;, colony_reno_pct &amp;lt;dbl&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+    year months  state colon…¹ colon…² colon…³ colon…⁴ colon…⁵ colon…⁶
+   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;
+ 1  2015 Januar… Unit… 2824610      NA  500020      18  546980  270530
+ 2  2015 April-… Unit… 2849500      NA  352860      12  661860  692850
+ 3  2015 July-S… Unit… 3132880      NA  457100      15  172990  303070
+ 4  2015 Octobe… Unit… 2874760      NA  412380      14  117150  158790
+ 5  2016 Januar… Unit… 2594590      NA  428800      17  378160  158050
+ 6  2016 April-… Unit… 2801470      NA  329820      12  736920  561160
+ 7  2016 July-S… Unit… 3181180      NA  397290      12  217320  282130
+ 8  2016 Octobe… Unit… 3032060      NA  502350      17  124660   60390
+ 9  2017 Januar… Unit… 2615590      NA  361850      14  586240  239580
+10  2017 April-… Unit… 2886030      NA  225680       8  653470  806170
+# … with 16 more rows, 1 more variable: colony_reno_pct &amp;lt;dbl&amp;gt;, and
+#   abbreviated variable names ¹​colony_n, ²​colony_max, ³​colony_lost,
+#   ⁴​colony_lost_pct, ⁵​colony_added, ⁶​colony_reno
+# ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;colony_counts_per_state&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 1,196 × 10
-    year months  state colony_n colony_max colony_lost colony_lost_pct
-   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;    &amp;lt;dbl&amp;gt;      &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;           &amp;lt;dbl&amp;gt;
- 1  2015 Januar… Alab…     7000       7000        1800              26
- 2  2015 Januar… Ariz…    35000      35000        4600              13
- 3  2015 Januar… Arka…    13000      14000        1500              11
- 4  2015 Januar… Cali…  1440000    1690000      255000              15
- 5  2015 Januar… Colo…     3500      12500        1500              12
- 6  2015 Januar… Conn…     3900       3900         870              22
- 7  2015 Januar… Flor…   305000     315000       42000              13
- 8  2015 Januar… Geor…   104000     105000       14500              14
- 9  2015 Januar… Hawa…    10500      10500         380               4
-10  2015 Januar… Idaho    81000      88000        3700               4
-# … with 1,186 more rows, and 3 more variables: colony_added &amp;lt;dbl&amp;gt;,
-#   colony_reno &amp;lt;dbl&amp;gt;, colony_reno_pct &amp;lt;dbl&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+    year months  state colon…¹ colon…² colon…³ colon…⁴ colon…⁵ colon…⁶
+   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt;
+ 1  2015 Januar… Alab…    7000    7000    1800      26    2800     250
+ 2  2015 Januar… Ariz…   35000   35000    4600      13    3400    2100
+ 3  2015 Januar… Arka…   13000   14000    1500      11    1200      90
+ 4  2015 Januar… Cali… 1440000 1690000  255000      15  250000  124000
+ 5  2015 Januar… Colo…    3500   12500    1500      12     200     140
+ 6  2015 Januar… Conn…    3900    3900     870      22     290      NA
+ 7  2015 Januar… Flor…  305000  315000   42000      13   54000   25000
+ 8  2015 Januar… Geor…  104000  105000   14500      14   47000    9500
+ 9  2015 Januar… Hawa…   10500   10500     380       4    3400     760
+10  2015 Januar… Idaho   81000   88000    3700       4    2600    8000
+# … with 1,186 more rows, 1 more variable: colony_reno_pct &amp;lt;dbl&amp;gt;, and
+#   abbreviated variable names ¹​colony_n, ²​colony_max, ³​colony_lost,
+#   ⁴​colony_lost_pct, ⁵​colony_added, ⁶​colony_reno
+# ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# ...and after tidying
 tidied_colony_counts_overall&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 100 × 3
@@ -616,7 +855,8 @@ tidied_colony_counts_overall&lt;/code&gt;&lt;/pre&gt;
  8  2015 Renovated       692850
  9  2015 Total colonies 3132880
 10  2015 Lost            457100
-# … with 90 more rows&lt;/code&gt;&lt;/pre&gt;
+# … with 90 more rows
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class="r"&gt;&lt;code&gt;tidied_colony_counts_per_state&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;# A tibble: 4,208 × 3
     year type           count
@@ -631,7 +871,8 @@ tidied_colony_counts_overall&lt;/code&gt;&lt;/pre&gt;
  8  2015 Renovated       2100
  9  2015 Total colonies 13000
 10  2015 Lost            1500
-# … with 4,198 more rows&lt;/code&gt;&lt;/pre&gt;
+# … with 4,198 more rows
+# ℹ Use `print(n = ...)` to see more rows&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="plotting-bee-colony-observations-using-ggbeeswarm"&gt;Plotting Bee Colony observations using {ggbeeswarm}&lt;/h2&gt;
 &lt;p&gt;The first graph plots a point for each type of observation using &lt;a href="https://github.com/eclarke/ggbeeswarm"&gt;geom_beeswarm()&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class="r"&gt;&lt;code&gt;# Plotting Bee Colony observations using geom_beeswarm() from {ggbeeswarm}
@@ -647,7 +888,7 @@ tidied_colony_counts_per_state %&amp;gt;%
        x = NULL, y = &amp;quot;Number of bee colonies (log10)&amp;quot;,
        fill = NULL)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file1597b629b1139_files/figure-html/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" /&gt;
+&lt;img src="file125c2418918b_files/figure-html/fig1-1.png" alt="Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig1)Scatter plots of bee colony observations. This plot has a point for each observation. Points are jittered to reduce overplotting.
 &lt;/p&gt;
@@ -672,7 +913,7 @@ p &amp;lt;- tidied_colony_counts_per_state %&amp;gt;%
 animate(p, nframes = 180, start_pause = 20,  end_pause = 20,
         renderer = magick_renderer())&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="../file1597b629b1139_files/figure-html/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  /&gt;
+&lt;img src="../file125c2418918b_files/figure-html/fig2-1.gif" alt="Animation showing bee colony counts from 2015 to 2021."  /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig2)Animation showing bee colony counts from 2015 to 2021.
 &lt;/p&gt;
@@ -691,7 +932,7 @@ tidied_colony_counts_overall %&amp;gt;%
        subtitle = &amp;quot;Distributions of Bee Colonies Addded, Renovated, Lost&amp;quot;,
        x = &amp;quot;Number of bee colonies&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class="figure"&gt;
-&lt;img src="file1597b629b1139_files/figure-html/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" /&gt;
+&lt;img src="file125c2418918b_files/figure-html/fig3-1.png" alt="A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar." width="864" /&gt;
 &lt;p class="caption"&gt;
 (#fig:fig3)A density plot, giving the distribution of various observations. Of the three types of observation plotted, Added and Renovated are the most similar.
 &lt;/p&gt;
