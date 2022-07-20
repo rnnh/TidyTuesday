@@ -7,7 +7,7 @@ by [Ronan Harrington](https://github.com/rnnh/)
 
 ***As featured on [R-bloggers.com](https://www.r-bloggers.com/author/ronan-harrington/)*** | ***<https://tidytuesday.netlify.app/>***
 
-<a href='https://ko-fi.com/rnn_h' target='_blank'><img height='30' style='border:0px;height:30px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+<a href='https://ko-fi.com/rnn_h' target='_blank'><img height='30' style='border:0px;height:30px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com'> </a>
 
 Reproducible visualisation and analysis of [#TidyTuesday data sets](https://github.com/rfordatascience/tidytuesday), created using [distill for R Markdown](https://github.com/rstudio/distill).
 These data sets are provided by the [R for Data Science (R4DS)](https://github.com/rfordatascience) community.
