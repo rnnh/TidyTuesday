@@ -31,10 +31,10 @@ flight_types <- colnames(tt$flights)[8:13]
 # Printing the flight types
 flight_types
 
-# Applying the tidying function to the flight types vector using purr::map()
+# Applying the tidying function to the flight types vector using purrr::map()
 tidy_flights_list <- map(flight_types, tidy_flights_per_airport)
 
-# Binding the tidy version of each flight type by row using purr::map_df
+# Binding the tidy version of each flight type by row using purrr::map_df
 tidy_flights <- map_df(tidy_flights_list, rbind)
 
 # Printing a summary of the tidy flights data frame

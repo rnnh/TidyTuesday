@@ -1518,8 +1518,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#setup">Setup</a></li>
-<li><a href="#defining-a-function-to-tidy-flight-types-and-applying-it-with-purrmap">Defining a function to tidy flight types and applying it with purr::map</a></li>
-<li><a href="#binding-the-tidied-flight-type-rows-into-a-data-frame-with-purrmap_df">Binding the tidied flight type rows into a data frame with purr::map_df</a></li>
+<li><a href="#defining-a-function-to-tidy-flight-types-and-applying-it-with-purrmap">Defining a function to tidy flight types and applying it with purrr::map</a></li>
+<li><a href="#binding-the-tidied-flight-type-rows-into-a-data-frame-with-purrmap_df">Binding the tidied flight type rows into a data frame with purrr::map_df</a></li>
 <li><a href="#plotting-the-distribution-of-arrivals-and-departures-across-the-top-six-airports">Plotting the distribution of arrivals and departures across the top six airports</a></li>
 <li><a href="#see-also">See also</a></li>
 </ul>
@@ -1543,7 +1543,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <pre><code>
     Downloading file 1 of 1: `flights.csv`</code></pre>
 </div>
-<h2 id="defining-a-function-to-tidy-flight-types-and-applying-it-with-purrmap">Defining a function to tidy flight types and applying it with purr::map</h2>
+<h2 id="defining-a-function-to-tidy-flight-types-and-applying-it-with-purrmap">Defining a function to tidy flight types and applying it with purrr::map</h2>
 <p>In this section, we want to tidy the different types of flight in the data set by increasing the number of rows and decreasing the number of columns. For a given airport on a given day, instead of having multiple columns/variables for arrivals, departures and total number of flights, we want to have one column describing the flight type (e.g. arrival or departure) and one column with the value of that flight type/number of flights. This will give the data set a <a href="https://tidyr.tidyverse.org/articles/tidy-data.html">tidy structure</a>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -1595,15 +1595,15 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <pre><code>[1] &quot;FLT_DEP_1&quot;     &quot;FLT_ARR_1&quot;     &quot;FLT_TOT_1&quot;     &quot;FLT_DEP_IFR_2&quot;
 [5] &quot;FLT_ARR_IFR_2&quot; &quot;FLT_TOT_IFR_2&quot;</code></pre>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Applying the tidying function to the flight types vector using purr::map()</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Applying the tidying function to the flight types vector using purrr::map()</span></span>
 <span><span class='va'>tidy_flights_list</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span><span class='op'>(</span><span class='va'>flight_types</span>, <span class='va'>tidy_flights_per_airport</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<h2 id="binding-the-tidied-flight-type-rows-into-a-data-frame-with-purrmap_df">Binding the tidied flight type rows into a data frame with purr::map_df</h2>
+<h2 id="binding-the-tidied-flight-type-rows-into-a-data-frame-with-purrmap_df">Binding the tidied flight type rows into a data frame with purrr::map_df</h2>
 <p>Using the map function in the previous section returned a list of tidied flight types: the “tidy_flights_per_airport()” function was applied to each item in “flight_types” individually, and the resulting tidied flight type was added to “tidy_flights_list”. In this section, the “rbind()” function is applied to “tidy_flights_list” to create a single data frame with all of the tidied flight types.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Binding the tidy version of each flight type by row using purr::map_df</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Binding the tidy version of each flight type by row using purrr::map_df</span></span>
 <span><span class='va'>tidy_flights</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map_df</a></span><span class='op'>(</span><span class='va'>tidy_flights_list</span>, <span class='va'>rbind</span><span class='op'>)</span></span>
 <span></span>
 <span><span class='co'># Printing a summary of the tidy flights data frame</span></span>
