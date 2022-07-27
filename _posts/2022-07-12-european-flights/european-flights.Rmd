@@ -1,5 +1,5 @@
 ---
-title: "How to write a function in R and apply it to a data frame using map functions from {purr}"
+title: "How to write a function in R and apply it to a data frame using map functions from {purrr}"
 description: |
   Writing a function and applying it to a data frame using the
   #TidyTuesday data set for week 28 of 2022
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(fig.width = 9)
 
 ## Introduction
 
-In this post, the [European Flights](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-12/readme.md) data set is used to illustrate defining a function in [R](https://www.r-project.org/) and applying it to a data frame using map functions from [{purr}](https://www.r-project.org/).
+In this post, the [European Flights](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-07-12/readme.md) data set is used to illustrate defining a function in [R](https://www.r-project.org/) and applying it to a data frame using map functions from [{purrr}](https://cran.r-project.org/web/packages/purrr/index.html).
 The full source for this blog post is [available on GitHub](https://github.com/rnnh/TidyTuesday).
 
 ## Setup
