@@ -48,6 +48,7 @@ Full article content via [RSS is now available](https://github.com/rnnh/TidyTues
 | ---- | ----- |
 | [technology-adoption.Rmd](_posts/2022-07-21-technology-adoption/technology-adoption.Rmd) | ![technology adoption plot 1](_posts/2022-07-21-technology-adoption/technology-adoption_files/figure-html5/fig1-1.png) |
 | [technology-adoption.Rmd](_posts/2022-07-21-technology-adoption/technology-adoption.Rmd) | ![technology adoption plot 2](_posts/2022-07-21-technology-adoption/technology-adoption_files/figure-html5/fig2-1.png) |
+| [european-flights.Rmd](_posts/2022-07-12-european-flights/european-flights.Rmd) | ![european flights plot](_posts/2022-07-12-european-flights/european-flights_files/figure-html5/fig1-1.png) |
 | [sf-rents.Rmd](_posts/2022-07-05-sf-rents/sf-rents.Rmd) | ![sf rents plot 1](_posts/2022-07-05-sf-rents/sf-rents_files/figure-html5/fig1-1.png) |
 | [sf-rents.Rmd](_posts/2022-07-05-sf-rents/sf-rents.Rmd) | ![sf rents plot 2](_posts/2022-07-05-sf-rents/sf-rents_files/figure-html5/fig2-1.png) |
 | [chocolate-bar-ratings.Rmd](_posts/2022-01-26-chocolate-bar-ratings/chocolate-bar-ratings.Rmd) | ![chocolate bar ratings plot 1](_posts/2022-01-26-chocolate-bar-ratings/chocolate-bar-ratings_files/figure-html5/fig1-1.png) |
