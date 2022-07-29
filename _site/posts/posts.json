@@ -281,22 +281,5 @@
     "preview": "posts/2021-03-21-bechdel-test/bechdel-test_files/figure-html5/figure1-1.gif",
     "last_modified": "2022-01-23T21:59:00+00:00",
     "input_file": {}
-  },
-  {
-    "path": "posts/welcome/",
-    "title": "Welcome",
-    "description": "Welcome to my TidyTuesday blog. This site features graphs and analysis\nof various data sets from the R for Data Science (R4DS) #TidyTuesday project.",
-    "author": [
-      {
-        "name": "Ronan Harrington",
-        "url": "https://github.com/rnnh/"
-      }
-    ],
-    "date": "2021-03-21",
-    "categories": [],
-    "contents": "\r\n\r\n\r\n\r\n",
-    "preview": {},
-    "last_modified": "2022-01-23T21:59:00+00:00",
-    "input_file": {}
   }
 ]

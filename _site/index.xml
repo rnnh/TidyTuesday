@@ -1043,14 +1043,5 @@ tidied_colony_counts_overall %&amp;gt;%
       <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
       <media:content url="https://tidytuesday.netlify.app/posts/2021-03-21-bechdel-test/bechdel-test_files/figure-html5/figure1-1.gif" medium="image" type="image/gif"/>
     </item>
-    <item>
-      <title>Welcome</title>
-      <dc:creator>Ronan Harrington</dc:creator>
-      <link>https://tidytuesday.netlify.app/posts/welcome</link>
-      <description>Welcome to my TidyTuesday blog. This site features graphs and analysis
-of various data sets from the R for Data Science (R4DS) #TidyTuesday project.</description>
-      <guid>https://tidytuesday.netlify.app/posts/welcome</guid>
-      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
-    </item>
   </channel>
 </rss>
