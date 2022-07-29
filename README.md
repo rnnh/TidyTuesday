@@ -9,18 +9,18 @@ by [Ronan Harrington](https://github.com/rnnh/)
 
 <a href='https://ko-fi.com/rnn_h' target='_blank'><img height='30' style='border:0px;height:30px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com'> </a>
 
-- [Intro](#intro)
+- [About](#about)
 - [Posts](#posts)
 - [Graph Gallery](#graph-gallery)
 - [References](#references)
 
-## Intro
+## About
 
-This blog provides reproducible examples of data wrangling, visualisation, and analysis in [R](https://www.r-project.org/) using [#TidyTuesday data sets](https://github.com/rfordatascience/tidytuesday), created with [distill for R Markdown](https://github.com/rstudio/distill).
-These data sets are provided by the [R for Data Science (R4DS)](https://github.com/rfordatascience) community.
-This blog can be viewed locally by downloading this GitHub repository and opening [the index page](_site/index.html) in a web browser.
-External links for each post as well as the R Markdown and R source files are provided in the [README](https://github.com/rnnh/TidyTuesday/blob/main/README.md#posts) file.
-Full article content via [RSS is now available](https://github.com/rnnh/TidyTuesday/commit/3608329d5a880c6d9647c0d4e21c9763388de618) though this blog's [index.xml](https://tidytuesday.netlify.app/index.xml) page.
+This blog provides reproducible examples of data wrangling, visualisation, and analysis in [R](https://www.r-project.org/) and is written using [distill for R Markdown](https://github.com/rstudio/distill).
+Each post uses a [#TidyTuesday data set](https://github.com/rfordatascience/tidytuesday); these data sets are provided by the [R for Data Science (R4DS)](https://github.com/rfordatascience) community.
+This blog is [deployed using netlify](https://tidytuesday.netlify.app/) and all source files are available on [GitHub](https://github.com/rnnh/TidyTuesday).
+External links for each post as well as the R Markdown and R source files are provided in the [README](https://github.com/rnnh/TidyTuesday/blob/main/README.md#posts) file, which also contains a [Graph Gallery](https://github.com/rnnh/TidyTuesday/blob/main/README.md#graph-gallery).
+Full article content via [RSS is now available](https://github.com/rnnh/TidyTuesday/commit/3608329d5a880c6d9647c0d4e21c9763388de618) though the [index.xml](https://tidytuesday.netlify.app/index.xml) page.
 
 ## Posts
 
